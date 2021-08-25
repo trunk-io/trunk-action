@@ -1,0 +1,22 @@
+name: Trunk Check
+author: trunk.io
+description: The official trunk.io GitHub action
+
+inputs:
+  github-token:
+    description: GitHub Token
+    default: ${{ github.token }}
+    required: false
+
+  trunk-path:
+    description: Path to Trunk Launcher
+    required: false
+
+  upstream:
+    description: The upstream to diff against
+    default: ${{ github.event.pull_request.base.sha }}
+    required: false
+
+runs:
+  using: node12
+  main: trunk.min.js

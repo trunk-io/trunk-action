@@ -1,0 +1,10 @@
+version: 0.1
+cli:
+  sha256:
+    darwin_x86_64: 9a1cbf4bbe83ca562bfd56f87cf5c4b4521f026f6f49961ac0e28d2f11a8193e
+    linux_x86_64: 18e9e3af261e3e8238140f05e9156bee9096dfbf8c089162361c12b011c53e2d
+  version: 0.1.27-alpha
+lint:
+  enabled:
+    - gitleaks@7.6.1
+    - prettier@2.4.1
