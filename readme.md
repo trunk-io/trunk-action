@@ -51,7 +51,7 @@ steps:
   # >>> Install your own deps here (npm install, etc) <<<
 
   - name: Trunk Check
-    uses: trunk-io/trunk-action@v0.2.0-alpha
+    uses: trunk-io/trunk-action@v0.2.1-alpha
 ```
 
 (See this repo's [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow for further reference)
@@ -112,9 +112,9 @@ If you'd like to run multiple Trunk Check jobs on different platforms at the sam
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v0.2.0-alpha
+  uses: trunk-io/trunk-action@v0.2.1-alpha
   with:
-    label: linux
+    label: ${{ runner.os }}
 ```
 
 ## Badge

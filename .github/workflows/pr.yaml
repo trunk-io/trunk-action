@@ -20,4 +20,4 @@ jobs:
           key: trunk-${{ runner.os }}
 
       - name: Trunk Check
-        uses: trunk-io/trunk-action@v0.2.0-alpha
+        uses: trunk-io/trunk-action@v0.2.1-alpha
