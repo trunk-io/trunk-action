@@ -1,5 +1,8 @@
 name: Trunk Check
-on: [pull_request, workflow_dispatch]
+on: [pull_request]
+concurrency:
+  group: ${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
   trunk_check:
@@ -7,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
-
       - name: Checkout
         uses: actions/checkout@v2
 
@@ -20,4 +20,4 @@ jobs:
           key: trunk-${{ runner.os }}
 
       - name: Trunk Check
-        uses: trunk-io/trunk-action@v0.1.0-alpha
+        uses: trunk-io/trunk-action@v0.2.0-alpha

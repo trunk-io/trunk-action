@@ -1,12 +1,32 @@
-# ⚡️ Trunk GitHub Action (alpha)
+<!-- trunk-ignore(markdownlint/MD041) -->
+<p align="center">
+  <a href="https://docs.trunk.io">
+    <img height="128" src="https://static.trunk.io/assets/vscode_icon.png" />
+  </a>
+</p>
+<h2 align="center">Trunk GitHub Action</h2>
+<p align="center">
+  <a href="https://trunk.io">
+    <img src="https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg"/>
+  </a>
+  <a href="https://slack.trunk.io">
+    <img src="https://img.shields.io/badge/slack-community-blue?logo=slack"/>
+  </a>
+  <a href="https://docs.trunk.io">
+    <img src="https://img.shields.io/badge/docs-7f7fcc?logo=readthedocs&labelColor=555555&logoColor=ffffff"/>
+  </a>
+</p>
 
-[![](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io)
+> 🎉 Trunk is in alpha. We'd appreciate your feedback - stop by the
+> [Trunk Community Slack](https://slack.trunk.io/) and let us know what you think. Thanks!
 
 This action runs [`trunk check`](https://trunk.io), a super powerful meta linter and formatter, showing inline annotations on your PRs for any issues found. Trunk runs just as well locally as on CI, so you can always quickly see lint issues _before_ pushing your changes.
 
 ## Get Started
 
-> :warning: Trunk (the tool, along with this GitHub action) is in private alpha, and is invite-only. You can't actually use it yet 😢. Stop by the [Trunk Community Slack](https://slack.trunk.io/) if you have any questions. Thanks!
+Before setting up running Trunk checking on CI, you'll need to initialize trunk in your repo. Initializing it (`trunk init`) bootstraps a the trunk configuration (`.trunk/trunk.yaml`) which stores all the configuration for Trunk. All linters and formatters, as well as the version of Trunk itself, are versioned in `trunk.yaml`, so you're guarnateed to get the same results whether you're running locally or on CI.
+
+Check out the Trunk [CLI](https://docs.trunk.io/getting-started) and [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) to start using Trunk locally.
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash` ([docs](https://docs.trunk.io/getting-started))
 2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/getting-started))
@@ -31,7 +51,7 @@ steps:
   # >>> Install your own deps here (npm install, etc) <<<
 
   - name: Trunk Check
-    uses: trunk-io/trunk-action@v0.1.0-alpha
+    uses: trunk-io/trunk-action@v0.2.0-alpha
 ```
 
 (See this repo's [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow for further reference)
@@ -51,24 +71,24 @@ If you've setup basic testing on CI, you're already doing this for other CI jobs
 
 We integrate new linters every release. Stop by on [slack](https://slack.trunk.io/) and let us know what you'd like next!
 
-| Language        | Linters                                                                  |
-| --------------- | ------------------------------------------------------------------------ |
-| All             | `gitleaks`                                                               |
-| Ansible         | `ansible-lint`                                                           |
-| Bash            | `shellcheck`, `shfmt`                                                    |
-| Bazel, Starlark | `buildifier`                                                             |
-| C/C++           | `clang-format`, `clang-tidy`                                             |
-| Cloudformation  | `cfnlint`                                                                |
-| Docker          | `hadolint`                                                               |
-| Go              | `gofmt`, `golangci-lint`, `semgrep`                                      |
-| Java            | `semgrep`                                                                |
-| JS/TS           | `eslint`, `prettier`, `semgrep`                                          |
-| Markdown        | `markdownlint`                                                           |
-| Protobuf        | `buf`                                                                    |
-| Python          | `autopep8`, `bandit`, `black-py`, `flake8`, `isort`, `pylint`, `semgrep` |
-| Ruby            | `semgrep`                                                                |
-| Rust            | `clippy`, `rustfmt`                                                      |
-| Terraform       | `terraform-fmt`                                                          |
+| Language        | Linters                                                                          |
+| --------------- | -------------------------------------------------------------------------------- |
+| All             | `gitleaks`                                                                       |
+| Ansible         | `ansible-lint`                                                                   |
+| Bash            | `shellcheck`, `shfmt`                                                            |
+| Bazel, Starlark | `buildifier`                                                                     |
+| C/C++           | `clang-format`, `clang-tidy`                                                     |
+| Cloudformation  | `cfnlint`                                                                        |
+| Docker          | `hadolint`                                                                       |
+| Go              | `gofmt`, `golangci-lint`, `semgrep`                                              |
+| Java            | `semgrep`                                                                        |
+| JS/TS           | `eslint`, `prettier`, `semgrep`                                                  |
+| Markdown        | `markdownlint`                                                                   |
+| Protobuf        | `buf`                                                                            |
+| Python          | `autopep8`, `bandit`, `black-py`, `flake8`, `isort`, `pylint`, `semgrep`, `yapf` |
+| Ruby            | `semgrep`                                                                        |
+| Rust            | `clippy`, `rustfmt`                                                              |
+| Terraform       | `terraform-fmt`                                                                  |
 
 ## Trunk versioning
 
@@ -86,13 +106,24 @@ Trunk has a dead simple install, is totally self-contained, doesn't require dock
 
 Check out our [Getting Started guide](https://docs.trunk.io/getting-started) for more info.
 
+## Inputs
+
+If you'd like to run multiple Trunk Check jobs on different platforms at the same time, you can pass `label` to each job to distinguish them. For example:
+
+```yaml
+- name: Trunk Check
+  uses: trunk-io/trunk-action@v0.2.0-alpha
+  with:
+    label: linux
+```
+
 ## Badge
 
 Add your very own [![](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io) !
 
 Follow [these instructions](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge) to create a workflow status badge. For example:
 
-```
+```markdown
 [![Trunk Check](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io)
 ```
 
