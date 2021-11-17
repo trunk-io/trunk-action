@@ -1,9 +1,9 @@
 version: 0.1
 cli:
-  version: 0.1.32-alpha
+  version: 0.1.33-alpha
   sha256:
-    darwin_x86_64: 6142760f761cd3d277e9611ab2da259180227751785c685486d1778e66d2c8f1
-    linux_x86_64: 877fa27f7fdf45e807421db75bd78f65daab4aa4b10fe368254f457428c80700
+    darwin_x86_64: f1ee343cc08c7646711b3553b055198f3052b03114544df65367d94cec0fc4e9
+    linux_x86_64: 2ff4574f4e1d93162a3b2243c9e6f8926edb85885adc297e169495c0801e84cb
 lint:
   enabled:
     - actionlint@1.6.8
