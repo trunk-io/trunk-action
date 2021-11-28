@@ -9,15 +9,18 @@
   <a href="https://trunk.io">
     <img src="https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg"/>
   </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=Trunk.io">
+    <img src="https://img.shields.io/visual-studio-marketplace/i/Trunk.io?logo=visualstudiocode"/>
+  </a>
   <a href="https://slack.trunk.io">
-    <img src="https://img.shields.io/badge/slack-community-blue?logo=slack"/>
+    <img src="https://img.shields.io/badge/slack-slack.trunk.io-blue?logo=slack"/>
   </a>
   <a href="https://docs.trunk.io">
-    <img src="https://img.shields.io/badge/docs-7f7fcc?logo=readthedocs&labelColor=555555&logoColor=ffffff"/>
+    <img src="https://img.shields.io/badge/docs.trunk.io-7f7fcc?label=docs&logo=readthedocs&labelColor=555555&logoColor=ffffff"/>
   </a>
 </p>
 
-> 🎉 Trunk is in alpha. We'd appreciate your feedback - stop by the
+> 🎉 Trunk is in beta. We'd appreciate your feedback - stop by the
 > [Trunk Community Slack](https://slack.trunk.io/) and let us know what you think. Thanks!
 
 This action runs [`trunk check`](https://trunk.io), a super powerful meta linter and formatter, showing inline annotations on your PRs for any issues found. Trunk runs just as well locally as on CI, so you can always quickly see lint issues _before_ pushing your changes.
@@ -71,6 +74,8 @@ If you've setup basic testing on CI, you're already doing this for other CI jobs
 
 We integrate new linters every release. Stop by on [slack](https://slack.trunk.io/) and let us know what you'd like next!
 
+We currently support the following linters.
+
 | Language        | Linters                                                                          |
 | --------------- | -------------------------------------------------------------------------------- |
 | All             | `gitleaks`                                                                       |
@@ -80,13 +85,14 @@ We integrate new linters every release. Stop by on [slack](https://slack.trunk.i
 | C/C++           | `clang-format`, `clang-tidy`                                                     |
 | Cloudformation  | `cfnlint`                                                                        |
 | Docker          | `hadolint`                                                                       |
+| GitHub          | `actionlint`                                                                     |
 | Go              | `gofmt`, `golangci-lint`, `semgrep`                                              |
 | Java            | `semgrep`                                                                        |
 | JS/TS           | `eslint`, `prettier`, `semgrep`                                                  |
 | Markdown        | `markdownlint`                                                                   |
-| Protobuf        | `buf`                                                                            |
+| Protobuf        | `buf-breaking`, `buf-lint`                                                       |
 | Python          | `autopep8`, `bandit`, `black-py`, `flake8`, `isort`, `pylint`, `semgrep`, `yapf` |
-| Ruby            | `semgrep`                                                                        |
+| Ruby            | `brakeman`,`rubocop`,`rufo`, `semgrep`                                           |
 | Rust            | `clippy`, `rustfmt`                                                              |
 | Terraform       | `terraform-fmt`                                                                  |
 
@@ -119,7 +125,7 @@ If you'd like to run multiple Trunk Check jobs on different platforms at the sam
 
 ## Badge
 
-Add your very own [![](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io) !
+Add your very own [![Trunk Check](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io) !
 
 Follow [these instructions](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge) to create a workflow status badge. For example:
 
