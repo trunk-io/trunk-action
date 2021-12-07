@@ -29,9 +29,11 @@ if [[ -z ${upstream+x} ]]; then
   fetch origin "${upstream}"
 fi
 
+# shellcheck disable=SC2086
 "${TRUNK_PATH}" check \
   --ci \
   --upstream "${upstream}" \
   --github-commit "${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" \
   --github-label "${INPUTS_LABEL}" \
-  --github-annotate
+  --github-annotate \
+  ${INPUTS_ARGUMENTS}
