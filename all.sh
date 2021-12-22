@@ -1,8 +1,9 @@
 #!/bin/bash
 
+# shellcheck disable=SC2086
+
 set -euo pipefail
 
-# shellcheck disable=SC2086
 "${TRUNK_PATH}" check \
   --ci \
   --all \
