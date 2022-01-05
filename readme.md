@@ -54,7 +54,7 @@ steps:
   # >>> Install your own deps here (npm install, etc) <<<
 
   - name: Trunk Check
-    uses: trunk-io/trunk-action@v0.3.0-beta
+    uses: trunk-io/trunk-action@v0.4.0-beta
 ```
 
 (See this repo's [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow for further reference)
@@ -119,7 +119,7 @@ If you'd like to run multiple Trunk Check jobs on different platforms at the sam
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v0.3.0-beta
+  uses: trunk-io/trunk-action@v0.4.0-beta
   with:
     label: ${{ runner.os }}
 ```
@@ -130,7 +130,7 @@ By default trunk check will run on only changed files. When triggered by a pull 
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v0.3.0-beta
+  uses: trunk-io/trunk-action@v0.4.0-beta
   with:
     check-mode: all
 ```
@@ -141,7 +141,7 @@ If you would like to annotate only new issues, you can pass `--github-annotate-n
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v0.3.0-beta
+  uses: trunk-io/trunk-action@v0.4.0-beta
   with:
     arguments: --github-annotate-new-only
 ```
