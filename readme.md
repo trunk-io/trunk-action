@@ -89,6 +89,7 @@ We currently support the following linters.
 | Go              | `gofmt`, `golangci-lint`, `semgrep`                                              |
 | Java            | `semgrep`                                                                        |
 | JS/TS           | `eslint`, `prettier`, `semgrep`                                                  |
+| Kotlin          | `detekt`, `ktlint`                                                               |
 | Markdown        | `markdownlint`                                                                   |
 | Protobuf        | `buf-breaking`, `buf-lint`                                                       |
 | Python          | `autopep8`, `bandit`, `black-py`, `flake8`, `isort`, `pylint`, `semgrep`, `yapf` |
