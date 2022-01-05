@@ -124,6 +124,28 @@ If you'd like to run multiple Trunk Check jobs on different platforms at the sam
     label: ${{ runner.os }}
 ```
 
+## Running trunk check on all files
+
+By default trunk check will run on only changed files. When triggered by a pull request this will be all files changed in the PR. When triggered by a push this will be all files changed in that push. If you would like to run trunk check on all files in a repo, you can set the check-mode to `all`. For example:
+
+```yaml
+- name: Trunk Check
+  uses: trunk-io/trunk-action@v0.3.0-beta
+  with:
+    check-mode: all
+```
+
+## Annotating only new issues
+
+If you would like to annotate only new issues, you can pass `--github-annotate-new-only` to Trunk Check. For example:
+
+```yaml
+- name: Trunk Check
+  uses: trunk-io/trunk-action@v0.3.0-beta
+  with:
+    arguments: --github-annotate-new-only
+```
+
 ## Badge
 
 Add your very own [![Trunk Check](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io) !
