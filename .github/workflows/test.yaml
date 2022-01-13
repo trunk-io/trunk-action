@@ -13,6 +13,6 @@ jobs:
       - name: Verify
         run: |
           diff --color=always -u \
-            <(git grep -ohP "(?<=trunk-io/trunk-action@)[^ ]+" | sort -u) \
+            <(git grep -ohP "(?<=trunk-io/trunk-action@)[\.\w-]+" | sort -u) \
             <(curl -s https://api.github.com/repos/trunk-io/trunk-action/releases/latest \
                 | python3 -c "import json, sys; print(json.load(sys.stdin)['tag_name'])")
