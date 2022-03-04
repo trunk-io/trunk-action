@@ -89,13 +89,14 @@ We currently support the following linters.
 | Go              | `gofmt`, `golangci-lint`, `semgrep`                                              |
 | Java            | `semgrep`                                                                        |
 | JS/TS           | `eslint`, `prettier`, `semgrep`                                                  |
-| Kotlin          | `detekt`, `ktlint`                                                               |
+| Kotlin          | `detekt`, `detekt-explicit`, `ktlint`                                            |
 | Markdown        | `markdownlint`                                                                   |
 | Protobuf        | `buf-breaking`, `buf-lint`                                                       |
 | Python          | `autopep8`, `bandit`, `black-py`, `flake8`, `isort`, `pylint`, `semgrep`, `yapf` |
-| Ruby            | `brakeman`,`rubocop`,`rufo`, `semgrep`                                           |
+| Ruby            | `brakeman`, `rubocop`, `rufo`, `semgrep`                                         |
 | Rust            | `clippy`, `rustfmt`                                                              |
-| Terraform       | `terraform-fmt`                                                                  |
+| Terraform       | `terraform-fmt`, `terraform-validate`, `tflint`                                  |
+| TOML            | `taplo`                                                                          |
 
 ## Trunk versioning
 
@@ -135,15 +136,15 @@ By default trunk check will run on only changed files. When triggered by a pull 
     check-mode: all
 ```
 
-## Annotating only new issues
+## Annotating existing issues
 
-If you would like to annotate only new issues, you can pass `--github-annotate-new-only` to Trunk Check. For example:
+By default the Trunk Action will only annotate new issues, but if you also want to annotate existing issues you can pass `--github-annotate-new-only=false` to Trunk Check. For example:
 
 ```yaml
 - name: Trunk Check
   uses: trunk-io/trunk-action@v0.4.0-beta
   with:
-    arguments: --github-annotate-new-only
+    arguments: --github-annotate-new-only=false
 ```
 
 ## Badge
