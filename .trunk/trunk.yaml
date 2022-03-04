@@ -1,11 +1,11 @@
 version: 0.1
 cli:
-  version: 0.5.0-beta
+  version: 0.8.1-beta
 lint:
   enabled:
-    - actionlint@1.6.8
+    - actionlint@1.6.4
     - gitleaks@7.6.1
-    - markdownlint@0.30.0
-    - prettier@2.5.0
-    - shellcheck@0.8.0
+    - markdownlint@0.29.0
+    - prettier@2.4.1
+    - shellcheck@0.7.2
     - shfmt@3.4.0
