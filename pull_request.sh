@@ -34,6 +34,6 @@ fi
   --ci \
   --upstream "${upstream}" \
   --github-commit "${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" \
-  --github-label "${INPUTS_LABEL}" \
+  --github-label "${INPUT_LABEL}" \
   --github-annotate \
-  ${INPUTS_ARGUMENTS}
+  ${INPUT_ARGUMENTS}

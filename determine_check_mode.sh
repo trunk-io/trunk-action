@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-check_mode="${INPUTS_CHECK_MODE}"
+check_mode="${INPUT_CHECK_MODE}"
 if [[ -z ${check_mode} ]]; then
   if [[ ${GITHUB_EVENT_NAME} == "pull_request" || ${GITHUB_EVENT_NAME} == "pull_request_target" ]]; then
     check_mode="pull_request"

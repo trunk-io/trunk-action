@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-trunk_path="${INPUTS_TRUNK_PATH}"
+trunk_path="${INPUT_TRUNK_PATH}"
 if [[ -z ${trunk_path} ]]; then
   if [[ -f .trunk/bin/trunk && -x .trunk/bin/trunk ]]; then
     trunk_path=.trunk/bin/trunk

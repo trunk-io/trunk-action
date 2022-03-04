@@ -18,6 +18,6 @@ fetch origin "${GITHUB_EVENT_BEFORE}"
   --ci \
   --upstream "${GITHUB_EVENT_BEFORE}" \
   --github-commit "${GITHUB_EVENT_AFTER}" \
-  --github-label "${INPUTS_LABEL}" \
+  --github-label "${INPUT_LABEL}" \
   --github-annotate \
-  ${INPUTS_ARGUMENTS}
+  ${INPUT_ARGUMENTS}
