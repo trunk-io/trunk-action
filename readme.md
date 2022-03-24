@@ -6,9 +6,6 @@
 </p>
 <h2 align="center">Trunk GitHub Action</h2>
 <p align="center">
-  <a href="https://trunk.io">
-    <img src="https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg"/>
-  </a>
   <a href="https://marketplace.visualstudio.com/items?itemName=Trunk.io">
     <img src="https://img.shields.io/visual-studio-marketplace/i/Trunk.io?logo=visualstudiocode"/>
   </a>
@@ -211,20 +208,6 @@ issues you can pass `--github-annotate-new-only=false` to Trunk Check. For examp
   uses: trunk-io/trunk-action@v1.0.0
   with:
     arguments: --github-annotate-new-only=false
-```
-
-## Badge
-
-Add your very own
-[![Trunk Check](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io)
-!
-
-Follow
-[these instructions](https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/adding-a-workflow-status-badge)
-to create a workflow status badge. For example:
-
-```markdown
-[![Trunk Check](https://github.com/trunk-io/trunk-action/actions/workflows/pr.yaml/badge.svg)](https://trunk.io)
 ```
 
 ## Feedback

@@ -3,9 +3,9 @@ cli:
   version: 0.8.1-beta
 lint:
   enabled:
-    - actionlint@1.6.9
-    - gitleaks@8.3.0
+    - actionlint@1.6.10
+    - gitleaks@8.5.1
     - markdownlint@0.31.1
-    - prettier@2.5.1
+    - prettier@2.6.0
     - shellcheck@0.8.0
     - shfmt@3.4.0
