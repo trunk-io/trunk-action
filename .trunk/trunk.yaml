@@ -1,6 +1,11 @@
 version: 0.1
 cli:
   version: 0.8.1-beta
+repo:
+  repo:
+    host: github.com
+    owner: trunk-io
+    name: trunk-action
 lint:
   enabled:
     - actionlint@1.6.10
