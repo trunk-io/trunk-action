@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 0.8.1-beta.10
+  version: 0.10.0-beta
 repo:
   repo:
     host: github.com
