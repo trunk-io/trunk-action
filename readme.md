@@ -210,7 +210,7 @@ issues you can pass `--github-annotate-new-only=false` to Trunk Check. For examp
     arguments: --github-annotate-new-only=false
 ```
 
-## Using with the github merge queue
+## Usage with the github merge queue
 
 Trunk auto-detects when it is running from the github merge queue and will check only the files
 being merged. The `merge` and `squash` strategies are currently supported. `rebase` does not yet
