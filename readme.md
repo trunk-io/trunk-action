@@ -32,16 +32,16 @@ stores all the configuration for Trunk. All linters and formatters, as well as t
 itself, are versioned in `trunk.yaml`, so you're guarnateed to get the same results whether you're
 running locally or on CI.
 
-Check out the Trunk [CLI](https://docs.trunk.io/getting-started) and
+Check out the Trunk [CLI](https://docs.trunk.io/get-started) and
 [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) to start using
 Trunk locally.
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
-   ([docs](https://docs.trunk.io/getting-started))
-2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/getting-started))
-3. Locally check your changes for issues → `trunk check` ([docs](https://docs.trunk.io/check))
-4. Locally format your changes → `trunk fmt`
-   ([docs](https://docs.trunk.io/using-trunk/cli-commands))
+   ([docs](https://docs.trunk.io/get-started))
+2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/get-started))
+3. Locally check your changes for issues → `trunk check`
+   ([docs](https://docs.trunk.io/check/overview))
+4. Locally format your changes → `trunk fmt` ([docs](https://docs.trunk.io/check/cli))
 5. Make sure no lint and format issues leak onto `main` → **You're in the right place 👍**
 
 ## Usage
@@ -136,14 +136,14 @@ Trunk has a dead simple install, is totally self-contained, doesn't require dock
 macOS and all common flavors of Linux.
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
-   ([docs](https://docs.trunk.io/getting-started))
-2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/getting-started))
+   ([docs](https://docs.trunk.io/get-started))
+2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/get-started))
 3. Check your changes for issues → `trunk check` ([docs](https://docs.trunk.io/check))
 4. Format your changes → `trunk fmt` ([docs](https://docs.trunk.io/using-trunk/cli-commands))
 5. Upgrade the pinned trunk version in your repo → `trunk upgrade`
    ([docs](https://docs.trunk.io/using-trunk/cli-commands))
 
-Check out our [Getting Started guide](https://docs.trunk.io/getting-started) for more info.
+Check out our [Getting Started guide](https://docs.trunk.io/get-started) for more info.
 
 ## Running trunk check on all files
 
