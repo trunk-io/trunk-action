@@ -49,12 +49,12 @@ Trunk locally.
 ```yaml
 steps:
   - name: Checkout
-    uses: actions/checkout@v2
+    uses: actions/checkout@v3
 
   # >>> Install your own deps here (npm install, etc) <<<
 
   - name: Trunk Check
-    uses: trunk-io/trunk-action@v1.0.1
+    uses: trunk-io/trunk-action@v1
 ```
 
 (See this repo's
@@ -84,7 +84,7 @@ as so:
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1.0.1
+  uses: trunk-io/trunk-action@v1
   with:
     cache: false
 ```
@@ -154,7 +154,7 @@ For example:
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1.0.1
+  uses: trunk-io/trunk-action@v1
   with:
     check-mode: all
 ```
@@ -174,7 +174,7 @@ Trunk will infer to run with `check-mode` as `all` and to upload results to Trun
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1.0.1
+  uses: trunk-io/trunk-action@v1
   with:
     trunk-token: ${{ secrets.TRUNK_TOKEN }}
 ```
@@ -193,7 +193,7 @@ If you'd like to run multiple Trunk Check jobs on different platforms at the sam
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1.0.1
+  uses: trunk-io/trunk-action@v1
   with:
     arguments: --github-label=${{ runner.os }}
 ```
@@ -205,7 +205,7 @@ issues you can pass `--github-annotate-new-only=false` to Trunk Check. For examp
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1.0.1
+  uses: trunk-io/trunk-action@v1
   with:
     arguments: --github-annotate-new-only=false
 ```
