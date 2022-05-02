@@ -8,9 +8,9 @@ repo:
     name: trunk-action
 lint:
   enabled:
-    - actionlint@1.6.10
-    - gitleaks@8.5.1
+    - actionlint@1.6.12
+    - gitleaks@8.8.2
     - markdownlint@0.31.1
-    - prettier@2.6.0
+    - prettier@2.6.2
     - shellcheck@0.8.0
     - shfmt@3.4.0
