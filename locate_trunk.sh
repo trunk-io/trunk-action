@@ -9,7 +9,7 @@ if [[ -z ${trunk_path} ]]; then
   elif [[ -f tools/trunk && -x tools/trunk ]]; then
     trunk_path=tools/trunk
   elif [[ -f trunk && -x trunk ]]; then
-    trunk_path=trunk
+    trunk_path=./trunk
   else
     tmpdir="$(mktemp -d)"
     curl -fsSL https://trunk.io/releases/trunk -o "${tmpdir}/trunk"

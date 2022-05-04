@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 0.10.0-beta
+  version: 0.11.0-beta
 repo:
   repo:
     host: github.com
@@ -9,7 +9,7 @@ repo:
 lint:
   enabled:
     - actionlint@1.6.12
-    - gitleaks@8.8.2
+    - gitleaks@8.8.4
     - markdownlint@0.31.1
     - prettier@2.6.2
     - shellcheck@0.8.0
