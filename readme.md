@@ -91,8 +91,9 @@ using `actions/cache@v2` to cache Trunk, please remove it from your workflow.
 
 ## Linters
 
-We integrate new linters every release. Stop by on [slack](https://slack.trunk.io/) and let us know
-what you'd like next!
+We integrate new linters every release. If you have suggestions for us, please request it
+[here](https://features.trunk.io/check) or stop by in our [Slack](https://slack.trunk.io/) - we
+always love hearing from our users!
 
 We currently support the following linters.
 
