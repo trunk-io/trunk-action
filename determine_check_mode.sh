@@ -8,6 +8,8 @@ if [[ -z ${check_mode} ]]; then
     check_mode="pull_request"
   elif [[ ${GITHUB_EVENT_NAME} == "push" ]]; then
     check_mode="push"
+  elif [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" && ${GITHUB_REF_NAME} == trunk-merge/* ]]; then
+    check_mode="trunk_merge"
   else
     check_mode="all"
   fi

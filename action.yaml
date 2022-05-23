@@ -124,6 +124,19 @@ runs:
         INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
         INPUT_UPLOAD_SERIES: ${{ inputs.upload-series }}
 
+    - name: Run trunk check on Trunk Merge
+      if: env.TRUNK_CHECK_MODE == 'trunk_merge'
+      shell: bash
+      run: |
+        # Run trunk check on Trunk Merge
+        ${GITHUB_ACTION_PATH}/trunk_merge.sh
+      env:
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_SHA: ${{ github.sha }}
+        GITHUB_TOKEN: ${{ github.token }}
+        INPUT_ARGUMENTS: ${{ inputs.arguments }}
+        INPUT_LABEL: ${{ inputs.label }}
+
     - name: Cleanup temporary files
       if: always()
       shell: bash
