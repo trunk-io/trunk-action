@@ -29,16 +29,14 @@ stores all the configuration for Trunk. All linters and formatters, as well as t
 itself, are versioned in `trunk.yaml`, so you're guarnateed to get the same results whether you're
 running locally or on CI.
 
-Check out the Trunk [CLI](https://docs.trunk.io/get-started) and
+Check out the Trunk [CLI](https://docs.trunk.io) and
 [VS Code extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) to start using
 Trunk locally.
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
-   ([docs](https://docs.trunk.io/get-started))
-2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/get-started))
+2. Setup Trunk in your repo → `trunk init`
 3. Locally check your changes for issues → `trunk check`
-   ([docs](https://docs.trunk.io/check/overview))
-4. Locally format your changes → `trunk fmt` ([docs](https://docs.trunk.io/check/cli))
+4. Locally format your changes → `trunk fmt`
 5. Make sure no lint and format issues leak onto `main` → **You're in the right place 👍**
 
 ## Usage
@@ -135,7 +133,7 @@ Support for Ruby and Rust is experimental.
 </li>
 
 <li><a aria-hidden="true" tabindex="-1" class="customAnchor" id="note-tflint"></a>
-[Module inspection](https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/module-inspection.md), [deep checking](https://github.com/terraform-linters/tflint-ruleset-aws/blob/master/docs/deep_checking.md), and setting variables are not currently supported.
+<a href=https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/module-inspection.md>Module inspection</a>, <a href=https://github.com/terraform-linters/tflint-ruleset-aws/blob/master/docs/deep_checking.md>deep checking</a>, and setting variables are not currently supported.
 </li>
 
 </ol></sup>
@@ -175,14 +173,12 @@ Trunk has a dead simple install, is totally self-contained, doesn't require dock
 macOS and all common flavors of Linux.
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
-   ([docs](https://docs.trunk.io/get-started))
-2. Setup Trunk in your repo → `trunk init` ([docs](https://docs.trunk.io/get-started))
-3. Check your changes for issues → `trunk check` ([docs](https://docs.trunk.io/check))
-4. Format your changes → `trunk fmt` ([docs](https://docs.trunk.io/using-trunk/cli-commands))
+2. Setup Trunk in your repo → `trunk init`
+3. Check your changes for issues → `trunk check`
+4. Format your changes → `trunk fmt`
 5. Upgrade the pinned trunk version in your repo → `trunk upgrade`
-   ([docs](https://docs.trunk.io/using-trunk/cli-commands))
 
-Check out our [Getting Started guide](https://docs.trunk.io/get-started) for more info.
+Check out our [docs](https://docs.trunk.io) for more info.
 
 ## Running trunk check on all files
 
