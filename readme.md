@@ -233,6 +233,17 @@ If you'd like to run multiple Trunk Check jobs on different platforms at the sam
     arguments: --github-label=${{ runner.os }}
 ```
 
+## Running additional command before check
+
+If need to run additional command before check, you can add:
+
+```yaml
+- name: Trunk Check
+  uses: trunk-io/trunk-action@v1
+  with:
+    pre-check-command: ~/.cache/trunk/linters/terraform/1.2.8-*/terraform init
+```
+
 ## Annotating existing issues
 
 By default the Trunk Action will only annotate new issues, but if you also want to annotate existing

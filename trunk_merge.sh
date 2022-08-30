@@ -16,6 +16,13 @@ fetch --depth=2 origin "${head_sha}"
 upstream=$(git rev-parse HEAD^1)
 echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream"
 
+"${TRUNK_PATH}" install \
+  --ci
+
+if [[ -n ${PRE_CHECK_COMMAND} ]]; then
+  eval ${PRE_CHECK_COMMAND}
+fi
+
 "${TRUNK_PATH}" check \
   --ci \
   --upstream "${upstream}" \

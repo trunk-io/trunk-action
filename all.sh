@@ -4,6 +4,13 @@
 
 set -euo pipefail
 
+"${TRUNK_PATH}" install \
+  --ci
+
+if [[ -n ${PRE_CHECK_COMMAND} ]]; then
+  eval ${PRE_CHECK_COMMAND}
+fi
+
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \

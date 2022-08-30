@@ -25,6 +25,13 @@ if [[ -z ${upstream+x} ]]; then
   fetch origin "${upstream}"
 fi
 
+"${TRUNK_PATH}" install \
+  --ci
+
+if [[ -n ${PRE_CHECK_COMMAND} ]]; then
+  eval ${PRE_CHECK_COMMAND}
+fi
+
 "${TRUNK_PATH}" check \
   --ci \
   --upstream "${upstream}" \

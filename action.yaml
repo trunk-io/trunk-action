@@ -51,6 +51,10 @@ inputs:
       name.
     required: false
 
+  pre-check-command:
+    description: Additional command to run after `trunk install` and before `trunk check`.
+    required: false
+
 runs:
   using: composite
   steps:
@@ -92,6 +96,7 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+        PRE_CHECK_COMMAND: ${{ inputs.pre-check-command }}
 
     - name: Run trunk check on push
       if: env.TRUNK_CHECK_MODE == 'push'
@@ -107,6 +112,7 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+        PRE_CHECK_COMMAND: ${{ inputs.pre-check-command }}
 
     - name: Run trunk check on all
       if: env.TRUNK_CHECK_MODE == 'all'
@@ -123,6 +129,7 @@ runs:
         INPUT_LABEL: ${{ inputs.label }}
         INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
         INPUT_UPLOAD_SERIES: ${{ inputs.upload-series }}
+        PRE_CHECK_COMMAND: ${{ inputs.pre-check-command }}
 
     - name: Run trunk check on Trunk Merge
       if: env.TRUNK_CHECK_MODE == 'trunk_merge'
@@ -136,6 +143,7 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+        PRE_CHECK_COMMAND: ${{ inputs.pre-check-command }}
 
     - name: Cleanup temporary files
       if: always()
