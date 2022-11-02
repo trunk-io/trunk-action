@@ -1,16 +1,27 @@
 version: 0.1
 cli:
-  version: 0.11.0-beta
-repo:
-  repo:
-    host: github.com
-    owner: trunk-io
-    name: trunk-action
+  version: 1.0.1
+plugins:
+  sources:
+    - id: trunk
+      ref: v0.0.5
+      uri: https://github.com/trunk-io/plugins
 lint:
   enabled:
-    - actionlint@1.6.12
-    - gitleaks@8.8.4
-    - markdownlint@0.31.1
-    - prettier@2.6.2
+    - actionlint@1.6.22
+    - git-diff-check
+    - gitleaks@8.15.0
+    - markdownlint@0.32.2
+    - prettier@2.7.1
     - shellcheck@0.8.0
-    - shfmt@3.4.0
+    - shfmt@3.5.0
+runtimes:
+  enabled:
+    - go@1.18.3
+    - node@16.14.2
+actions:
+  enabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available
