@@ -1,7 +1,7 @@
 <!-- trunk-ignore(markdownlint/MD041) -->
 <p align="center">
   <a href="https://docs.trunk.io">
-    <img height="128" src="https://static.trunk.io/assets/vscode_icon.png" />
+    <img height="300" src="https://user-images.githubusercontent.com/3904462/199616921-7861e331-c774-43bf-8c17-1ecd27d0a750.png" />
   </a>
 </p>
 <h2 align="center">Trunk GitHub Action</h2>
