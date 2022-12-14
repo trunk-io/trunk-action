@@ -24,10 +24,6 @@ This action runs [`trunk check`](https://trunk.io), a super powerful meta linter
 showing inline annotations on your PRs for any issues found. Trunk runs just as well locally as on
 CI, so you can always quickly see lint issues _before_ pushing your changes.
 
-
-
-
-
 ## Get Started
 
 Before setting up running Trunk Check on CI, you'll need to initialize trunk in your repo.
