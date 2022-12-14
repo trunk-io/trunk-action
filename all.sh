@@ -9,8 +9,6 @@ if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
     --ci \
     --all \
     --github-commit "${GITHUB_SHA}" \
-    --github-label "${INPUT_LABEL}" \
-    --github-annotate \
     ${INPUT_ARGUMENTS}
 else
   "${TRUNK_PATH}" check \

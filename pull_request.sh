@@ -18,7 +18,7 @@ if [[ ${GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
   fetch --depth=2 origin "${head_sha}"
   upstream=$(git rev-parse HEAD^1)
   git_commit=$(git rev-parse HEAD^2)
-  echo "Detected merge commit, using HEAD^1 (${upstream}) as upstream and HEAD^2 (${git_commit}) as as github commit"
+  echo "Detected merge commit, using HEAD^1 (${upstream}) as upstream and HEAD^2 (${git_commit}) as github commit"
 fi
 
 if [[ -z ${upstream+x} ]]; then
@@ -28,10 +28,23 @@ if [[ -z ${upstream+x} ]]; then
   fetch origin "${upstream}"
 fi
 
+save_annotations=${INPUT_SAVE_ANNOTATIONS}
+if [[ ${save_annotations} == "auto" && ${GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK} == "true" ]]; then
+  echo "Fork detected, saving annotations to an artifact."
+  save_annotations=true
+fi
+
+annotation_argument=--github-annotate
+if [[ ${save_annotations} == "true" ]]; then
+  annotation_argument=--github-annotate-file=${TRUNK_TMPDIR}/annotations.bin
+  # Signal that we need to upload an annotations artifact
+  echo "TRUNK_UPLOAD_ANNOTATIONS=true" >>"${GITHUB_ENV}"
+fi
+
 "${TRUNK_PATH}" check \
   --ci \
   --upstream "${upstream}" \
   --github-commit "${git_commit}" \
   --github-label "${INPUT_LABEL}" \
-  --github-annotate \
+  "${annotation_argument}" \
   ${INPUT_ARGUMENTS}

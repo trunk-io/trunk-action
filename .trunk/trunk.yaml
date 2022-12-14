@@ -1,6 +1,6 @@
 version: 0.1
 cli:
-  version: 1.0.1
+  version: 1.2.1
 plugins:
   sources:
     - id: trunk
@@ -10,10 +10,10 @@ lint:
   enabled:
     - actionlint@1.6.22
     - git-diff-check
-    - gitleaks@8.15.0
+    - gitleaks@8.15.2
     - markdownlint@0.32.2
-    - prettier@2.7.1
-    - shellcheck@0.8.0
+    - prettier@2.8.1
+    - shellcheck@0.9.0
     - shfmt@3.5.0
 runtimes:
   enabled:
