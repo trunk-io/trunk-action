@@ -29,6 +29,4 @@ fi
   --ci \
   --upstream "${upstream}" \
   --github-commit "${GITHUB_EVENT_AFTER}" \
-  --github-label "${INPUT_LABEL}" \
-  --github-annotate \
   ${INPUT_ARGUMENTS}

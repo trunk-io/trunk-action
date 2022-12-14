@@ -51,16 +51,22 @@ inputs:
       name.
     required: false
 
+  save-annotations:
+    description:
+      Save annotations as an artifact instead of posting them from this action. This is neccesary if
+      your repository will be used with forks as they will will not have permissions to upload
+      annotations. By default forks will be autod-etected.
+    required: false
+    default: auto
+
+  post-annotations:
+    description: Post annotations previously uploaded with the `save-annotations` option.
+    required: false
+    default: "false"
+
 runs:
   using: composite
   steps:
-    - name: Cache Linters/Formatters
-      if: inputs.cache == 'true'
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/trunk
-        key: trunk-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
-
     - name: Locate trunk
       shell: bash
       run: |
@@ -77,6 +83,13 @@ runs:
       env:
         INPUT_CHECK_MODE: ${{ inputs.check-mode }}
 
+    - name: Cache Linters/Formatters
+      if: env.TRUNK_CHECK_MODE != 'none' && inputs.cache == 'true'
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/trunk
+        key: trunk-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+
     - name: Run trunk check on pull request
       if: env.TRUNK_CHECK_MODE == 'pull_request'
       shell: bash
@@ -85,6 +98,7 @@ runs:
         ${GITHUB_ACTION_PATH}/pull_request.sh
       env:
         GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ${{ github.event.pull_request.head.repo.fork }}
         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         GITHUB_EVENT_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
         GITHUB_REF_NAME: ${{ github.ref_name }}
@@ -92,6 +106,7 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+        INPUT_SAVE_ANNOTATIONS: ${{ inputs.save-annotations }}
 
     - name: Run trunk check on push
       if: env.TRUNK_CHECK_MODE == 'push'
@@ -131,6 +146,57 @@ runs:
         # Run trunk check on Trunk Merge
         ${GITHUB_ACTION_PATH}/trunk_merge.sh
       env:
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_SHA: ${{ github.sha }}
+        GITHUB_TOKEN: ${{ github.token }}
+        INPUT_ARGUMENTS: ${{ inputs.arguments }}
+        INPUT_LABEL: ${{ inputs.label }}
+
+    - name: Upload annotations artifact
+      if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
+      uses: actions/upload-artifact@v3
+      with:
+        name: trunk-annotations
+        path: ${{ env.TRUNK_TMPDIR }}/annotations.bin
+
+    - name: Download annotations artifact
+      if: inputs.post-annotations == 'true'
+      uses: actions/github-script@v6
+      with:
+        # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
+        script: |
+          var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{github.event.workflow_run.id }},
+          });
+          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == "trunk-annotations"
+          })[0];
+          var download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+          });
+          var fs = require('fs');
+          fs.writeFileSync('${{ env.TRUNK_TMPDIR }}/annotations.zip', Buffer.from(download.data));
+
+    - name: Unpack annotations artifact
+      if: inputs.post-annotations == 'true'
+      run: |
+        # Unpack annotations artifact
+        cd ${{ env.TRUNK_TMPDIR }} && unzip annotations.zip
+      shell: bash
+
+    - name: Post annotations
+      if: inputs.post-annotations == 'true'
+      shell: bash
+      run: |
+        # Post annotations
+        ${GITHUB_ACTION_PATH}/annotate.sh
+      env:
+        GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         GITHUB_REPOSITORY: ${{ github.repository }}
         GITHUB_SHA: ${{ github.sha }}
         GITHUB_TOKEN: ${{ github.token }}

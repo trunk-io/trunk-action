@@ -1,0 +1,20 @@
+name: Annotate PR with trunk issues
+
+on:
+  workflow_run:
+    workflows: ["Pull Request"]
+    types:
+      - completed
+
+jobs:
+  trunk_check:
+    name: Trunk Check Annotate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Trunk Check
+        uses: ./gh_action
+        with:
+          post-annotations: true
