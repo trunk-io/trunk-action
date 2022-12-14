@@ -6,6 +6,8 @@ branding:
   icon: check
   color: orange
 
+
+
 inputs:
   trunk-path:
     description:
