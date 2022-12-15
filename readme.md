@@ -59,6 +59,41 @@ steps:
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference)
 
+### Posting annotations from forks
+
+For
+[security reasons](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/),
+it is not possible to post annotations to GitHub when Trunk Check is running on a fork. The Trunk
+Action auto-detects this situation and uploads its results as an artifact instead of trying to post
+them. You can create a new GitHub workflow that downloads this artifact and posts the annotations.
+An example workflow looks as follows:
+
+```yaml
+name: Annotate PR with trunk issues
+
+on:
+  workflow_run:
+    workflows: ["Pull Request"]
+    types:
+      - completed
+
+jobs:
+  trunk_check:
+    name: Trunk Check Annotate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          post-annotations: true
+```
+
+It's important that the name of the workflow in the workflow_runs section (here "Pull Request")
+matches the workflow which runs trunk check.
+
 ### Installing your own dependencies
 
 You do need to install your own dependencies (`npm install`, etc) as a step in your workflow before
