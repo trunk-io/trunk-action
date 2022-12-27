@@ -60,7 +60,9 @@ inputs:
     default: auto
 
   post-annotations:
-    description: Post annotations previously uploaded with the `save-annotations` option.
+    description:
+      Post annotations previously uploaded with the `save-annotations` option (specific to posting
+      annotations from forks).
     required: false
     default: "false"
 
@@ -168,7 +170,7 @@ runs:
           var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{github.event.workflow_run.id }},
+              run_id: ${{ github.event.workflow_run.id }},
           });
           var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
             return artifact.name == "trunk-annotations"
