@@ -20,9 +20,9 @@
   </a>
 </p>
 
-This action runs [`trunk check`](https://trunk.io), a super powerful meta linter and formatter,
-showing inline annotations on your PRs for any issues found. Trunk runs just as well locally as on
-CI, so you can always quickly see lint issues _before_ pushing your changes.
+This action runs and shows inline annotations of found by [`trunk check`](https://trunk.io), a
+powerful meta linter and formatter. Trunk runs hermetically, _locally_ or on CI, so you can always
+quickly see lint issues _before_ pushing your changes.
 
 ## Get Started
 
@@ -59,41 +59,6 @@ steps:
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference)
 
-### Posting annotations from forks
-
-For
-[security reasons](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/),
-it is not possible to post annotations to GitHub when Trunk Check is running on a fork. The Trunk
-Action auto-detects this situation and uploads its results as an artifact instead of trying to post
-them. You can create a new GitHub workflow that downloads this artifact and posts the annotations.
-An example workflow looks as follows:
-
-```yaml
-name: Annotate PR with trunk issues
-
-on:
-  workflow_run:
-    workflows: ["Pull Request"]
-    types:
-      - completed
-
-jobs:
-  trunk_check:
-    name: Trunk Check Annotate
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Trunk Check
-        uses: trunk-io/trunk-action@v1
-        with:
-          post-annotations: true
-```
-
-It's important that the name of the workflow in the workflow_runs section (here "Pull Request")
-matches the workflow which runs trunk check.
-
 ### Installing your own dependencies
 
 You do need to install your own dependencies (`npm install`, etc) as a step in your workflow before
@@ -124,6 +89,45 @@ as so:
 
 Note: Previous versions of the Trunk GitHub Action did _not_ include caching. If you were previously
 using `actions/cache@v2` to cache Trunk, please remove it from your workflow.
+
+### Supporting inline annotations for fork PRs
+
+Create a _new GitHub workflow_ to post annotations from fork PRs. This workflow needs to be merged
+into your main branch before fork PRs will see annotations. It's important that the name of the
+workflow in the workflow_runs section (here "Pull Request") matches the workflow which runs trunk
+check:
+
+```yaml
+name: Annotate PR with trunk issues
+
+on:
+  workflow_run:
+    workflows: ["Pull Request"]
+    types: [completed]
+
+jobs:
+  trunk_check:
+    name: Trunk Check Annotate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          post-annotations: true # only for fork PRs
+```
+
+For
+[security reasons](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/),
+it isn't possible to post annotations to GitHub when Trunk Check is running on a fork. The Trunk
+Action auto-detects this situation and uploads its results as an artifact instead of trying to post
+them. Creating the new github workflow above downloads this artifact and posts the annotations.
+
+This also works if you use both fork and non-fork PRs in your repo. In that case, non-fork PRs post
+annotations in the regular manner, and fork PRs post annotations via the above workflow.
 
 ## Linters
 
