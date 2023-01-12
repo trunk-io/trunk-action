@@ -11,6 +11,17 @@ fetch() {
     "$@"
 }
 
+if [[ ${GITHUB_EVENT_BEFORE} == "0000000000000000000000000000000000000000" ]]; then
+  # Github will send us all 0s for the before hash in a few circumstances, such as the first commit to a repo
+  # or pushing a tag. In these instances we will check the whole repo.
+  "${TRUNK_PATH}" check \
+    --ci \
+    --all \
+    --github-commit "${GITHUB_EVENT_AFTER}" \
+    ${INPUT_ARGUMENTS}
+  exit
+fi
+
 if [[ ${GITHUB_REF_NAME} == gh-readonly-queue/* ]]; then
   # If we are running via the GH merge queue then we use HEAD^1 as the commit as github.event.before will be inaccurate.
   head_sha=$(git rev-parse HEAD)
