@@ -61,7 +61,7 @@ for further reference)
 
 ### Installing your own dependencies
 
-You do need to install your own dependencies (`npm install`, etc) as a step in your workflow before
+YYou do need to install your own dependencies (`npm install`, etc) as a step in your workflow before
 the `trunk-io/trunk-action` step. Many linters will follow imports/includes in your code to find
 errors in your usage and thus they need you to have your dependencies installed and available.
 
