@@ -21,9 +21,9 @@ jobs:
     strategy:
       matrix:
         repo:
-          #- jbeder/yaml-cpp
-          #- replayio/devtools
-          #- square/leakcanary
+          - jbeder/yaml-cpp
+          - replayio/devtools
+          - square/leakcanary
           - terraform-linters/tflint
 
     steps:
