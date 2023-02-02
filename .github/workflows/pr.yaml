@@ -33,12 +33,13 @@ jobs:
       - name: Checkout action
         uses: actions/checkout@v3
         with:
-          path: ../asdf/
+          path: asdf
 
       - name: Checkout repo under test
         uses: actions/checkout@v3
         with:
           repository: ${{ matrix.repo }}
+          path: repo-under-test
 
       - name: Run trunk-action
         uses: ./../asdf/
