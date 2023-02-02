@@ -19,3 +19,7 @@ jobs:
 
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
+
+  repo_tests:
+    name: Repository tests
+    uses: ./.github/workflows/repo_tests.yaml
