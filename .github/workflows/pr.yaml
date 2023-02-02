@@ -16,7 +16,7 @@ jobs:
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
   test:
-    name: ${{ matrix.repo }}
+    name: trunk-action in ${{ matrix.repo }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -33,7 +33,7 @@ jobs:
       - name: Checkout action
         uses: actions/checkout@v3
         with:
-          path: ${{ github.workspace }}/trunk-action
+          path: ../trunk-action
 
       - name: Checkout repo under test
         uses: actions/checkout@v3
@@ -41,4 +41,4 @@ jobs:
           repository: ${{ matrix.repo }}
 
       - name: Run trunk-action
-        uses: ./trunk-action/
+        uses: ./../trunk-action/
