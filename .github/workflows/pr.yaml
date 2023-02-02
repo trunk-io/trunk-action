@@ -27,18 +27,18 @@ jobs:
           - terraform-linters/tflint
 
     steps:
-      - name: Checkout action
-        uses: actions/checkout@v3
-        with:
-          path: asdf
-
       - name: Checkout repo under test
         uses: actions/checkout@v3
         with:
           repository: ${{ matrix.repo }}
 
+      - name: Checkout action
+        uses: actions/checkout@v3
+        with:
+          path: asdf
+
       - name: Dump trunk-action contents
-        run: ls -a
+        run: ls -a ./ asdf/
 
       - name: Run trunk-action
         uses: ./asdf/
