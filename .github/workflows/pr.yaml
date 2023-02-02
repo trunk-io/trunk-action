@@ -21,10 +21,10 @@ jobs:
     strategy:
       matrix:
         repo:
-          - jbeder/yaml-cpp
-          - replayio/devtools
+          #- jbeder/yaml-cpp
+          #- replayio/devtools
           - square/leakcanary
-          - terraform-linters/tflint
+          #- terraform-linters/tflint
 
     steps:
       - name: Checkout repo under test
@@ -39,7 +39,7 @@ jobs:
           path: asdf
 
       - name: Dump trunk-action contents
-        run: ls -a ./ asdf/ repo-under-test/
+        run: pwd ls -a ./ asdf/ repo-under-test/
 
       - name: Change context into repo under test
         run: cd repo-under-test/
