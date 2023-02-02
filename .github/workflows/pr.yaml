@@ -15,3 +15,28 @@ jobs:
 
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
+  test:
+    strategy:
+      matrix:
+        repo:
+          - jbeder/yaml-cpp
+          - replayio/devtools
+          - square/leakcanary
+          - terraform-linters/tflint
+    name: ${{ matrix.repo }}
+
+    steps:
+      - name: Checkout action
+        uses: actions/checkout@v3
+        with:
+          path: trunk-action
+
+      - name: Checkout repo under test
+        uses: actions/checkout@v3
+        with:
+          path: repo-under-test
+          repository: ${{ matrix.repo }}
+
+      - name: Run trunk-action
+        working-directory: repo-under-test
+        uses: trunk-action/
