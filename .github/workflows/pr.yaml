@@ -38,7 +38,7 @@ jobs:
           repository: ${{ matrix.repo }}
 
       - name: Dump trunk-action contents
-        run: ls ./../asdf/
+        run: ls -a
 
       - name: Run trunk-action
-        uses: ./../asdf/
+        uses: ./
