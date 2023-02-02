@@ -39,3 +39,5 @@ jobs:
 
       - name: Run trunk-action
         uses: ./local-action/
+        with:
+          check-mode: all
