@@ -16,6 +16,8 @@ jobs:
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
   test:
+    name: ${{ matrix.repo }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         repo:
@@ -23,20 +25,20 @@ jobs:
           - replayio/devtools
           - square/leakcanary
           - terraform-linters/tflint
-    name: ${{ matrix.repo }}
 
+    defaults:
+      run:
+        working-directory: ./repo-under-test
     steps:
       - name: Checkout action
         uses: actions/checkout@v3
         with:
-          path: trunk-action
+          path: ${{ github.workspace }}/trunk-action
 
       - name: Checkout repo under test
         uses: actions/checkout@v3
         with:
-          path: repo-under-test
           repository: ${{ matrix.repo }}
 
       - name: Run trunk-action
-        working-directory: repo-under-test
-        uses: trunk-action/
+        uses: ${{ github.workspace }}/trunk-action/
