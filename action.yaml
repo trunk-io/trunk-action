@@ -66,9 +66,18 @@ inputs:
     required: false
     default: "false"
 
+  qwerty:
+    description: testing
+    required: false
+    default: ${{ github.repository }}
+
 runs:
   using: composite
   steps:
+    - name: Dump qwerty
+      shell: bash
+      run: echo ${{ inputs.qwerty }}
+
     - name: Locate trunk
       shell: bash
       run: |
