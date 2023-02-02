@@ -77,6 +77,12 @@ runs:
       env:
         INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
 
+    - name: Init on-demand
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          ${TRUNK_PATH} init
+        fi
+
     - name: Determine check mode
       shell: bash
       run: |

@@ -35,13 +35,7 @@ jobs:
       - name: Checkout action
         uses: actions/checkout@v3
         with:
-          path: asdf
-
-      - name: pwd
-        run: pwd
-
-      - name: ls
-        run: ls -a ../ ./
+          path: local-action
 
       - name: Run trunk-action
-        uses: ./asdf/
+        uses: ./local-action/
