@@ -78,6 +78,7 @@ runs:
         INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
 
     - name: Init on-demand
+      shell: bash
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH} init
