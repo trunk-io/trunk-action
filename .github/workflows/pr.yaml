@@ -28,7 +28,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./repo-under-test
+        working-directory: repo-under-test
     steps:
       - name: Checkout action
         uses: actions/checkout@v3
