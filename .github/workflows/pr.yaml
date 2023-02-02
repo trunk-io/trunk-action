@@ -30,6 +30,7 @@ jobs:
       - name: Checkout repo under test
         uses: actions/checkout@v3
         with:
+          path: repo-under-test
           repository: ${{ matrix.repo }}
 
       - name: Checkout action
@@ -38,7 +39,10 @@ jobs:
           path: asdf
 
       - name: Dump trunk-action contents
-        run: ls -a ./ asdf/
+        run: ls -a ./ asdf/ repo-under-test/
+
+      - name: Change context into repo under test
+        run: cd repo-under-test/
 
       - name: Run trunk-action
-        uses: ./asdf/
+        uses: ./../asdf/
