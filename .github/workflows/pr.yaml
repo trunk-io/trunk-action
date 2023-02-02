@@ -41,4 +41,4 @@ jobs:
           repository: ${{ matrix.repo }}
 
       - name: Run trunk-action
-        uses: ${{ github.workspace }}/trunk-action/
+        uses: ./trunk-action/
