@@ -26,20 +26,11 @@ jobs:
           - square/leakcanary
           - terraform-linters/tflint
 
-    defaults:
-      run:
-        working-directory: repo-under-test
     steps:
-      - name: Checkout action
-        uses: actions/checkout@v3
-        with:
-          path: asdf
-
       - name: Checkout repo under test
         uses: actions/checkout@v3
         with:
           repository: ${{ matrix.repo }}
-          path: repo-under-test
 
       - name: Run trunk-action
-        uses: ./../asdf/
+        uses: trunk-io/trunk-action@${{ github.ref }}
