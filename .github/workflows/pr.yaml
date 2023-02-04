@@ -17,4 +17,4 @@ jobs:
         uses: ./ # external users, use: trunk-io/trunk-action@v1
 
   test:
-    uses: .github/workflows/test.yaml
+    uses: ./.github/workflows/test.yaml

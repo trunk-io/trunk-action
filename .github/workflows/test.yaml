@@ -1,0 +1,30 @@
+name: repo_tests
+on: [workflow_dispatch, workflow_call]
+
+jobs:
+  repo_test:
+    name: trunk-action in ${{ matrix.repo }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        repo:
+          - jbeder/yaml-cpp
+          - replayio/devtools
+          - square/leakcanary
+          - terraform-linters/tflint
+
+    steps:
+      - name: Checkout repo under test
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ matrix.repo }}
+
+      - name: Checkout action
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Run trunk-action
+        uses: ./local-action/
+        with:
+          check-mode: all
