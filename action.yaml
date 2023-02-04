@@ -84,7 +84,7 @@ runs:
           ${TRUNK_PATH} init
         fi
 
-    - name: Detect npm or yarn
+    - name: Detect npm/yarn/pnpm
       id: node_detect
       shell: bash
       run: |
@@ -94,11 +94,14 @@ runs:
         elif [ -e yarn.lock ]; then
           echo "package_manager=yarn" >> $GITHUB_OUTPUT
           echo "install_cmd=yarn install --frozen-lockfile" >> $GITHUB_OUTPUT
+        elif [ -e pnpm-lock.yaml ]; then
+          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
+          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
         fi
 
     - name: Install Node dependencies
-      uses: actions/setup-node@v3
       if: ${{ steps.node_detect.outputs.package_manager }}
+      uses: actions/setup-node@v3
       with:
         cache: ${{ steps.node_detect.outputs.package_manager }}
 
