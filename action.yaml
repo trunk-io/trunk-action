@@ -55,7 +55,7 @@ inputs:
     description:
       Save annotations as an artifact instead of posting them from this action. This is neccesary if
       your repository will be used with forks as they will will not have permissions to upload
-      annotations. By default forks will be autod-etected.
+      annotations. By default forks will be auto-detected.
     required: false
     default: auto
 
@@ -66,18 +66,9 @@ inputs:
     required: false
     default: "false"
 
-  qwerty:
-    description: testing
-    required: false
-    default: ${{ github.repository }}
-
 runs:
   using: composite
   steps:
-    - name: Dump qwerty
-      shell: bash
-      run: echo ${{ inputs.qwerty }}
-
     - name: Locate trunk
       shell: bash
       run: |
@@ -183,22 +174,24 @@ runs:
       with:
         # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
         script: |
-          var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+          let artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: ${{ github.event.workflow_run.id }},
           });
-          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+          let matchArtifact = artifacts.data.artifacts.filter((artifact) => {
             return artifact.name == "trunk-annotations"
           })[0];
-          var download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-          });
-          var fs = require('fs');
-          fs.writeFileSync('${{ env.TRUNK_TMPDIR }}/annotations.zip', Buffer.from(download.data));
+          if (matchArtifact) {
+            let download = await github.rest.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: matchArtifact.id,
+                archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync('${{ env.TRUNK_TMPDIR }}/annotations.zip', Buffer.from(download.data));
+          }
 
     - name: Unpack annotations artifact
       if: inputs.post-annotations == 'true'
