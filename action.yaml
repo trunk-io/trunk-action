@@ -98,12 +98,12 @@ runs:
 
     - name: Install Node dependencies
       uses: actions/setup-node@v3
-      if: ${{ steps.node_detect.outputs.pcakage_manager }}
+      if: ${{ steps.node_detect.outputs.package_manager }}
       with:
         cache: ${{ steps.node_detect.outputs.package_manager }}
 
     - name: Install ${{ steps.node_detect.outputs.package_manager }} packages
-      if: ${{ steps.node_detect.outputs.pcakage_manager }}
+      if: ${{ steps.node_detect.outputs.package_manager }}
       shell: bash
       run: ${{ steps.node_detect.outputs.install_cmd }}
 
