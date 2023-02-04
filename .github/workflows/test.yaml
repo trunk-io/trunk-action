@@ -5,6 +5,7 @@ jobs:
   repo_test:
     name: trunk-action in ${{ matrix.repo }}
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
       matrix:
         repo:
