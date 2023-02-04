@@ -105,6 +105,12 @@ runs:
       with:
         cache: ${{ steps.node_detect.outputs.package_manager }}
 
+    - name: Install pnpm
+      if: steps.node_detect.outputs.package_manager == 'pnpm'
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
     - name: Install ${{ steps.node_detect.outputs.package_manager }} packages
       if: ${{ steps.node_detect.outputs.package_manager }}
       shell: bash
