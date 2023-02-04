@@ -90,6 +90,7 @@ runs:
         cache: "yarn"
 
     - name: Install yarn dependencies
+      shell: bash
       run: yarn install
 
     - name: Determine check mode
