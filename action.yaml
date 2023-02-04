@@ -84,6 +84,9 @@ runs:
           ${TRUNK_PATH} init
         fi
 
+    - name: Install Node dependencies
+      uses: actions/setup-node@v3
+
     - name: Determine check mode
       shell: bash
       run: |
