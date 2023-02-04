@@ -86,6 +86,8 @@ runs:
 
     - name: Install Node dependencies
       uses: actions/setup-node@v3
+      with:
+        cache: "yarn"
 
     - name: Determine check mode
       shell: bash
