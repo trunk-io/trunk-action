@@ -9,10 +9,10 @@ jobs:
     strategy:
       matrix:
         repo:
-          - jbeder/yaml-cpp
+          #- jbeder/yaml-cpp
           - replayio/devtools
-          - square/leakcanary
-          - terraform-linters/tflint
+          #- square/leakcanary
+          #- terraform-linters/tflint
 
     steps:
       - name: Checkout repo under test

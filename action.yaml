@@ -89,6 +89,9 @@ runs:
       with:
         cache: "yarn"
 
+    - name: Install yarn dependencies
+      run: yarn install
+
     - name: Determine check mode
       shell: bash
       run: |
