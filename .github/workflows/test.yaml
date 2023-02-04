@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         repo:
-          #- jbeder/yaml-cpp
+          - jbeder/yaml-cpp
           - replayio/devtools
           #- square/leakcanary
           #- terraform-linters/tflint

@@ -84,14 +84,28 @@ runs:
           ${TRUNK_PATH} init
         fi
 
+    - name: Detect npm or yarn
+      id: node_detect
+      shell: bash
+      run: |
+        if [ -e package-lock.json ]; then
+          echo "package_manager=npm" >> $GITHUB_OUTPUT
+          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
+        elif [ -e yarn.lock ]; then
+          echo "package_manager=yarn" >> $GITHUB_OUTPUT
+          echo "install_cmd=yarn install --frozen-lockfile" >> $GITHUB_OUTPUT
+        fi
+
     - name: Install Node dependencies
       uses: actions/setup-node@v3
+      if: ${{ steps.node_detect.outputs.pcakage_manager }}
       with:
-        cache: "yarn"
+        cache: ${{ steps.node_detect.outputs.package_manager }}
 
-    - name: Install yarn dependencies
+    - name: Install ${{ steps.node_detect.outputs.package_manager }} packages
+      if: ${{ steps.node_detect.outputs.pcakage_manager }}
       shell: bash
-      run: yarn install
+      run: ${{ steps.node_detect.outputs.install_cmd }}
 
     - name: Determine check mode
       shell: bash
