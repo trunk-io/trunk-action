@@ -85,7 +85,7 @@ jobs:
         run: |
           import json, sys
 
-          landing_state = json.load(open('.trunk-landing-state.json'))
+          landing_state = json.load(open('.trunk/landing-state.json'))
           failure_count = len(landing_state.get("taskFailures", []))
 
           if failure_count == 0:
