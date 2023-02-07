@@ -38,6 +38,7 @@ fi
 
 "${TRUNK_PATH}" check \
   --ci \
+  --output-file ${TRUNK_TMPDIR}/landing_state.json \
   --upstream "${upstream}" \
   --github-commit "${GITHUB_EVENT_AFTER}" \
   ${INPUT_ARGUMENTS}

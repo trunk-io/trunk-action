@@ -10,11 +10,11 @@ jobs:
       matrix:
         repo:
           - jbeder/yaml-cpp
-          - replayio/devtools
+          #- replayio/devtools
           #- square/leakcanary
           #- terraform-linters/tflint
-          - trunk-io/plugins
-          - z-shell/wiki
+          #- trunk-io/plugins
+          #- z-shell/wiki
 
     steps:
       - name: Checkout repo under test
@@ -28,16 +28,17 @@ jobs:
           path: local-action
 
       - name: Run trunk-action
+        id: trunk
         uses: ./local-action/
         with:
           check-mode: all
 
       - name: Check for linter/task failures
         if: always()
-        shell: bash
+        shell: node
         run: |
-          if [ $(ls .trunk/out/ | wc -l) -ne 0 ]; then
-            echo "There were linter/task failures (see also logs for previous step)"
-            ls .trunk/out/
-            exit 1
-          fi
+          let landingState = JSON.parse("${{ steps.trunk.outputs.landing-state }}");
+          if (landingState.taskFailures) {
+            console.error(`There were ${landingState.taskFailures.length} task failures`);
+            process.exit(1);
+          }

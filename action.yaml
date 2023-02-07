@@ -68,6 +68,10 @@ inputs:
 
 runs:
   using: composite
+  outputs:
+    landing-state:
+      description: Trunk Check landing state
+      value: ${{ steps.dump_landing_state.outputs.landing_state }}
   steps:
     - name: Locate trunk
       shell: bash
@@ -192,6 +196,10 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+
+    - name: Record landing state in outputs
+      id: dump_landing_state
+      run: echo "landing_state=$(cat ${TRUNK_TMPDIR}/landing_state.json)" >> $GITHUB_OUTPUT
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
