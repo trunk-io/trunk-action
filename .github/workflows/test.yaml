@@ -11,7 +11,7 @@ jobs:
         repo:
           #- eslint/eslint
           #- facebook/jest
-          - freeCodeCamp/freeCodeCamp
+          #- freeCodeCamp/freeCodeCamp
           #- mochajs/mocha
           - pallets/flask
           - psf/black
