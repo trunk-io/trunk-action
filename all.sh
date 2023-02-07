@@ -4,6 +4,11 @@
 
 set -euo pipefail
 
+echo "cwd is $(pwd)"
+echo ".trunk/ contents are:"
+find .trunk
+
+echo "trunk check -a:"
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \
