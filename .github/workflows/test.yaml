@@ -36,8 +36,8 @@ jobs:
         if: always()
         shell: bash
         run: |
-          if [ -n $(ls .trunk/out/) ]; then
-            echo "Found linter/task failures"
+          if [ $(ls .trunk/out/ | wc -l) -ne 0 ]; then
+            echo "There were linter/task failures (see also logs for previous step)"
             ls .trunk/out/
             exit 1
           fi
