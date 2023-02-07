@@ -14,7 +14,7 @@ jobs:
           #- freeCodeCamp/freeCodeCamp
           #- mochajs/mocha
           - pallets/flask
-          - psf/black
+          #- psf/black
           - replayio/devtools
           - square/leakcanary
           - terraform-linters/tflint
