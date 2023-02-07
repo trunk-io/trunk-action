@@ -43,7 +43,7 @@ fi
 
 "${TRUNK_PATH}" check \
   --ci \
-  --output-file .trunk/out/landing_state.json \
+  --output-file .trunk/landing_state.json \
   --upstream "${upstream}" \
   --github-commit "${git_commit}" \
   --github-label "${INPUT_LABEL}" \

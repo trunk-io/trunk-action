@@ -8,13 +8,13 @@ if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \
     --all \
-    --output-file .trunk/out/landing_state.json \
+    --output-file .trunk/landing_state.json \
     --github-commit "${GITHUB_SHA}" \
     ${INPUT_ARGUMENTS}
 else
   "${TRUNK_PATH}" check \
     --all \
-    --output-file .trunk/out/landing_state.json \
+    --output-file .trunk/landing_state.json \
     --upload \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \

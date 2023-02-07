@@ -32,6 +32,7 @@ jobs:
         uses: ./local-action/
         with:
           check-mode: all
+        continue-on-error: true
 
       - name: Check for task failures
         if: always()
@@ -39,10 +40,11 @@ jobs:
         run: |
           import json, sys
 
-          landing_state = json.load(open('.trunk/out/landing_state.json'))
+          landing_state = json.load(open('.trunk/landing_state.json'))
           failure_count = len(landing_state.get("taskFailures", []))
 
           if failure_count == 0:
+            print("No task failures")
             sys.exit(0)
 
           if failure_count == 1:
