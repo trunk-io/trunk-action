@@ -16,6 +16,7 @@ jobs:
           - pallets/flask
           #- psf/black
           - replayio/devtools
+          - sheldonhull/sheldonhull.hugo
           - square/leakcanary
           - terraform-linters/tflint
           #- typescript-eslint/typescript-eslint
@@ -27,7 +28,7 @@ jobs:
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black prettier
-              sed -i "s|lint:|$(cat ${{ github.action_path }}/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
+              sed -i "s|lint:|$(cat local-action/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: jbeder/yaml-cpp
@@ -41,8 +42,13 @@ jobs:
               cd ..
               ln -s build/compile_commands.json
               sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
-              sed -i "s|lint:|$(cat ${{ github.action_path }}/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
+              sed -i "s|lint:|$(cat local-action/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
+
+          - repo: replayio/devtools
+            post-init: |
+              # Fails without this?!
+              touch .trunk/landing-state.json
 
           - repo: terraform-linters/tflint
             post-init: |
@@ -69,7 +75,7 @@ jobs:
         uses: ./local-action/
         with:
           check-mode: all
-          post-auto-init: ${{ matrix.post-init }}
+          post-init: ${{ matrix.post-init }}
         continue-on-error: true
 
       - name: Check for task failures

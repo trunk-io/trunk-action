@@ -38,8 +38,8 @@ inputs:
     required: false
     default: "true"
 
-  post-auto-init:
-    description: Steps to run after auto-init
+  post-init:
+    description: Steps to run after auto-init / before check
     required: false
 
   trunk-token:
@@ -120,10 +120,10 @@ runs:
       shell: bash
       run: ${{ steps.node_detect.outputs.install_cmd }}
 
-    - name: Post auto-init steps
-      if: inputs.post-auto-init
+    - name: Post-init steps
+      if: inputs.post-init
       shell: bash
-      run: ${{ inputs.post-auto-init }}
+      run: ${{ inputs.post-init }}
 
     - name: Determine check mode
       shell: bash
