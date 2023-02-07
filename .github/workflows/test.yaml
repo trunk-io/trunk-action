@@ -31,3 +31,12 @@ jobs:
         uses: ./local-action/
         with:
           check-mode: all
+
+      - name: Check for linter/task failures
+        if: always()
+        shell: bash
+        run: |
+          if [ -n $(ls .trunk/out/) ]; then
+            echo "Found linter/task failures"
+            exit 1
+          fi
