@@ -39,7 +39,7 @@ jobs:
         run: |
           import json, sys
 
-          landing_state_str = "${{ steps.trunk.outputs.landing-state }}"
+          landing_state_str = '${{ steps.trunk.outputs.landing-state }}'
 
           if landing_state_str:
             landing_state = json.loads(landing_state_str)
