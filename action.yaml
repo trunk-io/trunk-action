@@ -38,6 +38,10 @@ inputs:
     required: false
     default: "true"
 
+  post-auto-init:
+    description: Steps to run after auto-init
+    required: false
+
   trunk-token:
     description:
       You can find a per-repo API token in the Trunk web app settings. This will cause results to be
@@ -115,6 +119,11 @@ runs:
       if: steps.node_detect.outputs.package_manager
       shell: bash
       run: ${{ steps.node_detect.outputs.install_cmd }}
+
+    - name: Post auto-init steps
+      if: inputs.post-auto-init
+      shell: bash
+      run: ${{ inputs.post-auto-init }}
 
     - name: Determine check mode
       shell: bash

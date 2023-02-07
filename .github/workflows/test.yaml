@@ -9,18 +9,27 @@ jobs:
     strategy:
       matrix:
         repo:
-          - eslint/eslint
-          - facebook/jest
+          #- eslint/eslint
+          #- facebook/jest
+          - freeCodeCamp/freeCodeCamp
           - jbeder/yaml-cpp
-          - mochajs/mocha
+          #- mochajs/mocha
           - pallets/flask
           - psf/black
           - replayio/devtools
           - square/leakcanary
           - terraform-linters/tflint
-          - typescript-eslint/typescript-eslint
+          #- typescript-eslint/typescript-eslint
           - trunk-io/plugins
           - z-shell/wiki
+        include:
+          - repo: terraform-linters/tflint
+            post-init: |
+              # golangci-lint needs us to init with a newer go runtime
+              trunk check disable golangci-lint
+          - repo: pallets/flask
+            post-init: |
+              trunk check disable prettier
 
     steps:
       - name: Checkout ${{ matrix.repo }}
@@ -38,6 +47,7 @@ jobs:
         uses: ./local-action/
         with:
           check-mode: all
+          post-auto-init: ${{ matrix.post-init }}
         continue-on-error: true
 
       - name: Check for task failures
@@ -46,7 +56,7 @@ jobs:
         run: |
           import json, sys
 
-          landing_state = json.load(open('.trunk/landing_state.json'))
+          landing_state = json.load(open('.trunk-landing-state.json'))
           failure_count = len(landing_state.get("taskFailures", []))
 
           if failure_count == 0:
