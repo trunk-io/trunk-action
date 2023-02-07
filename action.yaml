@@ -199,6 +199,7 @@ runs:
 
     - name: Record landing state in outputs
       id: dump_landing_state
+      shell: bash
       run: echo "landing_state=$(cat ${TRUNK_TMPDIR}/landing_state.json)" >> $GITHUB_OUTPUT
 
     - name: Upload annotations artifact

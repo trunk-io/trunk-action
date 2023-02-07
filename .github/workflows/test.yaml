@@ -46,5 +46,5 @@ jobs:
             print(f'There was {failure_count} task failure')
           else:
             print(f'There were {failure_count} task failures`)
-          print('Failures can be viewed in the logs for the previous step')
+          print('Failures can be viewed in the logs for the previou step')
           sys.exit(1)
