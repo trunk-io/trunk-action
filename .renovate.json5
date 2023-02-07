@@ -1,0 +1,13 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: ["config:base"],
+  prConcurrentLimit: 3,
+  packageRules: [
+    {
+      groupName: "all non-major dependencies",
+      groupSlug: "all-minor-patch",
+      matchPackagePatterns: ["*"],
+      matchUpdateTypes: ["minor", "patch"]
+    }
+  ]
+}
