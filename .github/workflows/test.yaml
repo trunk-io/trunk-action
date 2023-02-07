@@ -10,11 +10,11 @@ jobs:
       matrix:
         repo:
           - jbeder/yaml-cpp
-          #- replayio/devtools
-          #- square/leakcanary
-          #- terraform-linters/tflint
-          #- trunk-io/plugins
-          #- z-shell/wiki
+          - replayio/devtools
+          - square/leakcanary
+          - terraform-linters/tflint
+          - trunk-io/plugins
+          - z-shell/wiki
 
     steps:
       - name: Checkout ${{ matrix.repo }}
