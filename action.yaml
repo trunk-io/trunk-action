@@ -66,12 +66,12 @@ inputs:
     required: false
     default: "false"
 
+outputs:
+  landing-state:
+    description: Trunk Check landing state
+    value: ${{ steps.dump_landing_state.outputs.landing_state }}
 runs:
   using: composite
-  outputs:
-    landing-state:
-      description: Trunk Check landing state
-      value: ${{ steps.dump_landing_state.outputs.landing_state }}
   steps:
     - name: Locate trunk
       shell: bash
