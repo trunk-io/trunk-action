@@ -3,7 +3,7 @@ on: [workflow_dispatch, workflow_call]
 
 jobs:
   repo_test:
-    name: trunk-action in ${{ matrix.repo }}
+    name: trunk-action in ${{ matrix.repo }} ${{ matrix.name }}
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -12,7 +12,6 @@ jobs:
           #- eslint/eslint
           #- facebook/jest
           - freeCodeCamp/freeCodeCamp
-          - jbeder/yaml-cpp
           #- mochajs/mocha
           - pallets/flask
           - psf/black
@@ -23,10 +22,33 @@ jobs:
           - trunk-io/plugins
           - z-shell/wiki
         include:
+          - repo: jbeder/yaml-cpp
+            name: (bazel)
+            post-init: |
+              # black complains about py2 code
+              trunk check disable black prettier
+              sed -i "s|lint:|$(cat ${{ github.action_path }}/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
+              trunk check enable clang-tidy
+
+          - repo: jbeder/yaml-cpp
+            name: (compile-commands.json)
+            post-init: |
+              # black complains about py2 code
+              trunk check disable black prettier
+              mkdir build
+              cd build
+              cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+              cd ..
+              ln -s build/compile_commands.json
+              sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
+              sed -i "s|lint:|$(cat ${{ github.action_path }}/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
+              trunk check enable clang-tidy
+
           - repo: terraform-linters/tflint
             post-init: |
               # golangci-lint needs us to init with a newer go runtime
               trunk check disable golangci-lint
+
           - repo: pallets/flask
             post-init: |
               trunk check disable prettier
