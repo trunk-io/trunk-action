@@ -9,10 +9,16 @@ jobs:
     strategy:
       matrix:
         repo:
+          - eslint/eslint
+          - facebook/jest
           - jbeder/yaml-cpp
+          - mochajs/mocha
+          - pallets/flask
+          - psf/black
           - replayio/devtools
           - square/leakcanary
           - terraform-linters/tflint
+          - typescript-eslint/typescript-eslint
           - trunk-io/plugins
           - z-shell/wiki
 
