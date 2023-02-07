@@ -19,7 +19,7 @@ echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream and HE
 
 "${TRUNK_PATH}" check \
   --ci \
-  --output-file ${TRUNK_TMPDIR}/landing_state.json \
+  --output-file .trunk/out/landing_state.json \
   --upstream "${upstream}" \
   --github-commit "${git_commit}" \
   ${INPUT_ARGUMENTS}

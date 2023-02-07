@@ -39,18 +39,15 @@ jobs:
         run: |
           import json, sys
 
-          landing_state_str = '${{ steps.trunk.outputs.landing-state }}'
+          landing_state = json.load(open('.trunk/out/landing_state.json'))
+          failure_count = len(landing_state.get("taskFailures", []))
 
-          if landing_state_str:
-            landing_state = json.loads(landing_state_str)
-            failure_count = len(landing_state.get("taskFailures", []))
+          if failure_count == 0:
+            sys.exit(0)
 
-            if failure_count == 0:
-              sys.exit(0)
-
-            if failure_count == 1:
-              print(f'There was {failure_count} task failure')
-            else:
-              print(f'There were {failure_count} task failures')
-            print('Failures can be viewed in the logs for the previous step')
-            sys.exit(1)
+          if failure_count == 1:
+            print(f'There was {failure_count} task failure')
+          else:
+            print(f'There were {failure_count} task failures')
+          print('Failures can be viewed in the logs for the previous step')
+          sys.exit(1)
