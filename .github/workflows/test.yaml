@@ -12,6 +12,7 @@ jobs:
           #- eslint/eslint
           #- facebook/jest
           #- freeCodeCamp/freeCodeCamp
+          - go-micro/go-micro
           #- mochajs/mocha
           - pallets/flask
           #- psf/black
@@ -28,7 +29,7 @@ jobs:
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black prettier
-              sed -i "s|lint:|$(cat local-action/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
+              sed -i "s/lint:/r local-action/repo_test/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: jbeder/yaml-cpp
@@ -42,7 +43,7 @@ jobs:
               cd ..
               ln -s build/compile_commands.json
               sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
-              sed -i "s|lint:|$(cat local-action/repo_test/yaml_cpp_ignores.yaml)|" .trunk/trunk.yaml
+              sed -i "s/lint:/r local-action/repo_test/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: replayio/devtools
