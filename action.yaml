@@ -199,8 +199,10 @@ runs:
 
     - name: Record landing state in outputs
       id: dump_landing_state
+      if: always()
       shell: bash
-      run: echo "landing_state=$(cat ${TRUNK_TMPDIR}/landing_state.json)" >> $GITHUB_OUTPUT
+      run: |
+        echo "landing_state=$(cat ${TRUNK_TMPDIR}/landing_state.json)" >> $GITHUB_OUTPUT
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
