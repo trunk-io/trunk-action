@@ -38,10 +38,13 @@ jobs:
         shell: python
         run: |
           import json, sys
+
           landing_state = json.loads("${{ steps.trunk.outputs.landing-state }}")
           failure_count = len(landing_state.get("taskFailures", []))
+
           if failure_count == 0:
-            return
+            sys.exit(0)
+
           if failure_count == 1:
             print(f'There was {failure_count} task failure')
           else:
