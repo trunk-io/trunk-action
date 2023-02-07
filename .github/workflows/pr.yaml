@@ -10,6 +10,8 @@ jobs:
   trunk_check:
     name: Trunk Check Runner
     runs-on: ubuntu-latest
+    permissions:
+      checks: write # For trunk to post annotations
 
     steps:
       - name: Checkout
