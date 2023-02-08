@@ -69,6 +69,9 @@ jobs:
 
           - repo: vuejs/core
             description: uses pnpm
+            post-init: |
+              # svgo gets confused by JS module loading
+              ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
             description: has trunk.yaml
