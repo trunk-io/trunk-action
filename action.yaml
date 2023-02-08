@@ -103,7 +103,7 @@ runs:
         elif [ -e pnpm-lock.yaml ]; then
           echo "package_manager=pnpm" >> $GITHUB_OUTPUT
           echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/pnpm-lock.json" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
         fi
 
     - name: Install pnpm

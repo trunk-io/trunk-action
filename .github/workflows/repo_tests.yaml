@@ -22,6 +22,7 @@ jobs:
           - terraform-linters/tflint
           #- typescript-eslint/typescript-eslint
           - trunk-io/plugins
+          - vuejs/core
           - z-shell/wiki
         include:
           - repo: jbeder/yaml-cpp
