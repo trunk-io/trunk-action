@@ -48,8 +48,7 @@ jobs:
 
           - repo: replayio/devtools
             post-init: |
-              # Fails without this?!
-              touch .trunk/landing-state.json
+              trunk upgrade
 
           - repo: terraform-linters/tflint
             post-init: |
