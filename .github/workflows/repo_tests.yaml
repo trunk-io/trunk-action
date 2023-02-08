@@ -1,0 +1,112 @@
+name: repo_tests
+on: [workflow_dispatch, workflow_call]
+
+jobs:
+  repo_tests:
+    name: trunk-action in ${{ matrix.repo }} ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        repo:
+          #- eslint/eslint
+          #- facebook/jest
+          #- freeCodeCamp/freeCodeCamp
+          - go-micro/go-micro
+          #- mochajs/mocha
+          - pallets/flask
+          #- psf/black
+          - replayio/devtools
+          - sheldonhull/sheldonhull.hugo
+          - square/leakcanary
+          - terraform-linters/tflint
+          #- typescript-eslint/typescript-eslint
+          - trunk-io/plugins
+          - z-shell/wiki
+        include:
+          - repo: jbeder/yaml-cpp
+            name: (bazel)
+            post-init: |
+              # black complains about py2 code
+              ${TRUNK_PATH} check disable black prettier
+              sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
+              ${TRUNK_PATH} check enable clang-tidy
+
+          - repo: jbeder/yaml-cpp
+            name: (compile-commands.json)
+            post-init: |
+              # black complains about py2 code
+              ${TRUNK_PATH} check disable black prettier
+              mkdir build
+              cd build
+              cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+              cd ..
+              ln -s build/compile_commands.json
+              sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
+              sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
+              ${TRUNK_PATH} check enable clang-tidy
+
+          - repo: replayio/devtools
+            post-init: |
+              # replay is on a very old version
+              trunk upgrade
+
+          - repo: terraform-linters/tflint
+            post-init: |
+              # golangci-lint needs us to init with a newer go runtime
+              ${TRUNK_PATH} check disable golangci-lint
+
+          - repo: pallets/flask
+            post-init: |
+              ${TRUNK_PATH} check disable prettier
+
+    steps:
+      - name: Checkout ${{ matrix.repo }}
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ matrix.repo }}
+
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Run trunk-action in ${{ matrix.repo }}
+        id: trunk
+        uses: ./local-action/
+        with:
+          check-mode: all
+          post-init: ${{ matrix.post-init }}
+        continue-on-error: true
+
+      - name: Check for task failures
+        if: always()
+        shell: python
+        run: |
+          import json, pprint, sys
+
+          landing_state = json.load(open('.trunk/landing-state.json'))
+          lint_action_count = len(landing_state.get("lintActions", []))
+          failure_count = len(landing_state.get("taskFailures", []))
+
+          print("::group::.trunk/trunk.yaml")
+          print(open(".trunk/trunk.yaml").read())
+          print("::endgroup::")
+          print("::group::Landing state")
+          pprint.pprint(landing_state, indent=2)
+          print("::endgroup::")
+
+          if lint_action_count == 0:
+            print("No lint actions were run - something went wrong.")
+            sys.exit(1)
+
+          if failure_count == 0:
+            print("No task failures")
+            sys.exit(0)
+
+          if failure_count == 1:
+            print(f'There was {failure_count} task failure')
+          else:
+            print(f'There were {failure_count} task failures')
+          print('Failures can be viewed in the logs for the previous step')
+          sys.exit(1)
