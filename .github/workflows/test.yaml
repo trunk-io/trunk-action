@@ -30,8 +30,6 @@ jobs:
               # black complains about py2 code
               ${TRUNK_PATH} check disable black prettier
               sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
-              echo "dumping trunk.yaml"
-              cat .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: jbeder/yaml-cpp
@@ -46,8 +44,6 @@ jobs:
               ln -s build/compile_commands.json
               sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
               sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
-              echo "dumping trunk.yaml"
-              cat .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: replayio/devtools
@@ -87,14 +83,16 @@ jobs:
         if: always()
         shell: python
         run: |
-          import json, sys
+          import json, pprint, sys
 
           landing_state = json.load(open('.trunk/landing-state.json'))
           lint_action_count = len(landing_state.get("lintActions", []))
           failure_count = len(landing_state.get("taskFailures", []))
 
-          print("::group:: Landing state")
-          import pprint
+          print("::group::.trunk/trunk.yaml")
+          print(open('.trunk/trunk.yaml).read())
+          print("::endgroup::")
+          print("::group::Landing state")
           pprint.pprint(landing_state, indent=2)
           print("::endgroup::")
 
