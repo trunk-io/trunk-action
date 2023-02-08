@@ -16,22 +16,8 @@ jobs:
         #- psf/black
         #- typescript-eslint/typescript-eslint
         include:
-          - repo: facebook/react-native-website
+          - repo: electron/website
             description: uses yarn
-
-          - repo: facebook/relay
-            description: uses yarn
-
-          - repo: go-micro/go-micro
-            description: has trunk.yaml
-
-          - repo: jbeder/yaml-cpp
-            description: bazel
-            post-init: |
-              # black complains about py2 code
-              ${TRUNK_PATH} check disable black
-              cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
-              ${TRUNK_PATH} check enable clang-tidy
 
           - repo: jbeder/yaml-cpp
             description: compile-commands.json
@@ -63,8 +49,6 @@ jobs:
 
           - repo: sheldonhull/sheldonhull.hugo
             description: has trunk.yaml
-
-          - repo: square/leakcanary
 
           - repo: terraform-linters/tflint
             post-init: |
