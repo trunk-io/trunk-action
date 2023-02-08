@@ -16,6 +16,12 @@ jobs:
         #- psf/black
         #- typescript-eslint/typescript-eslint
         include:
+          - repo: facebook/react-native-website
+            description: uses yarn
+
+          - repo: facebook/relay
+            description: uses yarn
+
           - repo: go-micro/go-micro
             description: has trunk.yaml
 
