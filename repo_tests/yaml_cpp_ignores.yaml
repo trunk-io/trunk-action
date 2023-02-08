@@ -1,0 +1,9 @@
+lint:
+  ignore:
+    - linters: [clang-tidy]
+      paths:
+        - test/**
+        - util/read.cpp
+        - util/api.cpp
+        - util/parse.cpp
+        - util/sandbox.cpp

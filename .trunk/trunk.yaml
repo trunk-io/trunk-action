@@ -15,6 +15,10 @@ lint:
     - prettier@2.8.3
     - shellcheck@0.9.0
     - shfmt@3.5.0
+  ignore:
+    - linters: [ALL]
+      paths:
+        - repo_tests/**
 runtimes:
   enabled:
     - go@1.18.3
