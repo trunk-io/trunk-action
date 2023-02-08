@@ -1,4 +1,3 @@
-lint:
   ignore:
     - linters: [clang-tidy]
       paths:
@@ -7,3 +6,6 @@ lint:
         - util/api.cpp
         - util/parse.cpp
         - util/sandbox.cpp
+    - linters: [prettier]
+      paths:
+        - test/**
