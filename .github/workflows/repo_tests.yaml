@@ -16,11 +16,8 @@ jobs:
         #- psf/black
         #- typescript-eslint/typescript-eslint
         include:
-          - repo: electron/website
-            description: uses yarn
-
           - repo: jbeder/yaml-cpp
-            description: compile-commands.json
+            description: (compile-commands.json)
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black
@@ -33,22 +30,28 @@ jobs:
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
+          - repo: mastodon/joinmastodon
+            description: (uses pnpm)
+
           - repo: pallets/flask
             post-init: |
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
-            description: uses pnpm
+            description: (uses pnpm)
 
           - repo: replayio/devtools
-            description: has trunk.yaml
+            description: (has trunk.yaml)
             post-init: |
               # replay is on a very old version
               ${TRUNK_PATH} upgrade
             trunk-path: node_modules/.bin/trunk
 
           - repo: sheldonhull/sheldonhull.hugo
-            description: has trunk.yaml
+            description: (has trunk.yaml)
+
+          - repo: shopify/draggable
+            description: (uses yarn)
 
           - repo: terraform-linters/tflint
             post-init: |
@@ -58,13 +61,13 @@ jobs:
           - repo: trunk-io/plugins
 
           - repo: vuejs/core
-            description: uses pnpm
+            description: (uses pnpm)
             post-init: |
               # svgo gets confused by JS module loading
               ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
-            description: has trunk.yaml
+            description: (has trunk.yaml)
 
     steps:
       - name: Checkout ${{ matrix.repo }}
