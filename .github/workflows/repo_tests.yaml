@@ -8,13 +8,13 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        repo:
-          #- eslint/eslint
-          #- facebook/jest
-          #- freeCodeCamp/freeCodeCamp
-          #- mochajs/mocha
-          #- psf/black
-          #- typescript-eslint/typescript-eslint
+        #repo:
+        #- eslint/eslint
+        #- facebook/jest
+        #- freeCodeCamp/freeCodeCamp
+        #- mochajs/mocha
+        #- psf/black
+        #- typescript-eslint/typescript-eslint
         include:
           - repo: go-micro/go-micro
             description: has trunk.yaml
