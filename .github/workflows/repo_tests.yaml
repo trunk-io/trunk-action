@@ -3,7 +3,7 @@ on: [workflow_dispatch, workflow_call]
 
 jobs:
   repo_tests:
-    name: ${{ matrix.repo }} (${{ matrix.description }})
+    name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
