@@ -3,7 +3,7 @@ on: [workflow_dispatch, workflow_call]
 
 jobs:
   repo_tests:
-    name: ${{ matrix.repo }} ${{ matrix.name }}
+    name: ${{ matrix.repo }} (${{ matrix.description }})
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -12,21 +12,15 @@ jobs:
           #- eslint/eslint
           #- facebook/jest
           #- freeCodeCamp/freeCodeCamp
-          - go-micro/go-micro
           #- mochajs/mocha
-          - pallets/flask
           #- psf/black
-          - replayio/devtools
-          - sheldonhull/sheldonhull.hugo
-          - square/leakcanary
-          - terraform-linters/tflint
           #- typescript-eslint/typescript-eslint
-          - trunk-io/plugins
-          - vuejs/core
-          - z-shell/wiki
         include:
+          - repo: go-micro/go-micro
+            description: has trunk.yaml
+
           - repo: jbeder/yaml-cpp
-            name: (bazel)
+            description: bazel
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black
@@ -34,7 +28,7 @@ jobs:
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: jbeder/yaml-cpp
-            name: (compile-commands.json)
+            description: compile-commands.json
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black
@@ -47,20 +41,37 @@ jobs:
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
+          - repo: pallets/flask
+            post-init: |
+              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+
+          - repo: postcss/postcss
+            description: uses pnpm
+
           - repo: replayio/devtools
+            description: has trunk.yaml
             post-init: |
               # replay is on a very old version
               ${TRUNK_PATH} upgrade
             trunk-path: node_modules/.bin/trunk
+
+          - repo: sheldonhull/sheldonhull.hugo
+            description: has trunk.yaml
+
+          - repo: square/leakcanary
 
           - repo: terraform-linters/tflint
             post-init: |
               # golangci-lint needs us to init with a newer go runtime
               ${TRUNK_PATH} check disable golangci-lint
 
-          - repo: pallets/flask
-            post-init: |
-              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+          - repo: trunk-io/plugins
+
+          - repo: vuejs/core
+            description: uses pnpm
+
+          - repo: z-shell/wiki
+            description: has trunk.yaml
 
     steps:
       - name: Checkout ${{ matrix.repo }}
@@ -88,7 +99,7 @@ jobs:
           import json, os, sys
 
           matrix_repo = '${{ matrix.repo }}'
-          matrix_name = '${{ matrix.name }}'
+          matrix_description = '${{ matrix.description }}'
 
           landing_state = json.load(open('.trunk/landing-state.json'))
           lint_action_count = len(landing_state.get("lintActions", []))
@@ -100,7 +111,7 @@ jobs:
 
           with open(os.environ['GITHUB_ENV'], 'a') as env:
             env.write('landing_state_artifact_name=')
-            env.write(f'{matrix_repo.replace("/", " ")} {matrix_name}')
+            env.write(f'{matrix_repo.replace("/", " ")} ({matrix_description})')
             env.write('\n')
 
           print(f'lint_action_count={lint_action_count}')
