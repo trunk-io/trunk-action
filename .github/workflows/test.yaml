@@ -86,7 +86,17 @@ jobs:
           import json, sys
 
           landing_state = json.load(open('.trunk/landing-state.json'))
+          lint_action_count = len(landing_state.get("lintActions", []))
           failure_count = len(landing_state.get("taskFailures", []))
+
+          print("::group:: Landing state")
+          import pprint
+          pprint.pprint(landing_state, indent=2)
+          print("::endgroup::")
+
+          if lint_action_count == 0:
+            print("No lint actions were run - something went wrong.")
+            sys.exit(1)
 
           if failure_count == 0:
             print("No task failures")

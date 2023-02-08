@@ -21,4 +21,5 @@ jobs:
         uses: ./ # external users, use: trunk-io/trunk-action@v1
 
   test:
+    name: Repository tests
     uses: ./.github/workflows/test.yaml
