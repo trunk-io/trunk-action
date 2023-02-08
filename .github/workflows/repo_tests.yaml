@@ -82,16 +82,13 @@ jobs:
           post-init: ${{ matrix.post-init }}
         continue-on-error: true
 
-      - name: Upload landing state
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.repo }} ${{ matrix.name }} landing state
-          path: .trunk/landing-state.json
-
       - name: Check for task failures
         shell: python
         run: |
-          import json, pprint, sys
+          import json, os, sys
+
+          matrix_repo = '${{ matrix.repo }}'
+          matrix_name = '${{ matrix.name }}'
 
           landing_state = json.load(open('.trunk/landing-state.json'))
           lint_action_count = len(landing_state.get("lintActions", []))
@@ -100,6 +97,11 @@ jobs:
           print("::group::.trunk/trunk.yaml")
           print(open(".trunk/trunk.yaml").read())
           print("::endgroup::")
+
+          with open(os.environ['GITHUB_ENV'], 'a') as env:
+            env.write('landing_state_artifact_name=')
+            env.write(f'{matrix_repo.replace("/", " ")} {matrix_name}')
+            env.write('\n')
 
           print(f'lint_action_count={lint_action_count}')
           print(f'task_failure_count={task_failure_count}')
@@ -113,3 +115,9 @@ jobs:
             sys.exit(1)
 
           print("No task failures!")
+
+      - name: Upload landing state
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.landing_state_artifact_name }} landing state
+          path: .trunk/landing-state.json
