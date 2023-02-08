@@ -89,7 +89,7 @@ runs:
         fi
 
     - name: Setup npm/yarn/pnpm
-      uses: ./setup_node/
+      uses: ${{ github.action_path }}/setup_node/
 
     - name: Post-init steps
       if: inputs.post-init
