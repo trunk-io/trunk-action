@@ -88,37 +88,8 @@ runs:
           ${TRUNK_PATH} init
         fi
 
-    - name: Detect npm/yarn/pnpm
-      id: node_detect
-      shell: bash
-      run: |
-        if [ -e package-lock.json ]; then
-          echo "package_manager=npm" >> $GITHUB_OUTPUT
-          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
-        elif [ -e yarn.lock ]; then
-          echo "package_manager=yarn" >> $GITHUB_OUTPUT
-          echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
-        elif [ -e pnpm-lock.yaml ]; then
-          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
-          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
-        fi
-
-    - name: Install pnpm
-      if: steps.node_detect.outputs.package_manager == 'pnpm'
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
-
-    - name: Install Node dependencies
-      if: steps.node_detect.outputs.package_manager
-      uses: actions/setup-node@v3
-      with:
-        cache: ${{ steps.node_detect.outputs.package_manager }}
-
-    - name: Install ${{ steps.node_detect.outputs.package_manager }} packages
-      if: steps.node_detect.outputs.package_manager
-      shell: bash
-      run: ${{ steps.node_detect.outputs.install_cmd }}
+    - name: Setup npm/yarn/pnpm
+      uses: ./setup_node/
 
     - name: Post-init steps
       if: inputs.post-init
