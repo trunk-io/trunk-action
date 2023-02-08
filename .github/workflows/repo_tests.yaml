@@ -29,7 +29,7 @@ jobs:
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black
-              sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
+              cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: jbeder/yaml-cpp
@@ -43,7 +43,7 @@ jobs:
               cd ..
               ln -s build/compile_commands.json
               sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
-              sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
+              cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: replayio/devtools
@@ -59,8 +59,7 @@ jobs:
 
           - repo: pallets/flask
             post-init: |
-              echo "prettier may fail"
-              #${TRUNK_PATH} check disable prettier
+              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
     steps:
       - name: Checkout ${{ matrix.repo }}
