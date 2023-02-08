@@ -28,7 +28,7 @@ jobs:
             name: (bazel)
             post-init: |
               # black complains about py2 code
-              ${TRUNK_PATH} check disable black prettier
+              ${TRUNK_PATH} check disable black
               sed -i "/lint:/r local-action/repo_tests/yaml_cpp_ignores.yaml" .trunk/trunk.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
@@ -36,7 +36,7 @@ jobs:
             name: (compile-commands.json)
             post-init: |
               # black complains about py2 code
-              ${TRUNK_PATH} check disable black prettier
+              ${TRUNK_PATH} check disable black
               mkdir build
               cd build
               cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -59,7 +59,8 @@ jobs:
 
           - repo: pallets/flask
             post-init: |
-              ${TRUNK_PATH} check disable prettier
+              echo "prettier may fail"
+              #${TRUNK_PATH} check disable prettier
 
     steps:
       - name: Checkout ${{ matrix.repo }}
