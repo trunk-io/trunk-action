@@ -3,7 +3,7 @@ on: [workflow_dispatch, workflow_call]
 
 jobs:
   repo_tests:
-    name: trunk-action in ${{ matrix.repo }} ${{ matrix.name }}
+    name: ${{ matrix.repo }} ${{ matrix.name }}
     runs-on: ubuntu-latest
     continue-on-error: true
     strategy:
@@ -49,7 +49,6 @@ jobs:
           - repo: replayio/devtools
             post-init: |
               # replay is on a very old version
-              #yarn upgrade @trunkio/launcher
               ${TRUNK_PATH} upgrade
             trunk-path: node_modules/.bin/trunk
 
@@ -82,34 +81,34 @@ jobs:
           post-init: ${{ matrix.post-init }}
         continue-on-error: true
 
+      - name: Upload landing state
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.repo }} ${{ matrix.name }} landing state
+          path: .trunk/landing-state.json
+
       - name: Check for task failures
-        if: always()
         shell: python
         run: |
           import json, pprint, sys
 
           landing_state = json.load(open('.trunk/landing-state.json'))
           lint_action_count = len(landing_state.get("lintActions", []))
-          failure_count = len(landing_state.get("taskFailures", []))
+          task_failure_count = len(landing_state.get("taskFailures", []))
 
           print("::group::.trunk/trunk.yaml")
           print(open(".trunk/trunk.yaml").read())
           print("::endgroup::")
-          print("::group::Landing state")
-          pprint.pprint(landing_state, indent=2)
-          print("::endgroup::")
+
+          print(f'lint_action_count={lint_action_count}')
+          print(f'task_failure_count={task_failure_count}')
 
           if lint_action_count == 0:
             print("No lint actions were run - something went wrong.")
             sys.exit(1)
 
-          if failure_count == 0:
-            print("No task failures")
-            sys.exit(0)
+          if task_failure_count > 0:
+            print('Failures can be viewed in the logs for the previous step')
+            sys.exit(1)
 
-          if failure_count == 1:
-            print(f'There was {failure_count} task failure')
-          else:
-            print(f'There were {failure_count} task failures')
-          print('Failures can be viewed in the logs for the previous step')
-          sys.exit(1)
+          print("No task failures!")
