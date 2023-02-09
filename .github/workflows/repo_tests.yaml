@@ -16,6 +16,11 @@ jobs:
         #- psf/black
         #- typescript-eslint/typescript-eslint
         include:
+          - repo: highlightjs/highlight.js
+            description: (uses npm)
+            post-init: |
+              cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
+
           - repo: jbeder/yaml-cpp
             description: (compile-commands.json)
             post-init: |
@@ -30,15 +35,14 @@ jobs:
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
-          - repo: mastodon/joinmastodon
-            description: (uses pnpm)
-
           - repo: pallets/flask
             post-init: |
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
             description: (uses pnpm)
+            post-init: |
+              ${TRUNK_PATH} check enable eslint
 
           - repo: replayio/devtools
             description: (has trunk.yaml)
@@ -46,6 +50,9 @@ jobs:
               # replay is on a very old version
               ${TRUNK_PATH} upgrade
             trunk-path: node_modules/.bin/trunk
+
+          - repo: sass/sass
+            description: (uses npm)
 
           - repo: sheldonhull/sheldonhull.hugo
             description: (has trunk.yaml)
