@@ -8,14 +8,18 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        #repo:
-        #- eslint/eslint
-        #- facebook/jest
-        #- freeCodeCamp/freeCodeCamp
-        #- mochajs/mocha
-        #- psf/black
-        #- typescript-eslint/typescript-eslint
         include:
+          # Items in this list satisfy a few criteria:
+          #
+          #   * test has to be useful/interesting and add value atop the monorepo tests for
+          #     trunk init
+          #
+          #   * the repo has to exercise some functionality specific to action.yaml (e.g. our
+          #     custom Node functionality for npm/yarn/pnpm)
+          #
+          #   * the repo and its dependency closure should be fast to set up, since we trigger
+          #     this workflow on PRs
+          #
           - repo: highlightjs/highlight.js
             description: (uses npm)
             post-init: |
