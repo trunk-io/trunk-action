@@ -3,7 +3,7 @@
 [![Trunk.io](https://user-images.githubusercontent.com/3904462/199616921-7861e331-c774-43bf-8c17-1ecd27d0a750.png)](https://trunk.io)
 
 [![docs](https://img.shields.io/badge/-docs-darkgreen?logo=readthedocs&logoColor=ffffff)][docs]
-[![vscode](https://img.shields.io/visual-studio-marketplace/i/trunk.io?color=0078d7&label=VS%20Code&logo=visualstudiocode)][vscode]
+[![vscode](https://img.shields.io/visual-studio-marketplace/i/trunk.io?color=0078d7&label=vscode&logo=visualstudiocode)][vscode]
 [![slack](https://img.shields.io/badge/-slack-611f69?logo=slack)][slack]
 [![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
 
