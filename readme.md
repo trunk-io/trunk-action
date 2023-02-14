@@ -1,31 +1,19 @@
-<!-- trunk-ignore(markdownlint/MD041) -->
-<p align="center">
-  <a href="https://docs.trunk.io">
-    <img height="300" src="https://user-images.githubusercontent.com/3904462/199616921-7861e331-c774-43bf-8c17-1ecd27d0a750.png" />
-  </a>
-</p>
-<h2 align="center">Trunk GitHub Action</h2>
-<p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=Trunk.io">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/Trunk.io?logo=visualstudiocode"/>
-  </a>
-  <a href="https://slack.trunk.io">
-    <img src="https://img.shields.io/badge/slack-slack.trunk.io-blue?logo=slack"/>
-  </a>
-  <a href="https://docs.trunk.io">
-    <img src="https://img.shields.io/badge/docs.trunk.io-7f7fcc?label=docs&logo=readthedocs&labelColor=555555&logoColor=ffffff"/>
-  </a>
-  <a href="https://trunk.io">
-    <img src="https://img.shields.io/badge/trunk.io-enabled-brightgreen?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIxMSIgdmlld0JveD0iMCAwIDEwMSAxMDEiPjxwYXRoIGQ9Ik01MC41IDk1LjVhNDUgNDUgMCAxIDAtNDUtNDVtNDUtMzBhMzAgMzAgMCAwIDAtMzAgMzBtNDUgMGExNSAxNSAwIDAgMC0zMCAwIi8+PC9zdmc+"/>
-  </a>
-  <a href="https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action">
-    <img src="https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge"/>
-  </a>
-</p>
+<!-- markdownlint-disable first-line-heading -->
 
-This action runs and shows inline annotations of found by [`trunk check`](https://trunk.io), a
-powerful meta linter and formatter. Trunk runs hermetically, _locally_ or on CI, so you can always
-quickly see lint issues _before_ pushing your changes.
+[![Trunk.io](https://user-images.githubusercontent.com/3904462/199616921-7861e331-c774-43bf-8c17-1ecd27d0a750.png)](https://trunk.io)
+
+[![docs](https://img.shields.io/badge/-docs-darkgreen?logo=readthedocs&logoColor=ffffff)][docs]
+[![vscode](https://img.shields.io/visual-studio-marketplace/i/trunk.io?color=0078d7&label=VS%20Code&logo=visualstudiocode)][vscode]
+[![slack](https://img.shields.io/badge/-slack-611f69?logo=slack)][slack]
+[![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
+
+# Trunk.io GitHub Action
+
+This action runs and shows inline annotations of issues found by
+[`trunk check`](https://docs.trunk.io/docs/check), a powerful meta linter and formatter. Trunk runs
+hermetically, _locally_ or on CI, so you can always quickly see lint, formatting, and security
+issues _before_ pushing your changes. See all supported linters
+[here](https://github.com/trunk-io/plugins).
 
 ## Get Started
 
@@ -35,9 +23,8 @@ stores all the configuration for Trunk. All linters and formatters, as well as t
 itself, are versioned in `trunk.yaml`, so you're guarnateed to get the same results whether you're
 running locally or on CI.
 
-Check out the Trunk [CLI](https://docs.trunk.io) and
-[VS Code extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) to start using
-Trunk locally.
+Check out the Trunk [CLI](https://docs.trunk.io/docs/overview) and [VS Code extension][vscode] to
+start using Trunk locally.
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
 2. Setup Trunk in your repo → `trunk init`
@@ -77,7 +64,7 @@ Here's some GitHub docs to get you going:
 
 ### Caching
 
-Caching is on by default: Trunk will cache linters/formatters via `actions/cache@v2`. This is great
+Caching is on by default: Trunk will cache linters/formatters via `actions/cache@v3`. This is great
 if you are using GitHub-hosted ephemeral runners.
 
 If you are using long-lived self-hosted runners you should disable caching by passing `cache: false`
@@ -85,20 +72,17 @@ as so:
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1
+  uses: trunk-io/trunk-action@v3
   with:
     cache: false
 ```
 
-Note: Previous versions of the Trunk GitHub Action did _not_ include caching. If you were previously
-using `actions/cache@v2` to cache Trunk, please remove it from your workflow.
+### Getting inline annotations for fork PRs
 
-### Supporting inline annotations for fork PRs
-
-Create a _new GitHub workflow_ to post annotations from fork PRs. This workflow needs to be merged
-into your main branch before fork PRs will see annotations. It's important that the name of the
-workflow in the workflow_runs section (here "Pull Request") matches the workflow which runs trunk
-check:
+Create an additional _new GitHub workflow_ to post annotations from fork PRs. This workflow needs to
+be merged into your main branch before fork PRs will see annotations. It's important that the name
+of the workflow in the workflow_runs section (here "Pull Request") matches the workflow which runs
+trunk check:
 
 ```yaml
 name: Annotate PR with trunk issues
@@ -123,68 +107,14 @@ jobs:
           post-annotations: true # only for fork PRs
 ```
 
-For
-[security reasons](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/),
-it isn't possible to post annotations to GitHub when Trunk Check is running on a fork. The Trunk
-Action auto-detects this situation and uploads its results as an artifact instead of trying to post
-them. Creating the new github workflow above downloads this artifact and posts the annotations.
+This setup is necessitated by GitHub for
+[security reasons](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/).
+The Trunk Action auto-detects this situation and uploads its results as an artifact instead of
+trying to post them. Creating the new github workflow above downloads this artifact and posts the
+annotations.
 
 This also works if you use both fork and non-fork PRs in your repo. In that case, non-fork PRs post
 annotations in the regular manner, and fork PRs post annotations via the above workflow.
-
-## Linters
-
-We integrate new linters every release. If you have suggestions for us, please request it
-[here](https://features.trunk.io/check) or stop by in our [Slack](https://slack.trunk.io/) - we
-always love hearing from our users!
-
-We currently support the following linters (always-up-to-date list
-[here](https://docs.trunk.io/docs/check-supported-linters)):
-
-| Language                           | Linters                                                                                                                                                                     |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| All                                | `codespell`, `cspell`, `gitleaks`, `git-diff-check`                                                                                                                         |
-| Ansible                            | `ansible-lint`                                                                                                                                                              |
-| Bash                               | `shellcheck`, `shfmt`                                                                                                                                                       |
-| Bazel, Starlark                    | `buildifier`                                                                                                                                                                |
-| C, C++, Protobuf                   | `clang-format`, `clang-tidy`, `include-what-you-use`                                                                                                                        |
-| Cloudformation                     | `cfnlint`                                                                                                                                                                   |
-| CSS, SCSS                          | `stylelint`                                                                                                                                                                 |
-| Cue                                | `cue-fmt`                                                                                                                                                                   |
-| Docker                             | `hadolint`                                                                                                                                                                  |
-| Dotenv                             | `dotenv-linter`                                                                                                                                                             |
-| GitHub                             | `actionlint`                                                                                                                                                                |
-| Go                                 | `gofmt`, `golangci-lint`, `semgrep`, `goimports`                                                                                                                            |
-| HAML                               | `haml-lint`                                                                                                                                                                 |
-| Java                               | `semgrep`                                                                                                                                                                   |
-| JavaScript, TypeScript, YAML, JSON | `eslint`, `prettier`, `semgrep`                                                                                                                                             |
-| Kotlin                             | `detekt`<sup><a href="#note-detekt">1</a></sup>, `detekt-explicit`<sup><a href="#note-detekt">1</a></sup>, `detekt-gradle`<sup><a href="#note-detekt">1</a></sup>, `ktlint` |
-| Markdown                           | `markdownlint`                                                                                                                                                              |
-| Protobuf                           | `buf-breaking`, `buf-lint`                                                                                                                                                  |
-| Python                             | `autopep8`, `bandit`, `black`, `flake8`, `isort`, `mypy`, `pylint`, `semgrep`, `yapf`                                                                                       |
-| Ruby                               | `brakeman`, `rubocop`, `rufo`, `semgrep`, `standardrb`                                                                                                                      |
-| Rust                               | `clippy`, `rustfmt`                                                                                                                                                         |
-| Scala                              | `scalafmt`                                                                                                                                                                  |
-| SQL                                | `sql-formatter`, `sqlfluff`                                                                                                                                                 |
-| SVG                                | `svgo`                                                                                                                                                                      |
-| Terraform                          | `terraform` (`validate` and `fmt`), `tflint`<sup><a href="#note-tflint">2</a></sup>                                                                                         |
-| TOML                               | `taplo`                                                                                                                                                                     |
-| YAML                               | `prettier`, `semgrep`, `yamllint`                                                                                                                                           |
-
-<sup><ol>
-
-<li><a aria-hidden="true" tabindex="-1" class="customAnchor" id="note-detekt"></a>
-Support for Detekt is under active development; see <a href="#detekt">its docs</a> for more
-details.
-</li>
-
-<li><a aria-hidden="true" tabindex="-1" class="customAnchor" id="note-tflint"></a>
-<a href="https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/module-inspection.md">Module inspection</a>, <a href="https://github.com/terraform-linters/tflint-ruleset-aws/blob/master/docs/deep_checking.md">deep Checking</a>, and setting variables are not currently supported.
-</li>
-
-</ol></sup>
-
-<br/>
 
 ## Trunk versioning
 
@@ -281,4 +211,8 @@ are currently supported. "Rebase and merge" does not yet work correctly.
 
 ## Feedback
 
-Join the [Trunk Community Slack](https://slack.trunk.io). ❤️
+Join the [Trunk Community Slack][slack]. ❤️
+
+[slack]: https://slack.trunk.io
+[docs]: https://docs.trunk.io
+[vscode]: https://marketplace.visualstudio.com/items?itemName=Trunk.io

@@ -1,19 +1,18 @@
-name: Trunk Check PR Annotation
+name: Cache Trunk
 
 on:
-  workflow_run:
-    workflows: [Pull Request]
-    types:
-      - completed
+  push:
+    branches: [main]
+    paths: [.trunk/trunk.yaml]
 
 permissions: read-all
 
 jobs:
-  trunk_check_annotate_pr:
-    name: Trunk Check PR Annotation
+  cache_trunk:
+    name: Cache Trunk
     runs-on: ubuntu-latest
     permissions:
-      checks: write
+      actions: write
 
     steps:
       - name: Checkout
@@ -22,4 +21,4 @@ jobs:
       - name: Trunk Check
         uses: ./
         with:
-          post-annotations: true
+          check-mode: populate_cache_only
