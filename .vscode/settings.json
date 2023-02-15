@@ -1,0 +1,12 @@
+{
+  "editor.defaultFormatter": "trunk.io",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "git.enableSmartCommit": true,
+  "git.ignoreLimitWarning": true,
+  "gitlens.advanced.fileHistoryFollowsRenames": true,
+  "gitlens.codeLens.enabled": false,
+  "terminal.integrated.scrollback": 100000,
+  "workbench.list.horizontalScrolling": true
+}
