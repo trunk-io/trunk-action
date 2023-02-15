@@ -64,11 +64,36 @@ Here's some GitHub docs to get you going:
 
 ### Caching
 
-Caching is on by default: Trunk will cache linters/formatters via `actions/cache@v3`. This is great
-if you are using GitHub-hosted ephemeral runners.
+To use GitHub Actions caching for Trunk, create a new workflow (for example,
+`.github/worksflows/cache_trunk.yaml) to run on any change the your Trunk configuration:
 
-If you are using long-lived self-hosted runners you should disable caching by passing `cache: false`
-as so:
+```yaml
+on:
+  push:
+    branches: [main]
+    paths: [.trunk/trunk.yaml]
+
+permissions: read-all
+
+jobs:
+  cache_trunk:
+    name: Cache Trunk
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          check-mode: populate_cache_only
+```
+
+If you are using long-lived self-hosted runners you should _not_ create the above workflow, and you
+should also disable caching by passing `cache: false` as so when running Trunk on your PRs:
 
 ```yaml
 - name: Trunk Check
