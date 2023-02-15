@@ -65,7 +65,7 @@ Here's some GitHub docs to get you going:
 ### Caching
 
 To use GitHub Actions caching for Trunk, create a new workflow (for example,
-`.github/worksflows/cache_trunk.yaml) to run on any change the your Trunk configuration:
+`.github/worksflows/cache_trunk.yaml`) to run on any change the your Trunk configuration:
 
 ```yaml
 on:
