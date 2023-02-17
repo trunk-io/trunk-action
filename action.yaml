@@ -4,7 +4,7 @@ description: The official trunk.io GitHub action
 
 branding:
   icon: check
-  color: orange
+  color: green
 
 inputs:
   trunk-path:
@@ -26,9 +26,9 @@ inputs:
 
   check-mode:
     description:
-      Trunk check mode. Leave unset to autodetect just changes. Set to 'all' to check the entire
-      repository. If `trunk-token` is set with 'all', 'all' will also upload results to the Trunk
-      web app.
+      Trunk check mode. Leave unset to autodetect. Set to 'all' to check the entire repository. Set
+      to 'populate_cache_only' in a dedicated workflow to populate the GitHub Actions cache with
+      Trunk artifacts (see docs for more details).
     required: false
 
   cache:
@@ -151,7 +151,7 @@ runs:
       if: env.TRUNK_CHECK_MODE == 'pull_request'
       shell: bash
       run: |
-        # Run trunk check on pull request
+        # Run 'trunk check' on pull request
         ${GITHUB_ACTION_PATH}/pull_request.sh
       env:
         GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -169,7 +169,7 @@ runs:
       if: env.TRUNK_CHECK_MODE == 'push'
       shell: bash
       run: |
-        # Run trunk check on push
+        # Run 'trunk check' on push
         ${GITHUB_ACTION_PATH}/push.sh
       env:
         GITHUB_EVENT_AFTER: ${{ github.event.after }}
@@ -184,7 +184,7 @@ runs:
       if: env.TRUNK_CHECK_MODE == 'all'
       shell: bash
       run: |
-        # Run trunk check on all
+        # Run 'trunk check' on all
         ${GITHUB_ACTION_PATH}/all.sh
       env:
         GITHUB_REF_NAME: ${{ github.ref_name }}
@@ -200,7 +200,7 @@ runs:
       if: env.TRUNK_CHECK_MODE == 'trunk_merge'
       shell: bash
       run: |
-        # Run trunk check on Trunk Merge
+        # Run 'trunk check' on Trunk Merge
         ${GITHUB_ACTION_PATH}/trunk_merge.sh
       env:
         GITHUB_REPOSITORY: ${{ github.repository }}
@@ -208,6 +208,15 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+
+    - name: Run trunk install to populate the GitHub Actions cache
+      if: env.TRUNK_CHECK_MODE == 'populate_cache_only'
+      shell: bash
+      run: |
+        # Run 'trunk install' to populate the GitHub Actions cache
+        ${GITHUB_ACTION_PATH}/populate_cache_only.sh
+      env:
+        INPUT_ARGUMENTS: ${{ inputs.arguments }}
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
