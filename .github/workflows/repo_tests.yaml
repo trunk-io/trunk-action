@@ -21,11 +21,13 @@ jobs:
           #     this workflow on PRs
           #
           - repo: highlightjs/highlight.js
+            ref: 91e1898df92a7127956a4926e5e4ce94424492b7
             description: (uses npm)
             post-init: |
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
 
           - repo: jbeder/yaml-cpp
+            ref: 1b50109f7bea60bd382d8ea7befce3d2bd67da5f
             description: (compile-commands.json)
             post-init: |
               # black complains about py2 code
@@ -40,15 +42,18 @@ jobs:
               ${TRUNK_PATH} check enable clang-tidy
 
           - repo: pallets/flask
+            ref: 4ddb3f73baa5b60ed83d6bb48d0d447a0d8ab492
             post-init: |
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
+            ref: 8834314ff334ea8321bf2c83934f276d379512cd
             description: (uses pnpm)
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
           - repo: replayio/devtools
+            ref: 78259d9457f4f97ad130efbb6d36dae196588487
             description: (has trunk.yaml)
             post-init: |
               # replay is on a very old version
@@ -56,28 +61,35 @@ jobs:
             trunk-path: node_modules/.bin/trunk
 
           - repo: sass/sass
+            ref: b78c027126a9d6a3f5648a784936223ae7c730a2
             description: (uses npm)
 
           - repo: sheldonhull/sheldonhull.hugo
+            ref: f4867cf31f7f7ebe57522faa946ef5105d12f17f
             description: (has trunk.yaml)
 
           - repo: shopify/draggable
+            ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
             description: (uses yarn)
 
           - repo: terraform-linters/tflint
+            ref: 602fa73fafa020436520a0efa6cfc151d5f4c91f
             post-init: |
               # golangci-lint needs us to init with a newer go runtime
               ${TRUNK_PATH} check disable golangci-lint
 
           - repo: trunk-io/plugins
+            ref: main
 
           - repo: vuejs/core
+            ref: a0e7dc334356e9e6ffaa547d29e55b34b9b8a04d
             description: (uses pnpm)
             post-init: |
               # svgo gets confused by JS module loading
               ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
+            ref: 602fa73fafa020436520a0efa6cfc151d5f4c91f
             description: (has trunk.yaml)
 
     steps:
@@ -85,6 +97,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: ${{ matrix.repo }}
+          ref: ${{ matrix.ref }}
 
       - name: Checkout ${{ github.repository }}
         uses: actions/checkout@v3
