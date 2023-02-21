@@ -89,7 +89,7 @@ jobs:
               ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
-            ref: 602fa73fafa020436520a0efa6cfc151d5f4c91f
+            ref: 06dbdbd696892bf4eda9641c88a6b406374fbaa4
             description: (has trunk.yaml)
 
     steps:
