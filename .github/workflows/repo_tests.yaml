@@ -116,6 +116,7 @@ jobs:
 
       - name: Check for task failures
         shell: python
+        working-directory: ./local-action/
         run: |
           import repo_tests.check_for_task_failures
           repo_tests.check_for_task_failures.main(
