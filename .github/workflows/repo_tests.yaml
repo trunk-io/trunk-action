@@ -118,9 +118,9 @@ jobs:
         shell: bash
         run: |
           python3 local-action/repo_tests/check_for_task_failures.py \
-            ${{ github.env }} \
-            ${{ matrix.repo }} \
-            ${{ matrix.description }}
+            '${{ github.env }}' \
+            '${{ matrix.repo }}' \
+            '${{ matrix.description }}'
 
       - name: Upload landing state
         uses: actions/upload-artifact@v3
