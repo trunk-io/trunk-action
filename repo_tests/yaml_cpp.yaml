@@ -1,0 +1,13 @@
+version: 0.1
+lint:
+  ignore:
+    - linters: [clang-tidy]
+      paths:
+        - test/**
+        - util/read.cpp
+        - util/api.cpp
+        - util/parse.cpp
+        - util/sandbox.cpp
+    - linters: [prettier]
+      paths:
+        - test/**

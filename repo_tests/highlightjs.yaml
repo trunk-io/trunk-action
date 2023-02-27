@@ -1,0 +1,7 @@
+version: 0.1
+lint:
+  ignore:
+    - linters: [prettier]
+      paths:
+        - demo/index.html
+        - test/fixtures/index.html

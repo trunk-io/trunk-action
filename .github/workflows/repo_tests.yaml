@@ -1,0 +1,129 @@
+name: repo_tests
+on: [workflow_dispatch, workflow_call]
+
+jobs:
+  repo_tests:
+    name: ${{ matrix.repo }} ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        include:
+          # Items in this list satisfy a few criteria:
+          #
+          #   * test has to be useful/interesting and add value atop the monorepo tests for
+          #     trunk init
+          #
+          #   * the repo has to exercise some functionality specific to action.yaml (e.g. our
+          #     custom Node functionality for npm/yarn/pnpm)
+          #
+          #   * the repo and its dependency closure should be fast to set up, since we trigger
+          #     this workflow on PRs
+          #
+          - repo: highlightjs/highlight.js
+            ref: 91e1898df92a7127956a4926e5e4ce94424492b7
+            description: (uses npm)
+            post-init: |
+              cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
+
+          - repo: jbeder/yaml-cpp
+            ref: 1b50109f7bea60bd382d8ea7befce3d2bd67da5f
+            description: (compile-commands.json)
+            post-init: |
+              # black complains about py2 code
+              ${TRUNK_PATH} check disable black
+              mkdir build
+              cd build
+              cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+              cd ..
+              ln -s build/compile_commands.json
+              sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
+              cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
+              ${TRUNK_PATH} check enable clang-tidy
+
+          - repo: pallets/flask
+            ref: 4ddb3f73baa5b60ed83d6bb48d0d447a0d8ab492
+            post-init: |
+              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+
+          - repo: postcss/postcss
+            ref: 8834314ff334ea8321bf2c83934f276d379512cd
+            description: (uses pnpm)
+            post-init: |
+              ${TRUNK_PATH} check enable eslint
+
+          - repo: replayio/devtools
+            ref: 78259d9457f4f97ad130efbb6d36dae196588487
+            description: (has trunk.yaml)
+            post-init: |
+              # replay is on a very old version
+              ${TRUNK_PATH} upgrade
+            trunk-path: node_modules/.bin/trunk
+
+          - repo: sass/sass
+            ref: b78c027126a9d6a3f5648a784936223ae7c730a2
+            description: (uses npm)
+
+          - repo: sheldonhull/sheldonhull.hugo
+            ref: f4867cf31f7f7ebe57522faa946ef5105d12f17f
+            description: (has trunk.yaml)
+
+          - repo: shopify/draggable
+            ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
+            description: (uses yarn)
+
+          - repo: terraform-linters/tflint
+            ref: 602fa73fafa020436520a0efa6cfc151d5f4c91f
+            post-init: |
+              # golangci-lint needs us to init with a newer go runtime
+              ${TRUNK_PATH} check disable golangci-lint
+
+          - repo: trunk-io/plugins
+            ref: main
+
+          - repo: vuejs/core
+            ref: a0e7dc334356e9e6ffaa547d29e55b34b9b8a04d
+            description: (uses pnpm)
+            post-init: |
+              # svgo gets confused by JS module loading
+              ${TRUNK_PATH} check disable svgo
+
+          - repo: z-shell/wiki
+            ref: 06dbdbd696892bf4eda9641c88a6b406374fbaa4
+            description: (has trunk.yaml)
+
+    steps:
+      - name: Checkout ${{ matrix.repo }}
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ matrix.repo }}
+          ref: ${{ matrix.ref }}
+
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Run trunk-action in ${{ matrix.repo }}
+        id: trunk
+        uses: ./local-action/
+        with:
+          cache: false
+          check-mode: all
+          trunk-path: ${{ matrix.trunk-path }}
+          post-init: ${{ matrix.post-init }}
+        continue-on-error: true
+
+      - name: Check for task failures
+        shell: bash
+        run: |
+          python3 local-action/repo_tests/check_for_task_failures.py \
+            '${{ github.env }}' \
+            '${{ matrix.repo }}' \
+            '${{ matrix.description }}'
+
+      - name: Upload landing state
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.landing_state_artifact_name }} landing state
+          path: .trunk/landing-state.json
