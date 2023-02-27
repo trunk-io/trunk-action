@@ -117,36 +117,8 @@ jobs:
       - name: Check for task failures
         shell: python
         run: |
-          import json, os, sys
-
-          matrix_repo = '${{ matrix.repo }}'
-          matrix_description = '${{ matrix.description }}'
-
-          landing_state = json.load(open('.trunk/landing-state.json'))
-          lint_action_count = len(landing_state.get("lintActions", []))
-          task_failure_count = len(landing_state.get("taskFailures", []))
-
-          print("::group::.trunk/trunk.yaml")
-          print(open(".trunk/trunk.yaml").read())
-          print("::endgroup::")
-
-          with open(os.environ['GITHUB_ENV'], 'a') as env:
-            env.write('landing_state_artifact_name=')
-            env.write(f'{matrix_repo.replace("/", " ")} ({matrix_description})')
-            env.write('\n')
-
-          print(f'lint_action_count={lint_action_count}')
-          print(f'task_failure_count={task_failure_count}')
-
-          if lint_action_count == 0:
-            print("No lint actions were run - something went wrong.")
-            sys.exit(1)
-
-          if task_failure_count > 0:
-            print('Failures can be viewed in the logs for the previous step')
-            sys.exit(1)
-
-          print("No task failures!")
+          import repo_tests.check_for_task_failures
+          repo_tests.check_for_task_failures.main(${{ github.env }}, ${{ matrix.repo }}, ${{ matrix.description }})
 
       - name: Upload landing state
         uses: actions/upload-artifact@v3
