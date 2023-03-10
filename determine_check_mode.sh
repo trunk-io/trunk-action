@@ -17,8 +17,8 @@ if [[ -z ${check_mode} ]]; then
   else
     check_mode="none"
   fi
-elif [[ ]] 
-  echo "check-mode must be one of: all, none, populate_cache_only, pull_request, push, or trunk_merge"
+elif [[ ${check_mode} != "all" || ${check_mode} != "none" || ${check_mode} != "populate_cache_only" || ${check_mode} != "pull_request" || ${check_mode} != "push" || ${check_mode} != "trunk_merge" ]]; then
+  echo 'check-mode must be one of: `all`, `none`, `populate_cache_only`, `pull_request`, `push`, or `trunk_merge`'
   exit 1
 fi
 
