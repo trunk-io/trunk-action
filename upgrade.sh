@@ -15,6 +15,7 @@ fi
 
 if [ ! -e trunk ]; then
   ln -s "${TRUNK_PATH}" trunk
+  export PATH="${PATH}:${TRUNK_PATH}"
 fi
 
 echo "Finished running upgrade"
