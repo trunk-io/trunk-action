@@ -15,6 +15,7 @@ fi
 echo "Finished running upgrade"
 
 # echo "UPGRADE_OUTPUT=${upgrade_output}" >>"$GITHUB_OUTPUT"
+# trunk-ignore(shellcheck/SC2129)
 echo "UPGRADE_OUTPUT<<EOF" >>"$GITHUB_OUTPUT"
 echo "${upgrade_output}" >>"$GITHUB_OUTPUT"
 echo "EOF" >>"$GITHUB_OUTPUT"
