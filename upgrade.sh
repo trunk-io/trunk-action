@@ -17,6 +17,7 @@ if [ ! -e trunk ]; then
   ln -s "${TRUNK_PATH}" trunk
   export PATH="${PATH}:${TRUNK_PATH}"
   ${TRUNK_PATH} daemon shutdown
+  git config --unset core.hooksPath
 fi
 
 echo "Finished running upgrade"
