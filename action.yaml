@@ -303,11 +303,7 @@ runs:
         body: ${{ steps.upgrade.outputs.UPGRADE_OUTPUT }}
         base: main
         branch: trunk-io/update-trunk
-        add-paths: |
-          .trunk/trunk.yaml
-          .trunk/configs
-          trunk
-          ${{ inputs.trunk-path }}
+        # add-paths: ${{ steps.upgrade.outputs.UPGRADE_PATHS }}
         commit-message: "Upgrade trunk to ${{ steps.upgrade.outputs.TITLE_MESSAGE }}"
         delete-branch: true
       continue-on-error: true

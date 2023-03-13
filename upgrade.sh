@@ -17,6 +17,7 @@ fi
 if [ ! -e trunk ]; then
   ${TRUNK_PATH} daemon shutdown
   git config --unset core.hooksPath
+  rm -f .trunk/landing-state.json
 fi
 
 echo "Finished running upgrade"
