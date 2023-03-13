@@ -4,6 +4,7 @@
   prConcurrentLimit: 3,
   packageRules: [
     {
+      automerge: true,
       groupName: "all non-major dependencies",
       groupSlug: "all-minor-patch",
       matchPackagePatterns: ["*"],
