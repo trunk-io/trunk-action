@@ -13,9 +13,8 @@ if [[ -n ${new_cli_version} ]]; then
   title_message="Upgrade trunk to ${new_cli_version}"
 fi
 
+# TODO: TYLER ADD AN EXPLANATION COMMENT
 if [ ! -e trunk ]; then
-  ln -s "${TRUNK_PATH}" trunk
-  export PATH="${PATH}:${TRUNK_PATH}"
   ${TRUNK_PATH} daemon shutdown
   git config --unset core.hooksPath
 fi
