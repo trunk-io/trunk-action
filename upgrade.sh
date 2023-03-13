@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-upgrade_output=$(${TRUNK_PATH} upgrade -n "${UPGRADE_ARGUMENTS}")
+upgrade_output=$(${TRUNK_PATH} upgrade -n "${UPGRADE_ARGUMENTS:-""}")
 new_cli_version=$(echo "${upgrade_output}" | grep "cli upgrade" | awk '{print $NF}' | sed -e 's/\x1b\[[0-9;]*m//g')
 title_message="Upgrade trunk"
 
