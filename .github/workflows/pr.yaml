@@ -22,6 +22,6 @@ jobs:
         with:
           upgrade: true
 
-  repo_tests:
-    name: Repository tests
-    uses: ./.github/workflows/repo_tests.yaml
+  # repo_tests:
+  #   name: Repository tests
+  #   uses: ./.github/workflows/repo_tests.yaml

@@ -291,7 +291,6 @@ runs:
         # Run trunk upgrade
         ${GITHUB_ACTION_PATH}/upgrade.sh
       env:
-        TRUNK_PATH: ${{ env.TRUNK_PATH }}
         UPGRADE_ARGUMENTS: ${{ inputs.upgrade-arguments }}
       continue-on-error: true
 
