@@ -306,9 +306,8 @@ runs:
           .trunk
           trunk
           ${{ inputs.trunk-path }}
-        commit-message: "Upgrade trunk to ${{ steps.upgrade.outputs.TRUNK_RELEASE }}"
+        commit-message: "Upgrade trunk to ${{ steps.upgrade.outputs.TITLE_MESSAGE }}"
         delete-branch: true
-        token: ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
       continue-on-error: true
 
     - name: Cleanup temporary files
