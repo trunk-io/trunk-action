@@ -4,16 +4,16 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-permissions: write-all
-# permissions: read-all
+permissions: read-all
 
 jobs:
   trunk_check:
     name: Trunk Check Runner
     runs-on: ubuntu-latest
     permissions:
-      write-all
-      # checks: write # For trunk to post annotations
+      checks: write # For trunk to post annotations
+      contents: write # For trunk to create PRs
+      pull-requests: write # For trunk to create PRs
 
       # actions: write
       # pull-requests: write
