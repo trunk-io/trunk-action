@@ -19,6 +19,8 @@ jobs:
 
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
+        with:
+          upgrade: true
 
   repo_tests:
     name: Repository tests

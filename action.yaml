@@ -31,6 +31,15 @@ inputs:
       Trunk artifacts (see docs for more details).
     required: false
 
+  upgrade:
+    description: Run trunk upgrade and post a PR with the associated trunk changes.
+    required: false
+    default: "false"
+
+  upgrade-arguments:
+    description: Extra arguments to pass to trunk upgrade to filter the upgrade scope, e.g. `cli`.
+    required: false
+
   cache:
     description:
       Cache trunk downloads and results between runs. Caching is only needed when using ephemeral CI
@@ -57,7 +66,7 @@ inputs:
 
   save-annotations:
     description:
-      Save annotations as an artifact instead of posting them from this action. This is neccesary if
+      Save annotations as an artifact instead of posting them from this action. This is necessary if
       your repository will be used with forks as they will will not have permissions to upload
       annotations. By default forks will be auto-detected.
     required: false
@@ -82,9 +91,12 @@ runs:
         INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
 
     - name: Init on-demand
+      id: auto_init
       shell: bash
+      # TODO: TYLER MIGHT WANT TO MAKE UPGRADE CONDITIONAL ON THE TRUNK.YAML ALREADY EXISTING
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
+          echo "auto_init=true" >> $GITHUB_OUTPUT
           ${TRUNK_PATH} init
         fi
 
@@ -270,6 +282,35 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
+
+    - name: Run upgrade
+      id: upgrade
+      if: inputs.upgrade == 'true' && steps.auto_init.outputs.auto_init != 'true'
+      shell: bash
+      run: |
+        # Run trunk upgrade
+        ${GITHUB_ACTION_PATH}/upgrade.sh
+      env:
+        TRUNK_PATH: ${{ env.TRUNK_PATH }}
+        UPGRADE_ARGUMENTS: ${{ inputs.upgrade-arguments }}
+      continue-on-error: true
+
+    - name: Create Pull Request
+      if: steps.upgrade.outcome == 'success'
+      uses: peter-evans/create-pull-request@v4
+      with:
+        title: |
+          ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
+        body: ${{ steps.upgrade.outputs.UPGRADE_OUTPUT }}
+        base: main
+        add-paths: |
+          .trunk
+          trunk
+          ${{ inputs.trunk-path }}
+        commit-message: "Upgrade trunk to ${{ steps.upgrade.outputs.TRUNK_RELEASE }}"
+        delete-branch: true
+        token: ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
+      continue-on-error: true
 
     - name: Cleanup temporary files
       if: always()
