@@ -12,10 +12,11 @@ jobs:
     name: Trunk Check Runner
     runs-on: ubuntu-latest
     permissions:
-      checks: write # For trunk to post annotations
+      write-all
+      # checks: write # For trunk to post annotations
 
-      actions: write
-      pull-requests: write
+      # actions: write
+      # pull-requests: write
 
     steps:
       - name: Checkout
