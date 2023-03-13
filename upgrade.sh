@@ -12,5 +12,11 @@ if [[ -n ${new_cli_version} ]]; then
   title_message="Upgrade trunk to ${new_cli_version}"
 fi
 
-echo "UPGRADE_OUTPUT=${upgrade_output}" >>"$GITHUB_OUTPUT"
+echo "Finished running upgrade"
+
+# echo "UPGRADE_OUTPUT=${upgrade_output}" >>"$GITHUB_OUTPUT"
+echo "UPGRADE_OUTPUT<<EOF" >>"$GITHUB_OUTPUT"
+echo "${upgrade_output}" >>"$GITHUB_OUTPUT"
+echo "EOF" >>"$GITHUB_OUTPUT"
+
 echo "TITLE_MESSAGE=${title_message}" >>"$GITHUB_OUTPUT"
