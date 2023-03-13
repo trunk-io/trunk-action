@@ -303,6 +303,7 @@ runs:
         body: ${{ steps.upgrade.outputs.UPGRADE_OUTPUT }}
         base: main
         branch: trunk-io/update-trunk
+        # TODO: TYLER REMOVE THIS
         # add-paths: ${{ steps.upgrade.outputs.UPGRADE_PATHS }}
         commit-message: "Upgrade trunk to ${{ steps.upgrade.outputs.TITLE_MESSAGE }}"
         delete-branch: true
