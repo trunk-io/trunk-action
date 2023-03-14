@@ -40,6 +40,12 @@ inputs:
     description: Extra arguments to pass to trunk upgrade to filter the upgrade scope, e.g. `cli`.
     required: false
 
+  upgrade-base:
+    description:
+      The base branch to run `trunk upgrade` against and create a PR against if `upgrade` is "true"
+    required: false
+    default: main
+
   cache:
     description:
       Cache trunk downloads and results between runs. Caching is only needed when using ephemeral CI
@@ -284,9 +290,17 @@ runs:
         INPUT_LABEL: ${{ inputs.label }}
 
     # TODO: TYLER RUN EVEN IF PREV FAIL
+    - name: Prepare upgrade
+      id: prepare-upgrade
+      if: inputs.upgrade == 'true' && steps.auto_init.outputs.auto_init != 'true'
+      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+      with:
+        ref: ${{ inputs.upgrade-base }}
+      # TODO: TYLER DOES THIS NEED CLEAN?
+
     - name: Run upgrade
       id: upgrade
-      if: inputs.upgrade == 'true' && steps.auto_init.outputs.auto_init != 'true'
+      if: steps.prepare-upgrade.outcome == 'success'
       shell: bash
       run: |
         # Run trunk upgrade
@@ -300,6 +314,7 @@ runs:
       with:
         title: |
           ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
+        base: ${{ inputs.upgrade-base }}
         body: ${{ steps.upgrade.outputs.DESCRIPTION }}
         branch: trunk-io/update-trunk
         commit-message: ${{ steps.upgrade.outputs.TITLE_MESSAGE }}

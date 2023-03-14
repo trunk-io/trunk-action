@@ -25,6 +25,7 @@ formatted_output=$(echo "${upgrade_output}" | sed -e 's/^\(  \)/*\1$/')
 # TODO: TYLER CHANGE URL
 banner="[![Trunk](https://raw.githubusercontent.com/TylerJang27/trunk-action/tyler/upgrade-mode/trunk_banner.png)](https://trunk.io)"
 
+# TODO: TYLER MAKE THIS A TEMPLATE AND INSERT IT
 description="${banner}\n\n${formatted_output}"
 
 # TODO: TYLER REMOVE THIS
