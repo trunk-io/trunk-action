@@ -283,6 +283,7 @@ runs:
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
 
+    # TODO: TYLER RUN EVEN IF PREV FAIL
     - name: Run upgrade
       id: upgrade
       if: inputs.upgrade == 'true' && steps.auto_init.outputs.auto_init != 'true'
@@ -292,7 +293,6 @@ runs:
         ${GITHUB_ACTION_PATH}/upgrade.sh
       env:
         UPGRADE_ARGUMENTS: ${{ inputs.upgrade-arguments }}
-      continue-on-error: true
 
     - name: Create Pull Request
       if: steps.upgrade.outcome == 'success'
@@ -300,14 +300,10 @@ runs:
       with:
         title: |
           ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
-        body: ${{ steps.upgrade.outputs.UPGRADE_OUTPUT }}
-        base: main
+        body: ${{ steps.upgrade.outputs.DESCRIPTION }}
         branch: trunk-io/update-trunk
-        # TODO: TYLER REMOVE THIS
-        # add-paths: ${{ steps.upgrade.outputs.UPGRADE_PATHS }}
-        commit-message: "Upgrade trunk to ${{ steps.upgrade.outputs.TITLE_MESSAGE }}"
+        commit-message: ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
         delete-branch: true
-      continue-on-error: true
 
     - name: Cleanup temporary files
       if: always()

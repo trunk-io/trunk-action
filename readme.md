@@ -234,6 +234,10 @@ being merged. The "Merge commit" and "Squash and merge"
 [strategies](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#about-merge-queues)
 are currently supported. "Rebase and merge" does not yet work correctly.
 
+## Automatic Upgrades
+
+# TODO: TYLER DO THIS
+
 ## Feedback
 
 Join the [Trunk Community Slack][slack]. ❤️
