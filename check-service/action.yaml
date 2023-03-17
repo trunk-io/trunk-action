@@ -29,7 +29,7 @@ runs:
       if: fromJSON(inputs.client_payload).version == '0.0.0'
       uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       with:
-        repository: fromJSON(inputs.client_payload).repository.full_name
+        repository: ${{ fromJSON(inputs.client_payload).repository.full_name }}
 
     - uses: ./../
       if: fromJSON(inputs.client_payload).version == '0.0.0'
