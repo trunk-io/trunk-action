@@ -1,6 +1,6 @@
 name: Trunk Check
 author: trunk.io
-description: The official trunk.io GitHub action
+description: trunk check service workflow
 
 branding:
   icon: check
@@ -32,7 +32,7 @@ runs:
         repository: ${{ fromJSON(inputs.client_payload).repository.full_name }}
 
     - name: Trunk Check
-      uses: ./../
+      uses: trunk-io/trunk-action@v1
       if: fromJSON(inputs.client_payload).version == '0.0.0'
       with:
         check-mode: ${{ fromJSON(inputs.client_payload).check_mode }}
