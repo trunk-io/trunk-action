@@ -34,8 +34,8 @@ runs:
     - uses: ./../
       if: fromJSON(inputs.client_payload).version == '0.0.0'
       with:
-        check-mode: fromJSON(inputs.client_payload).check_mode
+        check-mode: ${{ fromJSON(inputs.client_payload).check_mode }}
         cache: true
-        trunk-token: fromJSON(inputs.client_payload).token
-        repo: fromJSON(inputs.client_payload).repository.full_name
-        upload-series: fromJSON(inputs.client_payload).upload_series
+        trunk-token: ${{ fromJSON(inputs.client_payload).token }}
+        repo: ${{ fromJSON(inputs.client_payload).repository.full_name }}
+        upload-series: ${{ fromJSON(inputs.client_payload).upload_series }}
