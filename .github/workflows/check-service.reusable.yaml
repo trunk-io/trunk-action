@@ -1,15 +1,11 @@
 name: Trunk Check
-author: trunk.io
-description: trunk check service workflow
-
-branding:
-  icon: check
-  color: green
-
-inputs:
-  client_payload:
-    description: the client payload
-    required: true
+on:
+  workflow_call:
+    inputs:
+      client_payload:
+        description: the client payload
+        required: true
+        type: string
 
 ###
 # current schema:
@@ -22,21 +18,23 @@ inputs:
 # upload_series: bool
 ###
 
-runs:
-  using: composite
-  steps:
-    - name: Checkout
-      if: fromJSON(inputs.client_payload).version == '0.0.0'
-      uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-      with:
-        repository: ${{ fromJSON(inputs.client_payload).repository.full_name }}
+jobs:
+  check:
+    runs-on: ubuntu-latest
 
-    - name: Trunk Check
-      uses: trunk-io/trunk-action@v1
-      if: fromJSON(inputs.client_payload).version == '0.0.0'
-      with:
-        check-mode: ${{ fromJSON(inputs.client_payload).check_mode }}
-        cache: true
-        trunk-token: ${{ fromJSON(inputs.client_payload).token }}
-        repo: ${{ fromJSON(inputs.client_payload).repository.full_name }}
-        upload-series: ${{ fromJSON(inputs.client_payload).upload_series }}
+    steps:
+      - name: Checkout
+        if: fromJSON(inputs.client_payload).version == '0.0.0'
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+        with:
+          repository: ${{ fromJSON(inputs.client_payload).repository.full_name }}
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        if: fromJSON(inputs.client_payload).version == '0.0.0'
+        with:
+          check-mode: ${{ fromJSON(inputs.client_payload).check_mode }}
+          cache: true
+          trunk-token: ${{ fromJSON(inputs.client_payload).token }}
+          repo: ${{ fromJSON(inputs.client_payload).repository.full_name }}
+          upload-series: ${{ fromJSON(inputs.client_payload).upload_series }}
