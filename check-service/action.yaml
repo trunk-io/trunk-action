@@ -31,7 +31,7 @@ runs:
       with:
         repository: fromJSON(inputs.client_payload).repository.full_name
 
-    - uses: ../
+    - uses: ./../
       if: fromJSON(inputs.client_payload).version == '0.0.0'
       with:
         check-mode: fromJSON(inputs.client_payload).check_mode
