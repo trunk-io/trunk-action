@@ -169,6 +169,7 @@ runs:
         INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_LABEL: ${{ inputs.label }}
         INPUT_SAVE_ANNOTATIONS: ${{ inputs.save-annotations }}
+        INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
 
     - name: Run trunk check on push
       if: env.TRUNK_CHECK_MODE == 'push'
