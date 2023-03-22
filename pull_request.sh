@@ -47,5 +47,6 @@ fi
   --upstream "${upstream}" \
   --github-commit "${git_commit}" \
   --github-label "${INPUT_LABEL}" \
+  --token "${INPUT_TRUNK_TOKEN}" \
   "${annotation_argument}" \
   ${INPUT_ARGUMENTS}
