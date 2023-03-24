@@ -240,6 +240,43 @@ being merged. The "Merge commit" and "Squash and merge"
 [strategies](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#about-merge-queues)
 are currently supported. "Rebase and merge" does not yet work correctly.
 
+## Automatic upgrades
+
+If you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade
+Trunk and its tools, you can configure the action to automatically generate pull requests with these
+upgrades:
+
+```yaml
+name: Nightly
+on:
+  schedule:
+    - cron: 0 8 * * 1-5
+  workflow_dispatch: {}
+permissions: read-all
+jobs:
+  trunk_upgrade:
+    name: Upgrade Trunk
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # For trunk to create PRs
+      pull-requests: write # For trunk to create PRs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # >>> Install your own deps here (npm install, etc) <<<
+      - name: Trunk Upgrade
+        uses: trunk-io/trunk-action/upgrade@v1
+```
+
+We recommend that you only run the upgrade action on a nightly or weekly cadence, running from your
+main branch. You can also set the `arguments` field to filter particular upgrades and set `base` to
+define the branch to create a PR against (default `main`).
+
+You must also enable the repository setting to "Allow GitHub Actions to create and approve pull
+requests". If you have checks that run on pull requests, you will need to supply a `github-token` to
+the upgrade action to run those checks. For more information, see
+[create-pull-request](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs).
+
 ## Feedback
 
 Join the [Trunk Community Slack][slack]. ❤️

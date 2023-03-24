@@ -1,0 +1,126 @@
+name: Trunk Upgrade
+author: trunk.io
+description: Upgrade trunk and its tools
+
+branding:
+  icon: check
+  color: green
+
+inputs:
+  trunk-path:
+    description:
+      Path to Trunk Launcher. If not provided, we'll look for it the repo root, `.trunk/bin` and
+      `tools/`. If it can't be found anywhere and is not provided explicitly, we'll download it on
+      demand.
+    required: false
+
+  arguments:
+    description: Extra arguments to pass to trunk upgrade
+    required: false
+
+  base:
+    description: The base branch to create a PR against
+    required: false
+    default: main
+
+  github-token:
+    description:
+      A GitHub token to allow created PRs to run pull_request workflows. See
+      https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
+      for more information.
+    required: false
+    default: ${{ github.token }}
+
+  reviewers:
+    description: A comma or newline separated list of GitHub reviewer usernames
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Locate trunk
+      shell: bash
+      run: |
+        # Locate trunk
+        ${GITHUB_ACTION_PATH}/../locate_trunk.sh
+      env:
+        INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
+
+    - name: Detect trunk
+      id: auto_init
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          echo "Unable to run 'trunk upgrade'. Please run 'trunk init' and commit the generate '.trunk/trunk.yaml'."
+          exit 1
+        fi
+
+    - name: Detect npm/yarn/pnpm
+      id: detect
+      shell: bash
+      run: |
+        if [ -e package-lock.json ]; then
+          echo "package_manager=npm" >> $GITHUB_OUTPUT
+          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
+        elif [ -e yarn.lock ]; then
+          echo "package_manager=yarn" >> $GITHUB_OUTPUT
+          echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
+        elif [ -e pnpm-lock.yaml ]; then
+          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
+          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Install pnpm
+      if: steps.detect.outputs.package_manager == 'pnpm'
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
+    - name: Install Node dependencies
+      if: steps.detect.outputs.package_manager
+      uses: actions/setup-node@v3
+
+    #- name: Cache node_modules
+    #  uses: actions/cache@v3
+    #  with:
+    #    path: node_modules/
+    #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
+
+    - name: Install ${{ steps.detect.outputs.package_manager }} packages
+      if: steps.detect.outputs.package_manager
+      shell: bash
+      run: ${{ steps.detect.outputs.install_cmd }}
+
+    - name: Run upgrade
+      id: upgrade
+      shell: bash
+      run: |
+        # Run trunk upgrade
+        ${GITHUB_ACTION_PATH}/upgrade.sh
+      env:
+        UPGRADE_ARGUMENTS: ${{ inputs.arguments }}
+
+    - name: Cleanup temporary files
+      if: always()
+      shell: bash
+      run: |
+        # Cleanup temporary files
+        ${GITHUB_ACTION_PATH}/../cleanup.sh
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        title: |
+          ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
+        body: ${{ steps.upgrade.outputs.DESCRIPTION }}
+        base: ${{ inputs.base }}
+        branch: trunk-io/update-trunk
+        labels: trunk
+        add-paths: .trunk
+        commit-message: ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
+        delete-branch: true
+        reviewers: ${{ inputs.reviewers }}
+        token: ${{ inputs.github-token }}
