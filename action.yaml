@@ -31,6 +31,10 @@ inputs:
       Trunk artifacts (see docs for more details).
     required: false
 
+  check-run-id:
+    description: Check run ID. If set, posts annotations using CheckService.
+    required: false
+
   cache:
     description:
       Cache trunk downloads and results between runs. Caching is only needed when using ephemeral CI
@@ -131,6 +135,16 @@ runs:
       if: inputs.post-init
       shell: bash
       run: ${{ inputs.post-init }}
+
+    ###################################################
+
+    - name: Dump debug info
+      shell: bash
+      run: |
+        set -x
+        cat $GITHUB_EVENT_PATH
+
+    ###################################################
 
     - name: Determine check mode
       shell: bash
