@@ -16,7 +16,7 @@ else
     --all \
     --output-file .trunk/landing-state.json \
     --upload \
-    --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
+    --series "${INPUT_UPLOAD_SERIES:-${INPUT_GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \
     ${INPUT_ARGUMENTS}
 fi

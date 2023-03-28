@@ -15,7 +15,7 @@ fetch() {
     "$@"
 }
 
-if [[ ${GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
+if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
   # We use this instead of github.event.pull_request.base.sha which can be incorrect sometimes.
   head_sha=$(git rev-parse HEAD)
@@ -38,11 +38,14 @@ if [[ ${save_annotations} == "auto" && ${GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FOR
   save_annotations=true
 fi
 
-annotation_argument=--github-annotate
-if [[ ${save_annotations} == "true" ]]; then
+if [[ -n ${INPUT_CHECK_RUN_ID} ]]; then
+  annotation_argument="--trunk-annotate=${INPUT_CHECK_RUN_ID}"
+elif [[ ${save_annotations} == "true" ]]; then
   annotation_argument=--github-annotate-file=${TRUNK_TMPDIR}/annotations.bin
   # Signal that we need to upload an annotations artifact
   echo "TRUNK_UPLOAD_ANNOTATIONS=true" >>"${GITHUB_ENV}"
+else
+  annotation_argument=--github-annotate
 fi
 
 "${TRUNK_PATH}" check \
