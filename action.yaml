@@ -76,7 +76,6 @@ inputs:
 
 runs:
   using: composite
-  post: ${GITHUB_ACTION_PATH}/cleanup.sh
   steps:
     - name: Locate trunk
       shell: bash
@@ -292,3 +291,4 @@ runs:
       run: |
         # Cleanup temporary files
         ${GITHUB_ACTION_PATH}/cleanup.sh
+  post: ${GITHUB_ACTION_PATH}/cleanup.sh
