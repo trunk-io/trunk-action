@@ -134,17 +134,6 @@ runs:
       shell: bash
       run: ${{ inputs.post-init }}
 
-    ###################################################
-
-    - name: Dump debug info
-      shell: bash
-      run: |
-        set -x
-        cat $GITHUB_EVENT_PATH
-        env
-
-    ###################################################
-
     - name: Determine check mode
       shell: bash
       run: |
