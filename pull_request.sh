@@ -35,7 +35,7 @@ if [[ ${save_annotations} == "auto" && ${GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FOR
 fi
 
 if [[ -n ${INPUT_CHECK_RUN_ID} ]]; then
-  annotation_argument="--trunk-annotate=${INPUT_CHECK_RUN_ID}"
+  annotation_argument=--trunk-annotate=${INPUT_CHECK_RUN_ID}
 elif [[ ${save_annotations} == "true" ]]; then
   annotation_argument=--github-annotate-file=${TRUNK_TMPDIR}/annotations.bin
   # Signal that we need to upload an annotations artifact
