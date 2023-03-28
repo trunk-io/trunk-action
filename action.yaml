@@ -80,7 +80,7 @@ runs:
     - name: Env setup
       shell: bash
       run: |
-        echo "::add-mask::$INPUT_TRUNK_TOKEN"
+        echo "::add-mask::${{ inputs.trunk-token }}"
 
         echo >>$GITHUB_ENV <<EOF
         GITHUB_TOKEN='${{ github.token }}'
@@ -89,6 +89,11 @@ runs:
         INPUT_LABEL='${{ inputs.label }}'
         INPUT_TRUNK_TOKEN='${{ inputs.trunk-token }}'
         EOF
+
+        echo 'github env'
+        cat $GITHUB_ENV
+
+        echo 'env | sort'
 
         env | sort
 
