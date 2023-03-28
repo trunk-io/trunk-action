@@ -2,6 +2,10 @@
 
 # shellcheck disable=SC2086
 
+set -x
+env
+set +x
+
 set -euo pipefail
 
 fetch() {
