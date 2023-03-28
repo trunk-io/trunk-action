@@ -237,4 +237,3 @@ runs:
       run: |
         # Cleanup temporary files
         ${GITHUB_ACTION_PATH}/cleanup.sh
-  post: ${GITHUB_ACTION_PATH}/cleanup.sh
