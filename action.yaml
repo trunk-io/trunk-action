@@ -31,6 +31,11 @@ inputs:
       Trunk artifacts (see docs for more details).
     required: false
 
+  check-all-mode:
+    description:
+      If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
+    required: false
+
   check-run-id:
     description: Check run ID. If set, posts annotations using CheckService.
     required: false
@@ -200,6 +205,7 @@ runs:
         # Run 'trunk check' on all
         ${GITHUB_ACTION_PATH}/all.sh
       env:
+        INPUT_CHECK_ALL_MODE: ${{ inputs.check-all-mode }}
         INPUT_UPLOAD_SERIES: ${{ inputs.upload-series }}
 
     - name: Run trunk check on Trunk Merge
