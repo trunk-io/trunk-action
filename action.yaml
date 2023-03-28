@@ -77,6 +77,21 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Env setup
+      shell: bash
+      run: |
+        echo "::add-mask::$INPUT_TRUNK_TOKEN"
+
+        echo >>$GITHUB_ENV <<EOF
+        GITHUB_TOKEN='${{ github.token }}'
+        INPUT_ARGUMENTS='${{ inputs.arguments }}'
+        INPUT_GITHUB_REF_NAME='${{ env.INPUT_GITHUB_REF_NAME || github.ref_name }}'
+        INPUT_LABEL='${{ inputs.label }}'
+        INPUT_TRUNK_TOKEN='${{ inputs.trunk-token }}'
+        EOF
+
+        env | sort
+
     - name: Locate trunk
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
@@ -165,13 +180,8 @@ runs:
           ${{ env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA || github.event.pull_request.head.sha }}
         GITHUB_EVENT_PULL_REQUEST_NUMBER:
           ${{ env.GITHUB_EVENT_PULL_REQUEST_NUMBER || github.event.pull_request.number }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
         INPUT_CHECK_RUN_ID: ${{ inputs.check-run-id }}
-        INPUT_GITHUB_REF_NAME: ${{ env.INPUT_GITHUB_REF_NAME || github.ref_name }}
-        INPUT_LABEL: ${{ inputs.label }}
         INPUT_SAVE_ANNOTATIONS: ${{ inputs.save-annotations }}
-        INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
 
     - name: Run trunk check on push
       if: env.TRUNK_CHECK_MODE == 'push'
@@ -182,10 +192,6 @@ runs:
       env:
         GITHUB_EVENT_AFTER: ${{ env.GITHUB_EVENT_AFTER || github.event.after }}
         GITHUB_EVENT_BEFORE: ${{ env.GITHUB_EVENT_BEFORE || github.event.before }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_GITHUB_REF_NAME: ${{ env.INPUT_GITHUB_REF_NAME || github.ref_name }}
-        INPUT_LABEL: ${{ inputs.label }}
 
     - name: Run trunk check on all
       if: env.TRUNK_CHECK_MODE == 'all'
@@ -194,11 +200,6 @@ runs:
         # Run 'trunk check' on all
         ${GITHUB_ACTION_PATH}/all.sh
       env:
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_GITHUB_REF_NAME: ${{ env.INPUT_GITHUB_REF_NAME || github.ref_name }}
-        INPUT_LABEL: ${{ inputs.label }}
-        INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
         INPUT_UPLOAD_SERIES: ${{ inputs.upload-series }}
 
     - name: Run trunk check on Trunk Merge
@@ -207,10 +208,6 @@ runs:
       run: |
         # Run 'trunk check' on Trunk Merge
         ${GITHUB_ACTION_PATH}/trunk_merge.sh
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
 
     - name: Run trunk install to populate the GitHub Actions cache
       if: env.TRUNK_CHECK_MODE == 'populate_cache_only'
@@ -218,8 +215,6 @@ runs:
       run: |
         # Run 'trunk install' to populate the GitHub Actions cache
         ${GITHUB_ACTION_PATH}/populate_cache_only.sh
-      env:
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
@@ -268,9 +263,6 @@ runs:
         ${GITHUB_ACTION_PATH}/annotate.sh
       env:
         GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
 
     - name: Cleanup temporary files
       if: always()
