@@ -11,7 +11,7 @@ if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
     --output-file .trunk/landing-state.json \
     --github-commit "${GITHUB_SHA}" \
     ${INPUT_ARGUMENTS}
-elif [[ ${CHECK_ALL_MODE} == "hold-the-line" ]]; then
+elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   latest_raw_upload="$(mktemp)"
   prev_ref=$("${TRUNK_PATH}" get-latest-raw-upload \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
