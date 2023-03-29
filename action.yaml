@@ -35,6 +35,7 @@ inputs:
     description:
       If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
     required: false
+    default: ""
 
   check-run-id:
     description: Check run ID. If set, posts annotations using CheckService.
