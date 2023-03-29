@@ -133,10 +133,12 @@ runs:
       uses: pnpm/action-setup@v2
       with:
         version: latest
+      continue-on-error: true
 
     - name: Install Node dependencies
       if: steps.detect.outputs.package_manager
       uses: actions/setup-node@v3
+      continue-on-error: true
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
@@ -148,11 +150,13 @@ runs:
       if: steps.detect.outputs.package_manager
       shell: bash
       run: ${{ steps.detect.outputs.install_cmd }}
+      continue-on-error: true
 
     - name: Post-init steps
       if: inputs.post-init
       shell: bash
       run: ${{ inputs.post-init }}
+      continue-on-error: true
 
     - name: Determine check mode
       shell: bash
