@@ -47,7 +47,7 @@ jobs:
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
-            ref: 8834314ff334ea8321bf2c83934f276d379512cd
+            ref: c2e94de4479ed76c96a71ebcc3e3fa2f83b2bcf6
             description: (uses pnpm)
             post-init: |
               ${TRUNK_PATH} check enable eslint
@@ -82,14 +82,14 @@ jobs:
             ref: main
 
           - repo: vuejs/core
-            ref: a0e7dc334356e9e6ffaa547d29e55b34b9b8a04d
+            ref: e10a89e608d3486c0c9a0457ee7c56d208e0aa91
             description: (uses pnpm)
             post-init: |
               # svgo gets confused by JS module loading
               ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
-            ref: 06dbdbd696892bf4eda9641c88a6b406374fbaa4
+            ref: ed203ec4681ad58f7863879c9b5df47adbf70a80
             description: (has trunk.yaml)
 
     steps:
