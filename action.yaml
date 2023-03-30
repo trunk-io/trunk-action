@@ -289,7 +289,7 @@ runs:
             "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
             ${{ inputs.check-run-id }}
           });
-          if (status == "completed") {
+          if (status === "completed") {
             return;
           }
           await github.checks.update({
