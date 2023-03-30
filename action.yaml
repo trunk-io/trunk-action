@@ -278,7 +278,7 @@ runs:
         GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
 
     - name: Finalize check run
-      if: always() #&& inputs.check-run-id
+      if: always() && inputs.check-run-id
       continue-on-error: true
       uses: actions/github-script@v6
       with:
