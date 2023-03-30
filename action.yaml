@@ -52,6 +52,10 @@ inputs:
     description: Steps to run after auto-init / before check
     required: false
 
+  github-token:
+    description: For overriding github.token
+    required: false
+
   trunk-token:
     description:
       You can find a per-repo API token in the Trunk web app settings. This will cause results to be
@@ -86,6 +90,7 @@ runs:
     - name: Env setup
       shell: bash
       run: |
+        echo "::add-mask::$INPUT_GITHUB_TOKEN"
         echo "::add-mask::$INPUT_TRUNK_TOKEN"
 
         cat >>$GITHUB_ENV <<EOF
@@ -96,6 +101,7 @@ runs:
         INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
         EOF
       env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
         INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
 
     - name: Locate trunk
@@ -270,6 +276,35 @@ runs:
         ${GITHUB_ACTION_PATH}/annotate.sh
       env:
         GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+
+    - name: Finalize check run
+      if: always() && inputs.check-run-id
+      continue-on-error: true
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const { status } = await github.rest.checks.get({
+            owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
+            repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
+            check_run_id: ${{ inputs.check-run-id }}
+          });
+          if (status === "completed") {
+            return;
+          }
+          await github.rest.checks.update({
+            owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
+            repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
+            check_run_id: ${{ inputs.check-run-id }},
+            head_sha: "${{ env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA }}",
+            status: "completed",
+            conclusion: "failure",
+            output: {
+              title: "Trunk Check",
+              summary: "unexpected failure",
+              text: "Please contact us at https://slack.trunk.io to get help",
+            },
+          });
 
     - name: Cleanup temporary files
       if: always()
