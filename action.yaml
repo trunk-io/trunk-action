@@ -292,7 +292,7 @@ runs:
           if (status === "completed") {
             return;
           }
-          await github.checks.update({
+          await github.rest.checks.update({
             owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
             check_run_id: ${{ inputs.check-run-id }},
