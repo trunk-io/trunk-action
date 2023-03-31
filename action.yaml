@@ -289,12 +289,7 @@ runs:
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
             check_run_id: ${{ inputs.check-run-id }}
           });
-          console.log('check API returned', check);
-          console.log('check API data', check.data);
-          console.log('check API status', check.data.status);
-          const { data: { status: checkStatus } } = check;
-          console.log('returned status is', checkStatus);
-          if (status === "completed") {
+          if (check.data.status === "completed") {
             return;
           }
           await github.rest.checks.update({
