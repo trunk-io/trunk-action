@@ -147,6 +147,7 @@ runs:
 
         fi
       env:
+        # These are handled specially because we add-mask them.
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token || fromJSON(inputs.json).github_token }}
         INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token || fromJSON(inputs.json).token }}
 
