@@ -292,7 +292,7 @@ runs:
           });
           if (data.status === "completed") {
             console.log("Success!");
-            return;
+            //return;
           }
           console.log("Check was not completed; marking the check run as failed; details are ", data);
           await github.rest.checks.update({
