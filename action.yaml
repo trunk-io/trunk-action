@@ -290,8 +290,8 @@ runs:
             check_run_id: ${{ inputs.check-run-id }}
           });
           console.log('check API returned', check);
-          const { data: { status } } = check;
-          console.log('returned status is', status);
+          const { data: { status: checkStatus } } = check;
+          console.log('returned status is', checkStatus);
           if (status === "completed") {
             return;
           }
