@@ -283,17 +283,13 @@ runs:
       uses: actions/github-script@v6
       with:
         github-token: ${{ inputs.github-token }}
-        # Both destructuring forms cause "SyntaxError: Invalid or unexpected token"
         script: |
-          const check = await github.rest.checks.get({
+          const { data: { status: checkStatus } } = await github.rest.checks.get({
             owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
             check_run_id: ${{ inputs.check-run-id }}
           });
-          const { data: { status: checkStatus } } = check;
-          const { data: { status } } = check;
-          console.log("try nested destructure", { status, checkStatus });
-          if (check.data.status === "completed") {
+          if (checkStatus === "completed") {
             return;
           }
           await github.rest.checks.update({
