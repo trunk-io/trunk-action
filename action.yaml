@@ -291,6 +291,7 @@ runs:
           });
           console.log('check API returned', check);
           const { status } = check;
+          console.log('returned status is', status);
           if (status === "completed") {
             return;
           }
