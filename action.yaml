@@ -87,6 +87,7 @@ inputs:
   json:
     description: Used by CheckService
     required: false
+    default: "{}"
 
 runs:
   using: composite
