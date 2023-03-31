@@ -289,6 +289,9 @@ runs:
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
             check_run_id: ${{ inputs.check-run-id }}
           });
+          # The below snippet doesn't work for destructuring, weirdly enough...
+          const { data: { status } } = check;
+            console.log('try nested destructure', status);
           if (check.data.status === "completed") {
             return;
           }
