@@ -294,7 +294,9 @@ runs:
             console.log("Success!");
             //return;
           }
-          console.log("Check was not completed; marking the check run as failed; details are ", data);
+          console.log(`::group::Status was ${data.status}; marking the check run as failed.`);
+          console.log(data);
+          console.log("::endgroup::");
           await github.rest.checks.update({
             owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
