@@ -284,14 +284,19 @@ runs:
       with:
         github-token: ${{ inputs.github-token }}
         script: |
-          const { status } = await github.rest.checks.get({
+          console.log("Verifying that the GitHub check run was updated with results...");
+          const { data } = await github.rest.checks.get({
             owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
             check_run_id: ${{ inputs.check-run-id }}
           });
-          if (status === "completed") {
+          if (data.status === "completed") {
+            console.log("Success!");
             return;
           }
+          console.log(`::group::Status was ${data.status}; marking the check run as failed.`);
+          console.log(data);
+          console.log("::endgroup::");
           await github.rest.checks.update({
             owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
             repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
