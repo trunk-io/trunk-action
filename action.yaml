@@ -122,6 +122,7 @@ runs:
         INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).check_run_id }}
         INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).target.ref_name }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
+        INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunk_path }}
         INPUT_UPLOAD_SERIES=${{ fromJSON(inputs.json).upload_series }}
         EOF
 
@@ -133,13 +134,14 @@ runs:
         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
         GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}
         GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_ARGUMENTS=${{ inputs.cache }}
+        INPUT_ARGUMENTS=${{ inputs.arguments }}
         INPUT_CACHE=${{ inputs.cache }}
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_LABEL=${{ inputs.label }}
+        INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
         INPUT_UPLOAD_SERIES=${{ inputs.upload_series }}
         EOF
 
@@ -151,8 +153,6 @@ runs:
     - name: Locate trunk
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
-      env:
-        INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
 
     - name: Init on-demand
       shell: bash
