@@ -109,21 +109,21 @@ runs:
         if [[ -n "${{ fromJSON(inputs.json).version }}" ]]; then
 
           cat >>$GITHUB_ENV <<EOF
-        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=${{ fromJSON(inputs.json).pull_request.base.repo.owner.login }}
-        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=${{ fromJSON(inputs.json).pull_request.base.repo.name }}
-        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ fromJSON(inputs.json).pull_request.base.sha }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ fromJSON(inputs.json).pull_request.head.repo.fork }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ fromJSON(inputs.json).pull_request.head.sha }}
-        GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ fromJSON(inputs.json).pull_request.number }}
+        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=${{ fromJSON(inputs.json).pullRequest.base.repo.owner.login }}
+        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=${{ fromJSON(inputs.json).pullRequest.base.repo.name }}
+        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ fromJSON(inputs.json).pullRequest.base.sha }}
+        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ fromJSON(inputs.json).pullRequest.head.repo.fork }}
+        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ fromJSON(inputs.json).pullRequest.head.sha }}
+        GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ fromJSON(inputs.json).pullRequest.number }}
         INPUT_ARGUMENTS=${{ fromJSON(inputs.json).arguments }}
         INPUT_CACHE=${{ fromJSON(inputs.json).cache }}
-        INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).check_all_mode }}
-        INPUT_CHECK_MODE=${{ fromJSON(inputs.json).check_mode }}
-        INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).check_run_id }}
-        INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).target.ref_name }}
+        INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).checkAllMode }}
+        INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
+        INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
+        INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).target.refName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
-        INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunk_path }}
-        INPUT_UPLOAD_SERIES=${{ fromJSON(inputs.json).upload_series }}
+        INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunkPath }}
+        INPUT_UPLOAD_SERIES=${{ fromJSON(inputs.json).uploadSeries }}
         EOF
 
         else
@@ -148,7 +148,7 @@ runs:
         fi
       env:
         # These are handled specially because we add-mask them.
-        INPUT_GITHUB_TOKEN: ${{ inputs.github-token || fromJSON(inputs.json).github_token }}
+        INPUT_GITHUB_TOKEN: ${{ inputs.github-token || fromJSON(inputs.json).githubToken }}
         INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token || fromJSON(inputs.json).token }}
 
     - name: Locate trunk
