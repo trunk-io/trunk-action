@@ -162,7 +162,7 @@ runs:
           ${TRUNK_PATH} init
         fi
 
-    - name: Detect npm/yarn/pnpm
+    - name: Detect npm/yarn/pnpm & custom setup
       id: detect
       shell: bash
       run: |
@@ -178,6 +178,10 @@ runs:
           echo "package_manager=pnpm" >> $GITHUB_OUTPUT
           echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
           echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+        fi
+
+        if [ -e .trunk/ci-setup/action.yaml ]; then
+          echo "setup_action_exists=true" >> $GITHUB_OUTPUT
         fi
 
     - name: Install pnpm
@@ -205,6 +209,10 @@ runs:
       if: inputs.post-init
       shell: bash
       run: ${{ inputs.post-init }}
+
+    - name: Run user-provided setup
+      if: steps.detect.outputs.setup_action_exists
+      run: ./.trunk/ci-setup/
 
     - name: Determine check mode
       shell: bash
