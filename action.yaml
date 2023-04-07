@@ -160,15 +160,17 @@ runs:
       shell: bash
       run: |
         if [ -e .trunk/ci-setup/action.yaml ]; then
-          echo "custom-setup-exists=true" >> $GITHUB_OUTPUT
+          echo "setup=user-provided" >> $GITHUB_OUTPUT
+        else
+          echo "setup=automatic" >> $GITHUB_OUTPUT
         fi
 
     - name: Run user-provided setup
-      if: steps.detect.output.custom-setup-exists
+      if: steps.detect.output.setup == 'user-provided'
       uses: ./.trunk/ci-setup/
 
     - name: Run automatic setup
-      if: !(steps.detect.outputs.custom-setup-exists)
+      if: steps.detect.outputs.setup == 'automatic'
       uses: ${GITHUB_ACTION_PATH}/setup-env
 
     - name: Post-init steps
