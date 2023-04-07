@@ -92,7 +92,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Env setup
+    - name: Set up inputs
       shell: bash
       run: |
         echo "::add-mask::$INPUT_GITHUB_TOKEN"
@@ -155,64 +155,26 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
 
-    - name: Init on-demand
-      shell: bash
-      run: |
-        if [ ! -e .trunk/trunk.yaml ]; then
-          ${TRUNK_PATH} init
-        fi
-
-    - name: Detect npm/yarn/pnpm & custom setup
+    - name: Detect
       id: detect
       shell: bash
       run: |
-        if [ -e package-lock.json ]; then
-          echo "package_manager=npm" >> $GITHUB_OUTPUT
-          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
-        elif [ -e yarn.lock ]; then
-          echo "package_manager=yarn" >> $GITHUB_OUTPUT
-          echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
-        elif [ -e pnpm-lock.yaml ]; then
-          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
-          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
-        fi
-
         if [ -e .trunk/ci-setup/action.yaml ]; then
-          echo "setup_action_exists=true" >> $GITHUB_OUTPUT
+          echo "custom-setup-exists=true" >> $GITHUB_OUTPUT
         fi
 
-    - name: Install pnpm
-      if: steps.detect.outputs.package_manager == 'pnpm'
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
+    - name: Run user-provided setup
+      if: steps.detect.output.custom-setup-exists
+      run: ./.trunk/ci-setup/
 
-    - name: Install Node dependencies
-      if: steps.detect.outputs.package_manager
-      uses: actions/setup-node@v3
-
-    #- name: Cache node_modules
-    #  uses: actions/cache@v3
-    #  with:
-    #    path: node_modules/
-    #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
-
-    - name: Install ${{ steps.detect.outputs.package_manager }} packages
-      if: steps.detect.outputs.package_manager
-      shell: bash
-      run: ${{ steps.detect.outputs.install_cmd }}
+    - name: Run automatic setup
+      if: !steps.detect.outputs.custom-setup-exists
+      run: ${GITHUB_ACTION_PATH}/setup-env
 
     - name: Post-init steps
       if: inputs.post-init
       shell: bash
       run: ${{ inputs.post-init }}
-
-    - name: Run user-provided setup
-      if: steps.detect.outputs.setup_action_exists
-      run: ./.trunk/ci-setup/
 
     - name: Determine check mode
       shell: bash
