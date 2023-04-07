@@ -162,6 +162,7 @@ runs:
         if [ ! -e .trunk/setup-ci ]; then
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
+          echo .trunk/setup-ci >>~/.gitignore
         fi
 
     - name: Set up env
