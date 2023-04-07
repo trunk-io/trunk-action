@@ -163,10 +163,6 @@ runs:
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
           echo .trunk/setup-ci >>.git/info/exclude
-
-          set -x
-          git status
-          set +x
         fi
 
     - name: Set up env
