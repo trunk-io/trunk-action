@@ -160,6 +160,7 @@ runs:
       shell: bash
       run: |
         if [ ! -e .trunk/ci-setup ]; then
+          mkdir -p .trunk
           ln -s ${{ github.action_path }} .trunk/ci-setup
         fi
 
