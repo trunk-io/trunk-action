@@ -163,10 +163,8 @@ runs:
           ln -s ${{ github.action_path }} .trunk/ci-setup
         fi
 
-        echo "setup=.trunk/ci-setup/" >> $GITHUB_OUTPUT
-
     - name: Set up env
-      uses: ./${{ steps.detect.outputs.setup }}
+      uses: ./.trunk/ci-setup
 
     - name: Post-init steps
       if: inputs.post-init
