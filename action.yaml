@@ -159,7 +159,7 @@ runs:
       id: detect
       shell: bash
       run: |
-        if [ -e .trunk/ci-setup ]; then
+        if [ ! -e .trunk/ci-setup ]; then
           ln -s ${{ github.action_path }} .trunk/ci-setup
         fi
 
