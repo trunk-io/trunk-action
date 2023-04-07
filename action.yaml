@@ -165,11 +165,11 @@ runs:
 
     - name: Run user-provided setup
       if: steps.detect.output.custom-setup-exists
-      run: ./.trunk/ci-setup/
+      uses: ./.trunk/ci-setup/
 
     - name: Run automatic setup
-      if: !steps.detect.outputs.custom-setup-exists
-      run: ${GITHUB_ACTION_PATH}/setup-env
+      if: !(steps.detect.outputs.custom-setup-exists)
+      uses: ${GITHUB_ACTION_PATH}/setup-env
 
     - name: Post-init steps
       if: inputs.post-init
