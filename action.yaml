@@ -165,7 +165,9 @@ runs:
           echo .trunk/setup-ci >>~/.gitignore
 
           set -x
-          git config --get core.excludesFile
+          echo ~
+          git config --global core.excludesFile=~/.gitignore
+
           git status
           set +x
         fi
