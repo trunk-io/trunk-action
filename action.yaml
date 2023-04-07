@@ -160,18 +160,13 @@ runs:
       shell: bash
       run: |
         if [ -e .trunk/ci-setup/action.yaml ]; then
-          echo "setup=user-provided" >> $GITHUB_OUTPUT
+          echo "setup=.trunk/ci-setup/" >> $GITHUB_OUTPUT
         else
-          echo "setup=automatic" >> $GITHUB_OUTPUT
+          echo "setup=$(realpath --relative-to=$(pwd) $GITHUB_ACTION_PATH)" >> $GITHUB_OUTPUT
         fi
 
-    - name: Run user-provided setup
-      if: steps.detect.output.setup == 'user-provided'
-      uses: ./.trunk/ci-setup/
-
-    - name: Run automatic setup
-      if: steps.detect.outputs.setup == 'automatic'
-      uses: ${{ github.action_path }}/setup-env
+    - name: Set up env
+      uses: ./${{ steps.detect.outputs.setup }}
 
     - name: Post-init steps
       if: inputs.post-init
