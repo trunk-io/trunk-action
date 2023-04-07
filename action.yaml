@@ -159,11 +159,11 @@ runs:
       id: detect
       shell: bash
       run: |
-        if [ -e .trunk/ci-setup/action.yaml ]; then
-          echo "setup=.trunk/ci-setup/" >> $GITHUB_OUTPUT
-        else
-          echo "setup=$(realpath --relative-to=$(pwd) $GITHUB_ACTION_PATH)" >> $GITHUB_OUTPUT
+        if [ -e .trunk/ci-setup ]; then
+          ln -s ${{ github.action_path }} .trunk/ci-setup
         fi
+
+        echo "setup=.trunk/ci-setup/" >> $GITHUB_OUTPUT
 
     - name: Set up env
       uses: ./${{ steps.detect.outputs.setup }}
