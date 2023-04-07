@@ -159,13 +159,13 @@ runs:
       id: detect
       shell: bash
       run: |
-        if [ ! -e .trunk/ci-setup ]; then
+        if [ ! -e .trunk/setup-ci ]; then
           mkdir -p .trunk
-          ln -s ${{ github.action_path }}/setup-env .trunk/ci-setup
+          ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
         fi
 
     - name: Set up env
-      uses: ./.trunk/ci-setup
+      uses: ./.trunk/setup-ci
 
     - name: Post-init steps
       if: inputs.post-init
