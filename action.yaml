@@ -162,12 +162,9 @@ runs:
         if [ ! -e .trunk/setup-ci ]; then
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
-          echo .trunk/setup-ci >>~/.gitignore
+          echo .trunk/setup-ci >>.git/info/exclude
 
           set -x
-          echo ~
-          git config --global core.excludesFile=~/.gitignore
-
           git status
           set +x
         fi
