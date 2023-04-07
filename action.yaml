@@ -171,7 +171,7 @@ runs:
 
     - name: Run automatic setup
       if: steps.detect.outputs.setup == 'automatic'
-      uses: ${{ github.action_pat }}/setup-env
+      uses: ${{ github.action_path }}/setup-env
 
     - name: Post-init steps
       if: inputs.post-init
