@@ -1,0 +1,52 @@
+name: Setup environment
+author: trunk.io
+description: Automatic setup for trunk check and dependencies (e.g. Node)
+
+runs:
+  using: composite
+  steps:
+    - name: Init on-demand
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          ${TRUNK_PATH:-trunk} init
+        fi
+
+    - name: Detect npm/yarn/pnpm & custom setup
+      id: detect
+      shell: bash
+      run: |
+        if [ -e package-lock.json ]; then
+          echo "package_manager=npm" >> $GITHUB_OUTPUT
+          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
+        elif [ -e yarn.lock ]; then
+          echo "package_manager=yarn" >> $GITHUB_OUTPUT
+          echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
+        elif [ -e pnpm-lock.yaml ]; then
+          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
+          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
+          echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Install pnpm
+      if: steps.detect.outputs.package_manager == 'pnpm'
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
+    - name: Install Node dependencies
+      if: steps.detect.outputs.package_manager
+      uses: actions/setup-node@v3
+
+    #- name: Cache node_modules
+    #  uses: actions/cache@v3
+    #  with:
+    #    path: node_modules/
+    #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
+
+    - name: Install ${{ steps.detect.outputs.package_manager }} packages
+      if: steps.detect.outputs.package_manager
+      shell: bash
+      run: ${{ steps.detect.outputs.install_cmd }}
