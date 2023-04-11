@@ -13,7 +13,7 @@ plugins:
       uri: https://github.com/trunk-io/configs
 
 lint:
-  # enable list inherited from plugin 'configs'
+  # enabled list inherited from plugin 'configs'
   ignore:
     - linters: [ALL]
       paths:
