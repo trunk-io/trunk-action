@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+if [[ ${INPUT_DEBUG} == "true" ]]; then
+  set -x
+fi
+
 tmpdir="$(mktemp -d)"
 echo "TRUNK_TMPDIR=${tmpdir}" >>"${GITHUB_ENV}"
 

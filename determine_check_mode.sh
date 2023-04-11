@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+if [[ ${INPUT_DEBUG} == "true" ]]; then
+  set -x
+fi
+
 check_mode="${INPUT_CHECK_MODE}"
 if [[ -z ${check_mode} ]]; then
   if [[ ${GITHUB_EVENT_NAME} == "pull_request" || ${GITHUB_EVENT_NAME} == "pull_request_target" ]]; then

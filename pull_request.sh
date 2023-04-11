@@ -4,6 +4,10 @@
 
 set -euo pipefail
 
+if [[ ${INPUT_DEBUG} == "true" ]]; then
+  set -x
+fi
+
 fetch() {
   git -c protocol.version=2 fetch -q \
     --no-tags \
