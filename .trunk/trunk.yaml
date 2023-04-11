@@ -14,7 +14,6 @@ plugins:
 
 lint:
   # enable list inherited from plugin 'configs'
-  enabled: []
   ignore:
     - linters: [ALL]
       paths:
