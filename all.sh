@@ -4,6 +4,10 @@
 
 set -euo pipefail
 
+if [[ ${INPUT_DEBUG} == "true" ]]; then
+  set -x
+fi
+
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \

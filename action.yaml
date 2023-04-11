@@ -89,6 +89,11 @@ inputs:
     required: false
     default: "{}"
 
+  debug:
+    description: Internal use only
+    required: false
+    default: "false"
+
 runs:
   using: composite
   steps:
@@ -120,6 +125,7 @@ runs:
         INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).checkAllMode }}
         INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
         INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
+        INPUT_DEBUG=${{ fromJSON(inputs.json).debug }}
         INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).target.refName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
         INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunkPath }}
@@ -139,6 +145,7 @@ runs:
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
+        INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_LABEL=${{ inputs.label }}
         INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
