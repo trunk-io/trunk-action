@@ -9,7 +9,7 @@ plugins:
       ref: v0.0.15
       uri: https://github.com/trunk-io/plugins
     - id: configs
-      ref: c99292a0411271304682c29e5aacd5c05068f221
+      ref: v0.0.1
       uri: https://github.com/trunk-io/configs
 
 lint:
