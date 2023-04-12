@@ -315,6 +315,14 @@ runs:
             },
           });
 
+    - name: Upload landing state
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: landing-state.json
+        path: .trunk/landing-state.json
+        if-no-files-found: warn
+
     - name: Cleanup temporary files
       if: always()
       shell: bash
