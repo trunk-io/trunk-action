@@ -151,9 +151,9 @@ runs:
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_CHECKOUT=false
-        INPUT_TARGET_NAME=
+        INPUT_TARGET_CHECKOUT=
         INPUT_TARGET_CHECKOUT_REF=
+        INPUT_TARGET_NAME=
         INPUT_LABEL=${{ inputs.label }}
         INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
         INPUT_UPLOAD_LANDING_STATE=false
