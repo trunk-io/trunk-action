@@ -333,6 +333,7 @@ runs:
 
     - name: Upload landing state
       if: env.INPUT_UPLOAD_LANDING_STATE
+      continue-on-error: true
       uses: actions/upload-artifact@v3
       with:
         name: landing-state.json
