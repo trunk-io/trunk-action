@@ -316,7 +316,7 @@ runs:
           });
 
     - name: Upload landing state
-      if: always()
+      if: always() && env.TRUNK_CHECK_MODE == 'pull_request'
       continue-on-error: true
       uses: actions/upload-artifact@v3
       with:
