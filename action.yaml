@@ -128,6 +128,9 @@ runs:
         INPUT_DEBUG=${{ fromJSON(inputs.json).debug }}
         INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).target.refName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
+        INPUT_CHECKOUT=true
+        INPUT_TARGET_NAME=${{ fromJSON(inputs.json).target.name }}
+        INPUT_TARGET_CHECKOUT_REF=${{ fromJSON(inputs.json).target.checkoutRef }}
         INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunkPath }}
         INPUT_UPLOAD_SERIES=${{ fromJSON(inputs.json).uploadSeries }}
         EOF
@@ -147,6 +150,9 @@ runs:
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
+        INPUT_CHECKOUT=false
+        INPUT_TARGET_NAME=
+        INPUT_TARGET_CHECKOUT_REF=
         INPUT_LABEL=${{ inputs.label }}
         INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
         INPUT_UPLOAD_SERIES=${{ inputs.upload_series }}
@@ -157,6 +163,14 @@ runs:
         # These are handled specially because we add-mask them.
         INPUT_GITHUB_TOKEN: ${{ inputs.github-token || fromJSON(inputs.json).githubToken }}
         INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token || fromJSON(inputs.json).token }}
+
+    - name: Checkout
+      if: env.INPUT_CHECKOUT
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ env.INPUT_TARGET_NAME }}
+        ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
+        token: ${{ env.INPUT_GITHUB_TOKEN }}
 
     - name: Locate trunk
       shell: bash
