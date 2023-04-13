@@ -317,6 +317,7 @@ runs:
 
     - name: Upload landing state
       if: always()
+      continue-on-error: true
       uses: actions/upload-artifact@v3
       with:
         name: landing-state.json
