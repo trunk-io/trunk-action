@@ -1,40 +1,20 @@
 version: 0.1
 
 cli:
-  version: 1.5.1
+  version: 1.7.1-beta.9
 
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.11
+      ref: v0.0.15
       uri: https://github.com/trunk-io/plugins
-
-runtimes:
-  enabled:
-    - python@3.10.8
-    - go@1.18.3
-    - node@18.12.1
+    - id: configs
+      ref: v0.0.1
+      uri: https://github.com/trunk-io/configs
 
 lint:
-  enabled:
-    - black@23.1.0
-    - pylint@2.16.2
-    - actionlint@1.6.23
-    - git-diff-check
-    - gitleaks@8.16.0
-    - markdownlint@0.33.0
-    - prettier@2.8.4
-    - shellcheck@0.9.0
-    - shfmt@3.5.0
-    - yamllint@1.29.0
+  # enabled list inherited from plugin 'configs'
   ignore:
     - linters: [ALL]
       paths:
         - repo_tests/**
-
-actions:
-  enabled:
-    - trunk-announce
-    - trunk-check-pre-push
-    - trunk-fmt-pre-commit
-    - trunk-upgrade-available
