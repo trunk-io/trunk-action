@@ -126,7 +126,7 @@ runs:
         INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
         INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
         INPUT_DEBUG=${{ fromJSON(inputs.json).debug }}
-        INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).target.refName }}
+        INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).targetRefName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
         INPUT_TARGET_CHECKOUT=${{ fromJSON(inputs.json).targetCheckout }}
         INPUT_TARGET_CHECKOUT_REF=${{ fromJSON(inputs.json).targetCheckoutRef }}
