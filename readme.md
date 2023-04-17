@@ -16,7 +16,7 @@ issues _before_ pushing your changes. See all supported linters
 [here](https://github.com/trunk-io/plugins).
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/46629651/232627691-73734ba9-f46d-4971-a8a5-0b35f2d12720.png" height="300"/>
+  <img src="https://user-images.githubusercontent.com/46629651/232631742-645be266-5ea1-4a97-aa6d-6da868c056a8.png" height="300"/>
   <br>
   <em>Example annotations</em>
 </p>
