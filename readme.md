@@ -15,12 +15,18 @@ hermetically, _locally_ or on CI, so you can always quickly see lint, formatting
 issues _before_ pushing your changes. See all supported linters
 [here](https://github.com/trunk-io/plugins).
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/46629651/232631742-645be266-5ea1-4a97-aa6d-6da868c056a8.png" height="300"/>
+  <br>
+  <em>Example annotations</em>
+</p>
+  
 ## Get Started
 
 Before setting up running Trunk Check on CI, you'll need to initialize trunk in your repo.
-Initializing it (`trunk init`) bootstraps a the trunk configuration (`.trunk/trunk.yaml`) which
-stores all the configuration for Trunk. All linters and formatters, as well as the version of Trunk
-itself, are versioned in `trunk.yaml`, so you're guarnateed to get the same results whether you're
+Initializing it (`trunk init`) bootstraps the trunk configuration (`.trunk/trunk.yaml`) which stores
+all the configurations for Trunk. All linters and formatters, as well as the version of Trunk
+itself, are versioned in `trunk.yaml`, so you're guaranteed to get the same results whether you're
 running locally or on CI.
 
 Check out the Trunk [CLI](https://docs.trunk.io/docs/overview) and [VS Code extension][vscode] to
@@ -65,7 +71,7 @@ Here's some GitHub docs to get you going:
 ### Caching
 
 To use GitHub Actions caching for Trunk, create a new workflow (for example,
-`.github/worksflows/cache_trunk.yaml`) to run on any change the your Trunk configuration:
+`.github/worksflows/cache_trunk.yaml`) to run on any change to your Trunk configuration:
 
 ```yaml
 on:
@@ -146,7 +152,7 @@ annotations in the regular manner, and fork PRs post annotations via the above w
 After you `trunk init`, `.trunk/trunk.yaml` will contain a pinned version of Trunk to use for your
 repo. When you run trunk, it will automatically detect which version you should be running for a
 particular repo and download+run it. This means that everyone working in a repo, and CI, all get the
-same results and the same experience. no more "doesn't happen on my machine". When you want to
+same results and the same experience - no more "doesn't happen on my machine". When you want to
 upgrade to a newer verison, just run `trunk upgrade` and commit the updated `trunk.yaml`.
 
 ## Run Trunk outside of GitHub Actions
