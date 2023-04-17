@@ -15,7 +15,7 @@ hermetically, _locally_ or on CI, so you can always quickly see lint, formatting
 issues _before_ pushing your changes. See all supported linters
 [here](https://github.com/trunk-io/plugins).
 
-[![annotations](https://user-images.githubusercontent.com/46629651/232627691-73734ba9-f46d-4971-a8a5-0b35f2d12720.png)[annotations]
+[![annotations](https://user-images.githubusercontent.com/46629651/232627691-73734ba9-f46d-4971-a8a5-0b35f2d12720.png)][annotations]
 
 ## Get Started
 
