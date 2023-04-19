@@ -51,7 +51,7 @@ runs:
       shell: bash
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
-          echo "Unable to run 'trunk upgrade'. Please run 'trunk init' and commit the generate '.trunk/trunk.yaml'."
+          echo "Unable to run 'trunk upgrade'. Please run 'trunk init' and commit the generated '.trunk/trunk.yaml'."
           exit 1
         fi
 
