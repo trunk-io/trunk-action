@@ -42,7 +42,6 @@ fi
 
 "${TRUNK_PATH}" check \
   --ci \
-  --output-file .trunk/landing-state.json \
   --upstream "${upstream}" \
   --github-commit "${GITHUB_EVENT_AFTER}" \
   ${INPUT_ARGUMENTS}
