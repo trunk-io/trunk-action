@@ -12,7 +12,6 @@ if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \
     --all \
-    --output-file .trunk/landing-state.json \
     --github-commit "${GITHUB_SHA}" \
     ${INPUT_ARGUMENTS}
 elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
@@ -46,7 +45,6 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
 else
   "${TRUNK_PATH}" check \
     --all \
-    --output-file .trunk/landing-state.json \
     --upload \
     --series "${INPUT_UPLOAD_SERIES:-${INPUT_GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \

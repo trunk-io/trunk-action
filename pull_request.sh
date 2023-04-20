@@ -50,7 +50,6 @@ fi
 
 "${TRUNK_PATH}" check \
   --ci \
-  --output-file .trunk/landing-state.json \
   --upstream "${upstream}" \
   --github-commit "${git_commit}" \
   --github-label "${INPUT_LABEL}" \
