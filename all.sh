@@ -20,8 +20,8 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \
-    --debug
-    ${INPUT_ARGUMENTS}
+    --debug \
+    ${INPUT_ARGUMENTS} \
     "${latest_raw_upload}")"
   get_latest_raw_upload_exit_code=$?
   set -e
