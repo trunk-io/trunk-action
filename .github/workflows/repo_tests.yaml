@@ -47,7 +47,7 @@ jobs:
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
-            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4ed
+            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
             description: (uses pnpm)
             post-init: |
               ${TRUNK_PATH} check enable eslint
