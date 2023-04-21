@@ -16,11 +16,18 @@ if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
     ${INPUT_ARGUMENTS}
 elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   latest_raw_upload="$(mktemp)"
+  set +e
   prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \
     "${latest_raw_upload}")"
-  if [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
+  get_latest_raw_upload_exit_code=$?
+  set -e
+  if [[ ${get_latest_raw_upload_exit_code} != 0 ]]; then
+    echo "Failed to retrieve the latest upload. TEMPORARY FIX DO NOT LAND error:"
+    echo $prev_ref
+    htl_arg=""
+  elif [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
     echo "${prev_ref}"
     htl_arg=""
   else
