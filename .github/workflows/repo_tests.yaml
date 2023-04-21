@@ -5,8 +5,9 @@ jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
-    continue-on-error: true
+    continue-on-error: false
     strategy:
+      fail-fast: false
       matrix:
         include:
           # Items in this list satisfy a few criteria:

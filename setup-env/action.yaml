@@ -11,6 +11,9 @@ runs:
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
         fi
+        cat >>$GITHUB_ENV <<EOF
+        INPUT_ARGUMENTS=$INPUT_ARGUMENTS --output-file=.trunk/landing-state.json
+        EOF
 
     - name: Detect npm/yarn/pnpm & custom setup
       id: detect
@@ -39,13 +42,6 @@ runs:
     - name: Install Node dependencies
       if: steps.detect.outputs.package_manager
       uses: actions/setup-node@v3
-
-    - name: Add landing-state.json as output file
-      shell: bash
-      run: |
-        cat >>$GITHUB_ENV <<EOF
-        INPUT_ARGUMENTS=$INPUT_ARGUMENTS --output-file=.trunk/landing-state.json
-        EOF
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
