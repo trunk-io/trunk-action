@@ -40,6 +40,13 @@ runs:
       if: steps.detect.outputs.package_manager
       uses: actions/setup-node@v3
 
+    - name: Add landing-state.json as output file
+      shell: bash
+      run: |
+        cat >>$GITHUB_ENV <<EOF
+        INPUT_ARGUMENTS=$INPUT_ARGUMENTS --output-file=.trunk/landing-state.json
+        EOF
+
     #- name: Cache node_modules
     #  uses: actions/cache@v3
     #  with:
