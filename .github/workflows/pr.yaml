@@ -23,27 +23,3 @@ jobs:
   repo_tests:
     name: Repository tests
     uses: ./.github/workflows/repo_tests.yaml
-
-  # TODO: TYLER DO NOT LAND: TESTING ONLY, move to PR later
-  trunk_upgrade:
-    name: Upgrade Trunk
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # For trunk to create PRs
-      pull-requests: write # For trunk to create PRs
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Create App Token for Opening PR
-        uses: tibdex/github-app-token@v1
-        id: generate-token
-        with:
-          app_id: ${{ secrets.TRUNK_OPEN_PR_APP_ID }}
-          private_key: ${{ secrets.TRUNK_OPEN_PR_APP_PRIVATE_KEY }}
-
-      - name: Trunk Upgrade
-        uses: ./upgrade # external users: use trunk-io/trunk-action/upgrade@v1
-        with:
-          github-token: ${{ steps.generate-token.outputs.token }}
-          reviewers: TylerJang27
