@@ -28,6 +28,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     git fetch origin "${prev_ref}"
   fi
   "${TRUNK_PATH}" check \
+    --ci \
     --all \
     --upload \
     ${htl_arg} \
@@ -36,6 +37,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     ${INPUT_ARGUMENTS}
 else
   "${TRUNK_PATH}" check \
+    --ci \
     --all \
     --upload \
     --series "${INPUT_UPLOAD_SERIES:-${INPUT_GITHUB_REF_NAME}}" \
