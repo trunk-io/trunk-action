@@ -42,4 +42,3 @@ jobs:
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
           reviewers: TylerJang27
-          base: tyler/add-upgrade-subaction # TODO: TYLER REMOVE
