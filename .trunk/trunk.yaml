@@ -1,12 +1,12 @@
 version: 0.1
 
 cli:
-  version: 1.7.1-beta.9
+  version: 1.8.1
 
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.15
+      ref: v0.0.16
       uri: https://github.com/trunk-io/plugins
     - id: configs
       ref: v0.0.1
@@ -14,6 +14,7 @@ plugins:
 
 lint:
   # enabled list inherited from plugin 'configs'
+  enabled:
   ignore:
     - linters: [ALL]
       paths:
