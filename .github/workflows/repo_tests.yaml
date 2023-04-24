@@ -5,8 +5,8 @@ jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         include:
           # Items in this list satisfy a few criteria:
@@ -21,13 +21,13 @@ jobs:
           #     this workflow on PRs
           #
           - repo: highlightjs/highlight.js
-            ref: 91e1898df92a7127956a4926e5e4ce94424492b7
+            ref: 4f9cd3bffb6bc55c9e2c4252c7b733a219880151
             description: (uses npm)
             post-init: |
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
 
           - repo: jbeder/yaml-cpp
-            ref: 1b50109f7bea60bd382d8ea7befce3d2bd67da5f
+            ref: 0e6e28d1a38224fc8172fae0109ea7f673c096db
             description: (compile-commands.json)
             post-init: |
               # black complains about py2 code
@@ -41,19 +41,21 @@ jobs:
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
-          - repo: pallets/flask
-            ref: 4ddb3f73baa5b60ed83d6bb48d0d447a0d8ab492
-            post-init: |
-              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+          # fails because of a malformed html file
+
+          # - repo: pallets/flask
+          #   ref: 2b2a7641430bc7d40dba3c8d701636fc9b16530c
+          #   post-init: |
+          #     cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
-            ref: 8834314ff334ea8321bf2c83934f276d379512cd
+            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
             description: (uses pnpm)
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
           - repo: replayio/devtools
-            ref: 78259d9457f4f97ad130efbb6d36dae196588487
+            ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
             description: (has trunk.yaml)
             post-init: |
               # replay is on a very old version
@@ -61,19 +63,23 @@ jobs:
             trunk-path: node_modules/.bin/trunk
 
           - repo: sass/sass
-            ref: b78c027126a9d6a3f5648a784936223ae7c730a2
+            ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
 
-          - repo: sheldonhull/sheldonhull.hugo
-            ref: f4867cf31f7f7ebe57522faa946ef5105d12f17f
-            description: (has trunk.yaml)
+          # fails because yarn install would update the yarn lockfile
 
-          - repo: shopify/draggable
-            ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
-            description: (uses yarn)
+          # - repo: sheldonhull/sheldonhull.hugo
+          #   ref: 4796211f1adeeb1858f2f9bf74d7ee0b4e2d8988
+          #   description: (has trunk.yaml)
+
+          # fails because webpack doesn't work with newest npm: https://github.com/webpack/webpack/issues/14532
+
+          # - repo: shopify/draggable
+          #   ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
+          #   description: (uses yarn)
 
           - repo: terraform-linters/tflint
-            ref: 602fa73fafa020436520a0efa6cfc151d5f4c91f
+            ref: 9c34a740319e2410094ca2754e5eca860f2d13f5
             post-init: |
               # golangci-lint needs us to init with a newer go runtime
               ${TRUNK_PATH} check disable golangci-lint
@@ -81,15 +87,17 @@ jobs:
           - repo: trunk-io/plugins
             ref: main
 
-          - repo: vuejs/core
-            ref: a0e7dc334356e9e6ffaa547d29e55b34b9b8a04d
-            description: (uses pnpm)
-            post-init: |
-              # svgo gets confused by JS module loading
-              ${TRUNK_PATH} check disable svgo
+          # fails because pnpm version is too new
+
+          # - repo: vuejs/core
+          #   ref: 2d9f6f926453c46f542789927bcd30d15da9c24b
+          #   description: (uses pnpm)
+          #   post-init: |
+          #     # svgo gets confused by JS module loading
+          #     ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
-            ref: 06dbdbd696892bf4eda9641c88a6b406374fbaa4
+            ref: 7d0ea1b14d2f163d54111655aa9aa737f3710b72
             description: (has trunk.yaml)
 
     steps:
@@ -112,6 +120,7 @@ jobs:
           check-mode: all
           trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
+          arguments: --output-file=.trunk/landing-state.json
         continue-on-error: true
 
       - name: Check for task failures
