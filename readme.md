@@ -20,7 +20,7 @@ issues _before_ pushing your changes. See all supported linters
   <br>
   <em>Example annotations</em>
 </p>
-  
+
 ## Get Started
 
 Before setting up running Trunk Check on CI, you'll need to initialize trunk in your repo.
@@ -242,8 +242,9 @@ are currently supported. "Rebase and merge" does not yet work correctly.
 
 ## Automatic upgrades
 
-If you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade
-Trunk and its tools, you can configure the action to automatically generate pull requests with these
+A service-based integration for automatic upgrades is in active development, but in the meantime if
+you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade Trunk
+and its tools, you can configure the action to automatically generate pull requests with these
 upgrades:
 
 ```yaml
