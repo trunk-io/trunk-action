@@ -120,7 +120,7 @@ jobs:
           check-mode: all
           trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
-          inputs: "{'arguments': '--output-file=.trunk/landing-state.json'}"
+          arguments: --output-file=.trunk/landing-state.json
         continue-on-error: true
 
       - name: Check for task failures
