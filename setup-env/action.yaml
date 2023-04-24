@@ -11,9 +11,6 @@ runs:
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
         fi
-        cat >>$GITHUB_ENV <<EOF
-        INPUT_ARGUMENTS=$INPUT_ARGUMENTS --output-file=.trunk/landing-state.json
-        EOF
 
     - name: Detect npm/yarn/pnpm & custom setup
       id: detect
