@@ -42,7 +42,7 @@ runs:
       shell: bash
       run: |
         # Locate trunk
-        ${GITHUB_ACTION_PATH}/../locate_trunk.sh
+        ${{ github.action_path }}/../locate_trunk.sh
       env:
         INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
 
@@ -55,51 +55,25 @@ runs:
           exit 1
         fi
 
-    - name: Detect npm/yarn/pnpm
+    - name: Detect
       id: detect
       shell: bash
       run: |
-        if [ -e package-lock.json ]; then
-          echo "package_manager=npm" >> $GITHUB_OUTPUT
-          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
-        elif [ -e yarn.lock ]; then
-          echo "package_manager=yarn" >> $GITHUB_OUTPUT
-          echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
-        elif [ -e pnpm-lock.yaml ]; then
-          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
-          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+        if [ ! -e .trunk/setup-ci ]; then
+          mkdir -p .trunk
+          ln -s ${{ github.action_path }}/../setup-env .trunk/setup-ci
+          echo .trunk/setup-ci >> .git/info/exclude
         fi
 
-    - name: Install pnpm
-      if: steps.detect.outputs.package_manager == 'pnpm'
-      uses: pnpm/action-setup@v2
-      with:
-        version: latest
-
-    - name: Install Node dependencies
-      if: steps.detect.outputs.package_manager
-      uses: actions/setup-node@v3
-
-    #- name: Cache node_modules
-    #  uses: actions/cache@v3
-    #  with:
-    #    path: node_modules/
-    #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
-
-    - name: Install ${{ steps.detect.outputs.package_manager }} packages
-      if: steps.detect.outputs.package_manager
-      shell: bash
-      run: ${{ steps.detect.outputs.install_cmd }}
+    - name: Set up env
+      uses: ./.trunk/setup-ci
 
     - name: Run upgrade
       id: upgrade
       shell: bash
       run: |
         # Run trunk upgrade
-        ${GITHUB_ACTION_PATH}/upgrade.sh
+        ${{ github.action_path }}/upgrade.sh
       env:
         UPGRADE_ARGUMENTS: ${{ inputs.arguments }}
 
@@ -108,7 +82,7 @@ runs:
       shell: bash
       run: |
         # Cleanup temporary files
-        ${GITHUB_ACTION_PATH}/../cleanup.sh
+        ${{ github.action_path }}/../cleanup.sh
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
