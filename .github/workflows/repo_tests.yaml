@@ -112,13 +112,6 @@ jobs:
         with:
           path: local-action
 
-      - name: Init on-demand
-        shell: bash
-        run: |
-          cat >>$GITHUB_ENV <<EOF
-          INPUT_ARGUMENTS=$INPUT_ARGUMENTS --output-file=.trunk/landing-state.json
-          EOF
-
       - name: Run trunk-action in ${{ matrix.repo }}
         id: trunk
         uses: ./local-action/
@@ -127,6 +120,7 @@ jobs:
           check-mode: all
           trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
+          inputs: "{'arguments': '--output-file=.trunk/landing-state.json'}"
         continue-on-error: true
 
       - name: Check for task failures
