@@ -39,6 +39,8 @@ runs:
     - name: Install Node dependencies
       if: steps.detect.outputs.package_manager
       uses: actions/setup-node@v3
+      with:
+        node-version-file: package-lock.json
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
