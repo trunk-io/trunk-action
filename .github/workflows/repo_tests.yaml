@@ -66,9 +66,11 @@ jobs:
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
 
-          - repo: sheldonhull/sheldonhull.hugo
-            ref: 4796211f1adeeb1858f2f9bf74d7ee0b4e2d8988
-            description: (has trunk.yaml)
+          # fails because yarn install would update the yarn lockfile
+
+          # - repo: sheldonhull/sheldonhull.hugo
+          #   ref: 4796211f1adeeb1858f2f9bf74d7ee0b4e2d8988
+          #   description: (has trunk.yaml)
 
           - repo: shopify/draggable
             ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
@@ -83,12 +85,14 @@ jobs:
           - repo: trunk-io/plugins
             ref: main
 
-          - repo: vuejs/core
-            ref: 2d9f6f926453c46f542789927bcd30d15da9c24b
-            description: (uses pnpm)
-            post-init: |
-              # svgo gets confused by JS module loading
-              ${TRUNK_PATH} check disable svgo
+          # fails because pnpm version is too new
+
+          # - repo: vuejs/core
+          #   ref: 2d9f6f926453c46f542789927bcd30d15da9c24b
+          #   description: (uses pnpm)
+          #   post-init: |
+          #     # svgo gets confused by JS module loading
+          #     ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
             ref: 7d0ea1b14d2f163d54111655aa9aa737f3710b72
