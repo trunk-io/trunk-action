@@ -40,7 +40,7 @@ runs:
       if: steps.detect.outputs.package_manager
       uses: actions/setup-node@v3
       with:
-        node-version-file: package-lock.json
+        node-version-file: package.json
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
