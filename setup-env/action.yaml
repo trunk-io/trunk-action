@@ -20,38 +20,29 @@ runs:
           echo "package_manager=npm" >> $GITHUB_OUTPUT
           echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
           echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
-          FOUND_NODE=true
         elif [ -e yarn.lock ]; then
           echo "package_manager=yarn" >> $GITHUB_OUTPUT
           echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
           echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
-          FOUND_NODE=true
         elif [ -e pnpm-lock.yaml ]; then
           echo "package_manager=pnpm" >> $GITHUB_OUTPUT
           echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
           echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
-          FOUND_NODE=true
-        fi
-
-        if [ -v $FOUND_NODE ]; then
+        else
           exit 0
         fi
 
         if [ -e .nvmrc ]; then
           echo "node_version_file=.nvmrc" >> $GITHUB_OUTPUT
-          FOUND_NODE_VERSION=1
+          exit 0
         elif [ -e .node-version ]; then
           echo "node_version_file=.node-version" >> $GITHUB_OUTPUT
-          FOUND_NODE_VERSION=1
+          exit 0
         elif [ -e .tool-versions ]; then
           echo "node_version_file=.tool-versions" >> $GITHUB_OUTPUT
-          FOUND_NODE_VERSION=1
+          exit 0
         elif [ -e package.json ]; then
           echo "node_version_file=package.json" >> $GITHUB_OUTPUT
-          FOUND_NODE_VERSION=1
-        fi
-
-        if [ -v $FOUND_NODE_VERSION ]; then
           exit 0
         fi
 
