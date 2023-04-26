@@ -51,7 +51,7 @@ runs:
 
         if which node; then
           echo "Detected existing node install"
-          echo "node_version_file=" >> $GITHUB_OUTPUT
+          echo "run_install_node_packages=true" >> $GITHUB_OUTPUT
         else
           echo "Found node lockfiles but no node version!"
         fi
@@ -75,6 +75,8 @@ runs:
     #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
 
     - name: Install ${{ steps.detect.outputs.package_manager }} packages
-      if: steps.detect.outputs.package_manager && steps.detect.outputs.node_version_file
+      if:
+        steps.detect.outputs.package_manager && (steps.detect.outputs.node_version_file ||
+        steps.detect.outputs.run_install_node_packages)
       shell: bash
       run: ${{ steps.detect.outputs.install_cmd }}
