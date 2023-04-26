@@ -33,7 +33,7 @@ runs:
           FOUND_NODE=true
         fi
 
-        if [ ! -v $FOUND_NODE ]; then
+        if [ -v $FOUND_NODE ]; then
           exit 0
         fi
 
@@ -51,7 +51,7 @@ runs:
           FOUND_NODE_VERSION=1
         fi
 
-        if [ ! -v $FOUND_NODE_VERSION ]; then
+        if [ -v $FOUND_NODE_VERSION ]; then
           exit 0
         fi
 
