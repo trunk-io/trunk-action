@@ -20,14 +20,40 @@ runs:
           echo "package_manager=npm" >> $GITHUB_OUTPUT
           echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
           echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
+          FOUND_NODE=1
         elif [ -e yarn.lock ]; then
           echo "package_manager=yarn" >> $GITHUB_OUTPUT
           echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
           echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
+          FOUND_NODE=1
         elif [ -e pnpm-lock.yaml ]; then
           echo "package_manager=pnpm" >> $GITHUB_OUTPUT
           echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
           echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+          FOUND_NODE=1
+        fi
+
+        if [ ! -v FOUND_NODE ]; then
+          exit 0
+        fi
+
+        if [ -e .nvmrc ]; then
+          echo "node_version_file=.nvmrc" >> $GITHUB_OUTPUT
+        elif [ -e .node-version ]; then
+          echo "node_version_file=.node-version" >> $GITHUB_OUTPUT
+        elif [ -e .tool-versions ]; then
+          echo "node_version_file=.tool-versions" >> $GITHUB_OUTPUT
+        elif [ -e package.json ]; then
+          echo "node_version_file=package.json" >> $GITHUB_OUTPUT
+        fi
+
+        echo "Found node lockfiles but no node version!"
+
+        if which node; then
+          echo "Detected existing node install"
+          echo "node_version_file=" >> $GITHUB_OUTPUT
+        else
+          echo "Found node lockfiles but no node version!"
         fi
 
     - name: Install pnpm
@@ -37,10 +63,10 @@ runs:
         version: latest
 
     - name: Install Node dependencies
-      if: steps.detect.outputs.package_manager
+      if: steps.detect.outputs.package_manager && steps.detect.outputs.node_version_file
       uses: actions/setup-node@v3
       with:
-        node-version-file: package.json
+        node-version-file: ${{ steps.detect.outputs.node_version_file }}
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
@@ -49,6 +75,6 @@ runs:
     #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
 
     - name: Install ${{ steps.detect.outputs.package_manager }} packages
-      if: steps.detect.outputs.package_manager
+      if: steps.detect.outputs.package_manager && steps.detect.outputs.node_version_file
       shell: bash
       run: ${{ steps.detect.outputs.install_cmd }}
