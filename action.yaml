@@ -48,6 +48,15 @@ inputs:
     required: false
     default: "true"
 
+  cache-key:
+    description:
+      A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
+    required: false
+
+  restore-cache-key:
+    description: A key unique to the repo this action is being run on (e.g. the repo name)
+    required: false
+
   post-init:
     description: Steps to run after auto-init / before check
     required: false
