@@ -116,7 +116,7 @@ jobs:
         id: trunk
         uses: ./local-action/
         with:
-          cache: false
+          cache: true
           check-mode: all
           trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
