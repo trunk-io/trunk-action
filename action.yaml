@@ -122,6 +122,8 @@ runs:
         GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ fromJSON(inputs.json).pullRequest.number }}
         INPUT_ARGUMENTS=${{ fromJSON(inputs.json).arguments }}
         INPUT_CACHE=${{ fromJSON(inputs.json).cache }}
+        INPUT_CACHE_KEY=${{ fromJSON(inputs.json).cacheKey }}
+        INPUT_RESTORE_CACHE_KEY=${{ fromJSON(inputs.json).restoreCacheKey }}
         INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).checkAllMode }}
         INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
         INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
@@ -145,6 +147,8 @@ runs:
         GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_ARGUMENTS=${{ inputs.arguments }}
         INPUT_CACHE=${{ inputs.cache }}
+        INPUT_CACHE_KEY=`echo '${{ github.repository }}/${{ github.event.pull_request.head.ref }}' | sed s,/,-,g`
+        INPUT_RESTORE_CACHE_KEY=`echo '${{ github.repository }}' | sed s,/,-,g`
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
@@ -205,7 +209,9 @@ runs:
       uses: actions/cache@v3
       with:
         path: ~/.cache/trunk
-        key: trunk-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+        key: trunk-${{ env.INPUT_CACHE_KEY }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+        restore-keys: |
+          trunk-${{ env.INPUT_RESTORE_CACHE_KEY }}
 
     - name: Run trunk check on pull request
       if: env.TRUNK_CHECK_MODE == 'pull_request'
