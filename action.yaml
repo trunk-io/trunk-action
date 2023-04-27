@@ -147,8 +147,8 @@ runs:
         GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_ARGUMENTS=${{ inputs.arguments }}
         INPUT_CACHE=${{ inputs.cache }}
-        INPUT_CACHE_KEY=$(echo '${{ github.repository }}/${{ github.event.pull_request.head.ref }}' | sed s,/,-,g)
-        INPUT_RESTORE_CACHE_KEY=$(echo '${{ github.repository }}' | sed s,/,-,g)
+        INPUT_CACHE_KEY=${{ inputs.cache-key }}
+        INPUT_RESTORE_CACHE_KEY=${{ inputs.restore-cache-key }}
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
