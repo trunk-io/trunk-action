@@ -11,8 +11,6 @@ fi
 TRUNK_VERSION=$("${TRUNK_PATH}" --version)
 MINIMUM_CI_VERSION="1.8.2-beta.12"
 
-echo "Trunk version: ${TRUNK_VERSION}"
-
 # trunk-ignore-begin(shellcheck/SC2312): the == will fail if anything inside the $() fails
 if [[ "$(printf "%s\n%s\n" "${MINIMUM_CI_VERSION}" "${TRUNK_VERSION}" |
   sort --version-sort |
@@ -22,8 +20,6 @@ else
   CI_ARGUMENT=""
 fi
 # trunk-ignore-end(shellcheck/SC2312)
-
-echo "CI arg: ${CI_ARGUMENT}"
 
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \

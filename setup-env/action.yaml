@@ -10,7 +10,6 @@ runs:
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
-          ${TRUNK_PATH:-trunk} upgrade cli --bleeding-edge
         fi
 
     - name: Detect npm/yarn/pnpm & custom setup
