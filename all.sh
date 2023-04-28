@@ -18,6 +18,8 @@ if [[ "$(printf "%s\n%s\n" "${MINIMUM_CI_VERSION}" "${TRUNK_VERSION}" |
   sort --version-sort |
   head -n 1)" == "${MINIMUM_CI_VERSION}"* ]] || [[ ${TRUNK_VERSION} == "0.0.0" ]]; then
   CI_ARGUMENT="--ci "
+else
+  CI_ARGUMENT=""
 fi
 # trunk-ignore-end(shellcheck/SC2312)
 
