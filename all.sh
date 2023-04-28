@@ -21,6 +21,8 @@ if [[ "$(printf "%s\n%s\n" "${MINIMUM_CI_VERSION}" "${TRUNK_VERSION}" |
 fi
 # trunk-ignore-end(shellcheck/SC2312)
 
+echo "CI arg: ${CI_ARGUMENT}"
+
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \
