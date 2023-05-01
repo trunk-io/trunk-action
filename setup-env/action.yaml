@@ -83,11 +83,15 @@ runs:
       with:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
 
-    #- name: Cache node_modules
-    #  uses: actions/cache@v3
-    #  with:
-    #    path: node_modules/
-    #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
+    - name: Cache node_modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules/
+        key:
+          ${{ runner.os }}-node_modules-${{ inputs.cache-key }}-${{
+          hashFiles(steps.detect.outputs.hash_glob) }}
+        restore-keys: |
+          ${{ runner.os }}-node_modules-${{ inputs.restore-cache-key }}
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
       if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)

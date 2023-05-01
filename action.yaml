@@ -201,6 +201,9 @@ runs:
 
     - name: Set up env
       uses: ./.trunk/setup-ci
+      with:
+        cache-key: ${{ env.INPUT_CACHE_KEY }}
+        restore-cache-key: ${{ env.INPUT_RESTORE_CACHE_KEY }}
 
     - name: Post-init steps
       if: inputs.post-init
