@@ -28,6 +28,31 @@ runs:
           echo "package_manager=pnpm" >> $GITHUB_OUTPUT
           echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
           echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+        else
+          exit 0
+        fi
+
+        if [ -e .nvmrc ]; then
+          echo "node_version_file=.nvmrc" >> $GITHUB_OUTPUT
+          exit 0
+        elif [ -e .node-version ]; then
+          echo "node_version_file=.node-version" >> $GITHUB_OUTPUT
+          exit 0
+        elif [ -e .tool-versions ]; then
+          echo "node_version_file=.tool-versions" >> $GITHUB_OUTPUT
+          exit 0
+        elif [ -e package.json ]; then
+          echo "node_version_file=package.json" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+
+        echo "Found node lockfiles but no node version to install"
+
+        if which node > /dev/null; then
+          echo "Detected existing node install"
+          echo "run_install_node_packages=true" >> $GITHUB_OUTPUT
+        else
+          echo "Could not find existing node install, skipping node package installation"
         fi
 
     - name: Install pnpm
@@ -37,8 +62,10 @@ runs:
         version: latest
 
     - name: Install Node dependencies
-      if: steps.detect.outputs.package_manager
+      if: steps.detect.outputs.package_manager && steps.detect.outputs.node_version_file
       uses: actions/setup-node@v3
+      with:
+        node-version-file: ${{ steps.detect.outputs.node_version_file }}
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
@@ -47,6 +74,8 @@ runs:
     #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
 
     - name: Install ${{ steps.detect.outputs.package_manager }} packages
-      if: steps.detect.outputs.package_manager
+      if:
+        steps.detect.outputs.package_manager && (steps.detect.outputs.node_version_file ||
+        steps.detect.outputs.run_install_node_packages)
       shell: bash
       run: ${{ steps.detect.outputs.install_cmd }}
