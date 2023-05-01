@@ -46,7 +46,7 @@ runs:
           exit 0
         fi
 
-        echo "Found node lockfiles but no node version!"
+        echo "Found node lockfiles but no node version to install"
 
         if which node > /dev/null; then
           echo "Detected existing node install"
