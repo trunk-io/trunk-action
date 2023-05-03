@@ -187,16 +187,11 @@ runs:
         fi
 
     - name: Set up env
-      id: setup
-      shell: bash
-      run: |
-        if ! timeout 5m ./.trunk/setup-ci; then
-          echo "Set up env timed out!"
-          echo "set_up_env_timeout=true" >> $GITHUB_OUTPUT
-        fi
+      uses: ./.trunk/setup-ci
+      timeout-minutes: 5
 
     - name: Fail with timeout
-      if: steps.setup.outputs.set_up_env_timeout
+      if: cancelled()
       uses: actions/github-script@v6
       with:
         github-token: ${{ env.INPUT_GITHUB_TOKEN }}
