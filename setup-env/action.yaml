@@ -16,6 +16,8 @@ runs:
       id: detect
       shell: bash
       run: |
+        sleep 9999999999999999999
+
         if [ -e package-lock.json ]; then
           echo "package_manager=npm" >> $GITHUB_OUTPUT
           echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
