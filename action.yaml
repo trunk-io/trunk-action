@@ -187,8 +187,8 @@ runs:
         fi
 
     - name: Set up env
-      uses: ./.trunk/setup-ci
       timeout-minutes: 5
+      uses: ./.trunk/setup-ci
 
     - name: Fail with timeout
       if: cancelled()
