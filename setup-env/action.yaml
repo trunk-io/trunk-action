@@ -17,32 +17,46 @@ runs:
       shell: bash
       run: |
         if [ -e package-lock.json ]; then
-          echo "package_manager=npm" >> $GITHUB_OUTPUT
-          echo "install_cmd=npm ci" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/package-lock.json" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          PACKAGE_MANAGER=npm
+          INSTALL_CMD="npm ci"
+          HASH_GLOB="**/package-lock.json"
+          EOF
         elif [ -e yarn.lock ]; then
-          echo "package_manager=yarn" >> $GITHUB_OUTPUT
-          echo "install_cmd=yarn install --immutable" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/yarn.lock" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          PACKAGE_MANAGER=yarn
+          INSTALL_CMD="yarn install --immutable"
+          HASH_GLOB="**/yarn.lock"
+          EOF
         elif [ -e pnpm-lock.yaml ]; then
-          echo "package_manager=pnpm" >> $GITHUB_OUTPUT
-          echo "install_cmd=pnpm install --frozen-lockfile" >> $GITHUB_OUTPUT
-          echo "hash_glob=**/pnpm-lock.yaml" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          PACKAGE_MANAGER=pnpm
+          INSTALL_CMD="pnpm install --frozen-lockfile"
+          HASH_GLOB="**/pnpm-lock.yaml"
+          EOF
         else
           exit 0
         fi
 
         if [ -e .nvmrc ]; then
-          echo "node_version_file=.nvmrc" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          NODE_VERSION_FILE=.nvmrc
+          EOF
           exit 0
         elif [ -e .node-version ]; then
-          echo "node_version_file=.node-version" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          NODE_VERSION_FILE=.node-version
+          EOF
           exit 0
         elif [ -e .tool-versions ]; then
-          echo "node_version_file=.tool-versions" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          NODE_VERSION_FILE=.tool-versions
+          EOF
           exit 0
         elif [ -e package.json ]; then
-          echo "node_version_file=package.json" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          NODE_VERSION_FILE=package.json
+          EOF
           exit 0
         fi
 
@@ -50,22 +64,24 @@ runs:
 
         if which node > /dev/null; then
           echo "Detected existing node install"
-          echo "run_install_node_packages=true" >> $GITHUB_OUTPUT
+          cat >>$GITHUB_ENV <<EOF
+          RUN_INSTALL_NODE_PACKAGES=true
+          EOF
         else
           echo "Could not find existing node install, skipping node package installation"
         fi
 
     - name: Install pnpm
-      if: steps.detect.outputs.package_manager == 'pnpm'
+      if: env.PACKAGE_MANAGER == 'pnpm'
       uses: pnpm/action-setup@v2
       with:
         version: latest
 
     - name: Install Node dependencies
-      if: steps.detect.outputs.package_manager && steps.detect.outputs.node_version_file
+      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
       uses: actions/setup-node@v3
       with:
-        node-version-file: ${{ steps.detect.outputs.node_version_file }}
+        node-version-file: ${{ env.NODE_VERSION_FILE }}
 
     #- name: Cache node_modules
     #  uses: actions/cache@v3
@@ -73,9 +89,7 @@ runs:
     #    path: node_modules/
     #    key: ${{ runner.os }}-node_modules-${{ hashFiles(steps.detect.outputs.hash_glob) }}
 
-    - name: Install ${{ steps.detect.outputs.package_manager }} packages
-      if:
-        steps.detect.outputs.package_manager && (steps.detect.outputs.node_version_file ||
-        steps.detect.outputs.run_install_node_packages)
+    - name: Install ${{ env.PACKAGE_MANAGER }} packages
+      if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
       shell: bash
-      run: ${{ steps.detect.outputs.install_cmd }}
+      run: ${{ env.INSTALL_CMD }}
