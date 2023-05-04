@@ -119,7 +119,7 @@ jobs:
           trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
           arguments: --output-file=.trunk/landing-state.json
-          cache-key: ${{ matrix.repo }}
+          cache-key: repo_tests/${{ matrix.repo }}
         continue-on-error: true
 
       - name: Check for task failures
