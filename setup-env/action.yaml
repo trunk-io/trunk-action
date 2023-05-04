@@ -2,6 +2,12 @@ name: Setup environment
 author: trunk.io
 description: Automatic setup for trunk check and dependencies (e.g. Node)
 
+inputs:
+  cache-key:
+    description:
+      A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
+    required: false
+
 runs:
   using: composite
   steps:
