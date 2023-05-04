@@ -84,6 +84,7 @@ runs:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
 
     - name: Cache node_modules
+      if: env.PACKAGE_MANAGER
       uses: actions/cache@v3
       with:
         path: node_modules/
