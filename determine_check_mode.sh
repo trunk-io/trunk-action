@@ -14,7 +14,7 @@ if [[ -z ${check_mode} ]]; then
     check_mode="trunk_merge"
   elif [[ ${GITHUB_EVENT_NAME} == "push" ]]; then
     check_mode="push"
-  elif [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" && ${GITHUB_REF_NAME} == trunk-merge/* ]]; then
+  elif [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" && (${GITHUB_REF_NAME} == trunk-merge/* || ${GITHUB_REF_NAME} == trunk-merge-beta/*) ]]; then
     check_mode="trunk_merge"
   elif [[ ${GITHUB_EVENT_NAME} == "workflow_dispatch" || ${GITHUB_EVENT_NAME} == "schedule" ]]; then
     check_mode="all"
