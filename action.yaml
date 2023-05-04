@@ -53,10 +53,6 @@ inputs:
       A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
     required: false
 
-  restore-cache-key:
-    description: A key unique to the repo this action is being run on (e.g. the repo name)
-    required: false
-
   post-init:
     description: Steps to run after auto-init / before check
     required: false
@@ -132,7 +128,6 @@ runs:
         INPUT_ARGUMENTS=${{ fromJSON(inputs.json).arguments }}
         INPUT_CACHE=${{ fromJSON(inputs.json).cache }}
         INPUT_CACHE_KEY=${{ fromJSON(inputs.json).cacheKey }}
-        INPUT_RESTORE_CACHE_KEY=${{ fromJSON(inputs.json).restoreCacheKey }}
         INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).checkAllMode }}
         INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
         INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
@@ -157,7 +152,6 @@ runs:
         INPUT_ARGUMENTS=${{ inputs.arguments }}
         INPUT_CACHE=${{ inputs.cache }}
         INPUT_CACHE_KEY=${{ inputs.cache-key }}
-        INPUT_RESTORE_CACHE_KEY=${{ inputs.restore-cache-key }}
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
@@ -203,7 +197,6 @@ runs:
       uses: ./.trunk/setup-ci
       with:
         cache-key: ${{ env.INPUT_CACHE_KEY }}
-        restore-cache-key: ${{ env.INPUT_RESTORE_CACHE_KEY }}
 
     - name: Post-init steps
       if: inputs.post-init
@@ -222,8 +215,6 @@ runs:
       with:
         path: ~/.cache/trunk
         key: trunk-${{ env.INPUT_CACHE_KEY }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
-        restore-keys: |
-          trunk-${{ env.INPUT_RESTORE_CACHE_KEY }}
 
     - name: Run trunk check on pull request
       if: env.TRUNK_CHECK_MODE == 'pull_request'

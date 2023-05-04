@@ -87,11 +87,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: node_modules/
-        key:
-          ${{ runner.os }}-node_modules-${{ inputs.cache-key }}-${{
-          hashFiles(steps.detect.outputs.hash_glob) }}
-        restore-keys: |
-          ${{ runner.os }}-node_modules-${{ inputs.restore-cache-key }}
+        key: ${{ runner.os }}-node_modules-${{ inputs.cache-key }}-${{ hashFiles(env.HASH_GLOB) }}
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
       if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
