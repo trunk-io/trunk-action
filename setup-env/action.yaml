@@ -18,45 +18,45 @@ runs:
       run: |
         if [ -e package-lock.json ]; then
           cat >>$GITHUB_ENV <<EOF
-          PACKAGE_MANAGER=npm
-          INSTALL_CMD="npm ci"
-          HASH_GLOB="**/package-lock.json"
-          EOF
+        PACKAGE_MANAGER=npm
+        INSTALL_CMD="npm ci"
+        HASH_GLOB="**/package-lock.json"
+        EOF
         elif [ -e yarn.lock ]; then
           cat >>$GITHUB_ENV <<EOF
-          PACKAGE_MANAGER=yarn
-          INSTALL_CMD="yarn install --immutable"
-          HASH_GLOB="**/yarn.lock"
-          EOF
+        PACKAGE_MANAGER=yarn
+        INSTALL_CMD="yarn install --immutable"
+        HASH_GLOB="**/yarn.lock"
+        EOF
         elif [ -e pnpm-lock.yaml ]; then
           cat >>$GITHUB_ENV <<EOF
-          PACKAGE_MANAGER=pnpm
-          INSTALL_CMD="pnpm install --frozen-lockfile"
-          HASH_GLOB="**/pnpm-lock.yaml"
-          EOF
+        PACKAGE_MANAGER=pnpm
+        INSTALL_CMD="pnpm install --frozen-lockfile"
+        HASH_GLOB="**/pnpm-lock.yaml"
+        EOF
         else
           exit 0
         fi
 
         if [ -e .nvmrc ]; then
           cat >>$GITHUB_ENV <<EOF
-          NODE_VERSION_FILE=.nvmrc
-          EOF
+        NODE_VERSION_FILE=.nvmrc
+        EOF
           exit 0
         elif [ -e .node-version ]; then
           cat >>$GITHUB_ENV <<EOF
-          NODE_VERSION_FILE=.node-version
-          EOF
+        NODE_VERSION_FILE=.node-version
+        EOF
           exit 0
         elif [ -e .tool-versions ]; then
           cat >>$GITHUB_ENV <<EOF
-          NODE_VERSION_FILE=.tool-versions
-          EOF
+        NODE_VERSION_FILE=.tool-versions
+        EOF
           exit 0
         elif [ -e package.json ]; then
           cat >>$GITHUB_ENV <<EOF
-          NODE_VERSION_FILE=package.json
-          EOF
+        NODE_VERSION_FILE=package.json
+        EOF
           exit 0
         fi
 
@@ -65,8 +65,8 @@ runs:
         if which node > /dev/null; then
           echo "Detected existing node install"
           cat >>$GITHUB_ENV <<EOF
-          RUN_INSTALL_NODE_PACKAGES=true
-          EOF
+        RUN_INSTALL_NODE_PACKAGES=true
+        EOF
         else
           echo "Could not find existing node install, skipping node package installation"
         fi
