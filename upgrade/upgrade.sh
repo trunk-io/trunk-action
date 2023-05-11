@@ -39,7 +39,10 @@ d
 }' "${GITHUB_ACTION_PATH}"/upgrade_pr.md)
 
 # Step 6: Write outputs
-cat >>"${GITHUB_ENV}" <<EOF
-PR_DESCRIPTION="${description}"
-PR_TITLE="${title_message}"
-EOF
+{
+  echo "PR_DESCRIPTION<<EOF"
+  echo "${description}"
+  echo "EOF"
+} >>"${GITHUB_ENV}"
+
+echo "PR_TITLE=${title_message}" >>"${GITHUB_ENV}"
