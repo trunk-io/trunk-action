@@ -7,10 +7,6 @@ inputs:
     description:
       A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
     required: false
-  trunk-upgrade:
-    description: Indicates whether or not invocation is from upgrade
-    required: false
-    default: "false"
 
 runs:
   using: composite

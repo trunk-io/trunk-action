@@ -197,6 +197,8 @@ runs:
       uses: ./.trunk/setup-ci
       with:
         cache-key: ${{ env.INPUT_CACHE_KEY }}
+      env:
+        INVOCATION_TYPE: check
 
     - name: Post-init steps
       if: inputs.post-init
