@@ -40,9 +40,9 @@ d
 
 # Step 6: Write outputs
 {
-  echo "DESCRIPTION<<EOF"
+  echo "PR_DESCRIPTION<<EOF"
   echo "${description}"
   echo "EOF"
-} >>"${GITHUB_OUTPUT}"
+} >>"${GITHUB_ENV}"
 
-echo "TITLE_MESSAGE=${title_message}" >>"${GITHUB_OUTPUT}"
+echo "PR_TITLE=${title_message}" >>"${GITHUB_ENV}"
