@@ -67,8 +67,6 @@ runs:
 
     - name: Set up env
       uses: ./.trunk/setup-ci
-      env:
-        INVOCATION_TYPE: upgrade
 
     - name: Run upgrade
       id: upgrade
