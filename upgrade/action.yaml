@@ -88,13 +88,13 @@ runs:
       uses: peter-evans/create-pull-request@v5
       with:
         title: |
-          ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
-        body: ${{ steps.upgrade.outputs.DESCRIPTION }}
+          ${{ env.PR_TITLE }}
+        body: ${{ env.PR_DESCRIPTION }}
         base: ${{ inputs.base }}
         branch: trunk-io/update-trunk
         labels: trunk
         add-paths: .trunk
-        commit-message: ${{ steps.upgrade.outputs.TITLE_MESSAGE }}
+        commit-message: ${{ env.PR_TITLE }}
         delete-branch: true
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
