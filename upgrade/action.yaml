@@ -67,8 +67,8 @@ runs:
 
     - name: Set up env
       uses: ./.trunk/setup-ci
-      env:
-        TRUNK_UPGRADE: "true"
+      with:
+        trunk-upgrade: "true"
 
     - name: Run upgrade
       id: upgrade
