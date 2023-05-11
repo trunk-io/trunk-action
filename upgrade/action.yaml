@@ -68,7 +68,7 @@ runs:
     - name: Set up env
       uses: ./.trunk/setup-ci
       env:
-        INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
+        TRUNK_UPGRADE: "true"
 
     - name: Run upgrade
       id: upgrade
