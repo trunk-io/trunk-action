@@ -5,8 +5,10 @@ description: Automatic setup for trunk check and dependencies (e.g. Node)
 inputs:
   cache-key:
     description:
-      A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
+      Cache key for setup (either passed into .trunk/setup-ci/, or used to cache node_modules in
+      this action).
     required: false
+    default: ""
 
 runs:
   using: composite
@@ -90,11 +92,13 @@ runs:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
 
     - name: Cache node_modules
-      if: env.PACKAGE_MANAGER
+      if: inputs.cache-key && env.PACKAGE_MANAGER
       uses: actions/cache@v3
       with:
         path: node_modules/
-        key: ${{ runner.os }}-node_modules-${{ inputs.cache-key }}-${{ hashFiles(env.HASH_GLOB) }}
+        key:
+          ${{ env.PACKAGE_MANAGER }}-${{ runner.os }}-${{ inputs.cache-key }}-${{
+          hashFiles(env.HASH_GLOB) }}
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
       if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
