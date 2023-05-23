@@ -89,7 +89,7 @@ inputs:
     required: false
     default: "false"
 
-  setup-env:
+  setup-deps:
     description:
       Install dependencies for trunk check that the trunk CLI does not manage. This is only
       necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
@@ -142,7 +142,7 @@ runs:
         INPUT_DEBUG=${{ fromJSON(inputs.json).debug }}
         INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).targetRefName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
-        INPUT_SETUP_ENV=${{ fromJSON(inputs.json).setupEnv }}
+        INPUT_SETUP_DEPS=${{ fromJSON(inputs.json).setupDeps }}
         INPUT_TARGET_CHECKOUT=${{ fromJSON(inputs.json).targetCheckout }}
         INPUT_TARGET_CHECKOUT_REF=${{ fromJSON(inputs.json).targetCheckoutRef }}
         INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunkPath }}
@@ -166,7 +166,7 @@ runs:
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_SETUP_ENV=${{ inputs.setup-env }}
+        INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
         INPUT_TARGET_CHECKOUT=
         INPUT_TARGET_CHECKOUT_REF=
         INPUT_LABEL=${{ inputs.label }}
@@ -196,20 +196,17 @@ runs:
     - name: Detect setup strategy
       shell: bash
       run: |
-        if [ -e .trunk/setup-ci ]; then
-          echo INPUT_SETUP_CI=true >>$GITHUB_ENV
-        elif [ ${INPUT_SETUP_ENV} == true ]; then
+        if [ ! -e .trunk/setup-ci ]; then
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
           echo .trunk/setup-ci >>.git/info/exclude
-          echo INPUT_SETUP_CI=true >>$GITHUB_ENV
         fi
 
     - name: Set up env
-      if: env.INPUT_SETUP_CI == 'true'
       uses: ./.trunk/setup-ci
       with:
         cache-key: ${{ env.INPUT_CACHE_KEY }}
+        setup-deps: ${{ env.INPUT_SETUP_DEPS }}
 
     - name: Post-init steps
       if: inputs.post-init

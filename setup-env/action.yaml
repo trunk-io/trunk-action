@@ -7,6 +7,13 @@ inputs:
     description:
       A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
     required: false
+  setup-deps:
+    description:
+      Install dependencies for trunk check that the trunk CLI does not manage. This is only
+      necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
+      eslint dependencies, or @types packages).
+    required: false
+    default: false
 
 runs:
   using: composite
@@ -19,8 +26,8 @@ runs:
         fi
 
     - name: Detect npm/yarn/pnpm & custom setup
-      id: detect
       shell: bash
+      if: inputs.setup-deps
       run: |
         if [ -e package-lock.json ]; then
           cat >>$GITHUB_ENV <<EOF
@@ -78,25 +85,27 @@ runs:
         fi
 
     - name: Install pnpm
-      if: env.PACKAGE_MANAGER == 'pnpm'
+      if: inputs.setup-deps && env.PACKAGE_MANAGER == 'pnpm'
       uses: pnpm/action-setup@v2
       with:
         version: latest
 
     - name: Install Node dependencies
-      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
+      if: inputs.setup-deps && env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
       uses: actions/setup-node@v3
       with:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
 
     - name: Cache node_modules
-      if: env.PACKAGE_MANAGER
+      if: inputs.setup-deps && env.PACKAGE_MANAGER
       uses: actions/cache@v3
       with:
         path: node_modules/
         key: ${{ runner.os }}-node_modules-${{ inputs.cache-key }}-${{ hashFiles(env.HASH_GLOB) }}
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
-      if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
+      if:
+        inputs.setup-deps && env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE ||
+        env.RUN_INSTALL_NODE_PACKAGES)
       shell: bash
       run: ${{ env.INSTALL_CMD }}
