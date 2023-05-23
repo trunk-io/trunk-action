@@ -120,6 +120,7 @@ jobs:
           post-init: ${{ matrix.post-init }}
           arguments: --output-file=.trunk/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
+          setup-deps: true
         continue-on-error: true
 
       - name: Check for task failures
