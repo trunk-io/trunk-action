@@ -87,6 +87,12 @@ runs:
       with:
         path: node_modules/
         key: ${{ runner.os }}-node_modules-${{ inputs.cache-key }}-${{ hashFiles(env.HASH_GLOB) }}
+    
+    - name: Repro attempt
+      uses: actions/cache@v3
+      with:
+        path: package.json
+        key: hashFiles(**/pnpm-lock.yaml)
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
       if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
