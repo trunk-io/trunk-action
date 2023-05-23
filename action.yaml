@@ -89,6 +89,14 @@ inputs:
     required: false
     default: "false"
 
+  setup-deps:
+    description:
+      Install dependencies for trunk check that the trunk CLI does not manage. This is only
+      necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
+      eslint dependencies, or @types packages).
+    required: false
+    default: false
+
   json:
     description: Used by CheckService
     required: false
@@ -136,6 +144,7 @@ runs:
         INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).targetRefName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
         INPUT_SETUP_CACHE_KEY=${{ fromJSON(inputs.json).setupCacheKey }}
+        INPUT_SETUP_DEPS=${{ fromJSON(inputs.json).setupDeps }}
         INPUT_TARGET_CHECKOUT=${{ fromJSON(inputs.json).targetCheckout }}
         INPUT_TARGET_CHECKOUT_REF=${{ fromJSON(inputs.json).targetCheckoutRef }}
         INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunkPath }}
@@ -160,6 +169,7 @@ runs:
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
+        INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
         INPUT_TARGET_CHECKOUT=
         INPUT_TARGET_CHECKOUT_REF=
         INPUT_LABEL=${{ inputs.label }}
@@ -187,11 +197,12 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
 
-    - name: Detect
-      id: detect
+    - name: Detect setup strategy
       shell: bash
       run: |
-        if [ ! -e .trunk/setup-ci ]; then
+        if [ -e .trunk/setup-ci ]; then
+          echo "INPUT_SETUP_DEPS=true" >>$GITHUB_ENV
+        else
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
           echo .trunk/setup-ci >>.git/info/exclude
@@ -199,8 +210,16 @@ runs:
 
     - name: Set up env
       uses: ./.trunk/setup-ci
+      if: env.INPUT_SETUP_DEPS == 'true'
       with:
         cache-key: ${{ env.INPUT_SETUP_CACHE_KEY }}
+
+    - name: Init on-demand
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          ${TRUNK_PATH:-trunk} init
+        fi
 
     - name: Post-init steps
       if: inputs.post-init
@@ -311,36 +330,12 @@ runs:
     - name: Finalize check run
       if: always() && env.INPUT_CHECK_RUN_ID
       continue-on-error: true
-      uses: actions/github-script@v6
-      with:
-        github-token: ${{ env.INPUT_GITHUB_TOKEN }}
-        script: |
-          console.log("Verifying that the GitHub check run was updated with results...");
-          const { data } = await github.rest.checks.get({
-            owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
-            repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
-            check_run_id: ${{ env.INPUT_CHECK_RUN_ID }}
-          });
-          if (data.status === "completed") {
-            console.log("Success!");
-            return;
-          }
-          console.log(`::group::Status was ${data.status}; marking the check run as failed.`);
-          console.log(data);
-          console.log("::endgroup::");
-          await github.rest.checks.update({
-            owner: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER }}",
-            repo: "${{ env.GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME }}",
-            check_run_id: ${{ env.INPUT_CHECK_RUN_ID }},
-            head_sha: "${{ env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA }}",
-            status: "completed",
-            conclusion: "failure",
-            output: {
-              title: "Trunk Check",
-              summary: "unexpected failure",
-              text: "Please contact us at https://slack.trunk.io to get help",
-            },
-          });
+      shell: bash
+      run: |
+        "${TRUNK_PATH}" check finalize-github-check-run \
+          --target "${INPUT_TARGET_CHECKOUT}" \
+          --check_run_id "${INPUT_CHECK_RUN_ID}" \
+          --token "${INPUT_TRUNK_TOKEN}"
 
     - name: Upload landing state
       if: env.INPUT_UPLOAD_LANDING_STATE
