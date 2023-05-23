@@ -206,7 +206,7 @@ runs:
 
     - name: Set up env
       uses: ./.trunk/setup-ci
-      if: env.INPUT_SETUP_DEPS == true
+      if: env.INPUT_SETUP_DEPS == 'true'
       with:
         cache-key: ${{ env.INPUT_CACHE_KEY }}
 
