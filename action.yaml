@@ -196,7 +196,9 @@ runs:
     - name: Detect setup strategy
       shell: bash
       run: |
-        if [ ! -e .trunk/setup-ci ]; then
+        if [ -e .trunk/setup-ci ]; then
+          echo "INPUT_SETUP_DEPS=true" >>$GITHUB_ENV
+        else
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
           echo .trunk/setup-ci >>.git/info/exclude
@@ -204,9 +206,16 @@ runs:
 
     - name: Set up env
       uses: ./.trunk/setup-ci
+      if: env.INPUT_SETUP_DEPS == true
       with:
         cache-key: ${{ env.INPUT_CACHE_KEY }}
-        setup-deps: ${{ env.INPUT_SETUP_DEPS }}
+
+    - name: Init on-demand
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          ${TRUNK_PATH:-trunk} init
+        fi
 
     - name: Post-init steps
       if: inputs.post-init
