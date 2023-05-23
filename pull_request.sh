@@ -48,11 +48,21 @@ else
   annotation_argument=--github-annotate
 fi
 
-"${TRUNK_PATH}" check \
-  --ci \
-  --upstream "${upstream}" \
-  --github-commit "${git_commit}" \
-  --github-label "${INPUT_LABEL}" \
-  --token "${INPUT_TRUNK_TOKEN}" \
-  "${annotation_argument}" \
-  ${INPUT_ARGUMENTS}
+if [[ -n ${INPUT_TRUNK_TOKEN} ]]; then
+  "${TRUNK_PATH}" check \
+    --ci \
+    --upstream "${upstream}" \
+    --github-commit "${git_commit}" \
+    --github-label "${INPUT_LABEL}" \
+    --token "${INPUT_TRUNK_TOKEN}" \
+    "${annotation_argument}" \
+    ${INPUT_ARGUMENTS}
+else
+  "${TRUNK_PATH}" check \
+    --ci \
+    --upstream "${upstream}" \
+    --github-commit "${git_commit}" \
+    --github-label "${INPUT_LABEL}" \
+    "${annotation_argument}" \
+    ${INPUT_ARGUMENTS}
+fi
