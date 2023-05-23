@@ -136,12 +136,14 @@ runs:
         INPUT_ARGUMENTS=${{ fromJSON(inputs.json).arguments }}
         INPUT_CACHE=${{ fromJSON(inputs.json).cache }}
         INPUT_CACHE_KEY=${{ fromJSON(inputs.json).cacheKey }}
+        INPUT_CACHE_PATH=${{ fromJSON(inputs.json).cachePath }}
         INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).checkAllMode }}
         INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
         INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
         INPUT_DEBUG=${{ fromJSON(inputs.json).debug }}
         INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).targetRefName }}
         INPUT_LABEL=${{ fromJSON(inputs.json).label }}
+        INPUT_SETUP_CACHE_KEY=${{ fromJSON(inputs.json).setupCacheKey }}
         INPUT_SETUP_DEPS=${{ fromJSON(inputs.json).setupDeps }}
         INPUT_TARGET_CHECKOUT=${{ fromJSON(inputs.json).targetCheckout }}
         INPUT_TARGET_CHECKOUT_REF=${{ fromJSON(inputs.json).targetCheckoutRef }}
@@ -160,7 +162,8 @@ runs:
         GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_ARGUMENTS=${{ inputs.arguments }}
         INPUT_CACHE=${{ inputs.cache }}
-        INPUT_CACHE_KEY=${{ inputs.cache-key }}
+        INPUT_CACHE_KEY=trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+        INPUT_CACHE_PATH=~/.cache/trunk
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
@@ -170,6 +173,7 @@ runs:
         INPUT_TARGET_CHECKOUT=
         INPUT_TARGET_CHECKOUT_REF=
         INPUT_LABEL=${{ inputs.label }}
+        INPUT_SETUP_CACHE_KEY=${{ inputs.cache-key }}
         INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
         INPUT_UPLOAD_LANDING_STATE=false
         INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
@@ -208,7 +212,7 @@ runs:
       uses: ./.trunk/setup-ci
       if: env.INPUT_SETUP_DEPS == 'true'
       with:
-        cache-key: ${{ env.INPUT_CACHE_KEY }}
+        cache-key: ${{ env.INPUT_SETUP_CACHE_KEY }}
 
     - name: Init on-demand
       shell: bash
@@ -232,8 +236,8 @@ runs:
       if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
       uses: actions/cache@v3
       with:
-        path: ~/.cache/trunk
-        key: trunk-${{ env.INPUT_CACHE_KEY }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+        path: ${{ env.INPUT_CACHE_PATH }}
+        key: ${{ env.INPUT_CACHE_KEY }}
 
     - name: Run trunk check on pull request
       if: env.TRUNK_CHECK_MODE == 'pull_request'
