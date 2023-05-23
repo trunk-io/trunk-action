@@ -206,7 +206,7 @@ runs:
       uses: ./.trunk/setup-ci
       with:
         cache-key: ${{ env.INPUT_CACHE_KEY }}
-        setup-deps: ${{ env.INPUT_SETUP_DEPS == 'true' }}
+        setup-deps: ${{ env.INPUT_SETUP_DEPS }}
 
     - name: Post-init steps
       if: inputs.post-init

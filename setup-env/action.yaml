@@ -27,7 +27,7 @@ runs:
 
     - name: Detect npm/yarn/pnpm & custom setup
       shell: bash
-      if: inputs.setup-deps
+      if: inputs.setup-deps == 'true'
       run: |
         if [ -e package-lock.json ]; then
           cat >>$GITHUB_ENV <<EOF
@@ -85,19 +85,19 @@ runs:
         fi
 
     - name: Install pnpm
-      if: inputs.setup-deps && env.PACKAGE_MANAGER == 'pnpm'
+      if: inputs.setup-deps == 'true' && env.PACKAGE_MANAGER == 'pnpm'
       uses: pnpm/action-setup@v2
       with:
         version: latest
 
     - name: Install Node dependencies
-      if: inputs.setup-deps && env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
+      if: inputs.setup-deps == 'true' && env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
       uses: actions/setup-node@v3
       with:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
 
     - name: Cache node_modules
-      if: inputs.setup-deps && env.PACKAGE_MANAGER
+      if: inputs.setup-deps == 'true' && env.PACKAGE_MANAGER
       uses: actions/cache@v3
       with:
         path: node_modules/
@@ -105,7 +105,7 @@ runs:
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
       if:
-        inputs.setup-deps && env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE ||
+        inputs.setup-deps == 'true' && env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE ||
         env.RUN_INSTALL_NODE_PACKAGES)
       shell: bash
       run: ${{ env.INSTALL_CMD }}
