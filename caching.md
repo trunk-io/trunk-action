@@ -10,7 +10,8 @@ cache.
 
 ## Invoked inside the `.trunk` repo
 
-We only cache the contents of `~/.cache/trunk/tools/ruby/`.
+We only cache the contents of `~/.cache/trunk/tools/ruby/` (Ruby is the only tool install that is
+painfully slow, since it has to be built from scratch on every single install).
 
 Although we _could_ cache all of `~/.cache/trunk/`, doing so would yield no benefit:
 
