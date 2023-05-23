@@ -1,6 +1,6 @@
 name: Setup environment
 author: trunk.io
-description: Automatic setup for trunk check and dependencies (e.g. Node)
+description: Automatic setup for trunk check dependencies (e.g. Node)
 
 inputs:
   cache-key:
@@ -11,15 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Init on-demand
-      shell: bash
-      run: |
-        if [ ! -e .trunk/trunk.yaml ]; then
-          ${TRUNK_PATH:-trunk} init
-        fi
-
     - name: Detect npm/yarn/pnpm & custom setup
-      id: detect
       shell: bash
       run: |
         if [ -e package-lock.json ]; then
