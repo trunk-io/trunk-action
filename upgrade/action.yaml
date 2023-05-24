@@ -31,6 +31,14 @@ inputs:
     required: false
     default: ${{ github.token }}
 
+  setup-deps:
+    description:
+      Install dependencies for trunk check that the trunk CLI does not manage. This is only
+      necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
+      eslint dependencies, or @types packages).
+    required: false
+    default: "false"
+
   reviewers:
     description: A comma or newline separated list of GitHub reviewer usernames
     required: false
@@ -55,18 +63,20 @@ runs:
           exit 1
         fi
 
-    - name: Detect
-      id: detect
+    - name: Detect setup strategy
       shell: bash
       run: |
-        if [ ! -e .trunk/setup-ci ]; then
+        if [ -e .trunk/setup-ci ]; then
+          echo "SETUP_DEPS=true" >>$GITHUB_ENV
+        else
           mkdir -p .trunk
           ln -s ${{ github.action_path }}/../setup-env .trunk/setup-ci
-          echo .trunk/setup-ci >> .git/info/exclude
+          echo .trunk/setup-ci >>.git/info/exclude
         fi
 
     - name: Set up env
       uses: ./.trunk/setup-ci
+      if: env.SETUP_DEPS == 'true' || inputs.setup-deps == 'true'
 
     - name: Run upgrade
       id: upgrade
