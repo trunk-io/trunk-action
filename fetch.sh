@@ -32,15 +32,11 @@ elif [[ ${TRUNK_CHECK_MODE} == "pull_request" ]]; then
     # We use this instead of github.event.pull_request.base.sha which can be incorrect sometimes.
     head_sha=$(git rev-parse HEAD)
     fetch --depth=2 origin "${head_sha}"
-    upstream=$(git rev-parse HEAD^1)
-    git_commit=$(git rev-parse HEAD^2)
-    echo "Detected merge commit, using HEAD^1 (${upstream}) as upstream and HEAD^2 (${git_commit}) as github commit"
   fi
 
   if [[ -z ${upstream+x} ]]; then
     # Otherwise use github.event.pull_request.base.sha as the upstream.
     upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
-    git_commit="${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}"
     fetch origin "${upstream}"
   fi
 elif [[ ${TRUNK_CHECK_MODE} == "push" ]]; then
@@ -48,8 +44,6 @@ elif [[ ${TRUNK_CHECK_MODE} == "push" ]]; then
     # If we are running via the GH merge queue then we use HEAD^1 as the commit as github.event.before will be inaccurate.
     head_sha=$(git rev-parse HEAD)
     fetch --depth=2 origin "${head_sha}"
-    upstream=$(git rev-parse HEAD^1)
-    echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream"
   fi
 
   if [[ -z ${upstream+x} ]]; then
@@ -60,7 +54,4 @@ elif [[ ${TRUNK_CHECK_MODE} == "push" ]]; then
 elif [[ ${TRUNK_CHECK_MODE} == "trunk_merge" ]]; then
   head_sha=$(git rev-parse HEAD)
   fetch --depth=2 origin "${head_sha}"
-  upstream=$(git rev-parse HEAD^1)
-  git_commit=$(git rev-parse HEAD^2)
-  echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream and HEAD^2 (${git_commit}) as github commit"
 fi

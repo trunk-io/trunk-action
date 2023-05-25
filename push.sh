@@ -19,6 +19,17 @@ if [[ ${GITHUB_EVENT_BEFORE} == "0000000000000000000000000000000000000000" ]]; t
   exit
 fi
 
+if [[ ${GITHUB_REF_NAME} == gh-readonly-queue/* ]]; then
+  # If we are running via the GH merge queue then we use HEAD^1 as the commit as github.event.before will be inaccurate.
+  upstream=$(git rev-parse HEAD^1)
+  echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream"
+fi
+
+if [[ -z ${upstream+x} ]]; then
+  # Otherwise use github.event.before as the upstream.
+  upstream="${GITHUB_EVENT_BEFORE}"
+fi
+
 "${TRUNK_PATH}" check \
   --ci \
   --upstream "${upstream}" \
