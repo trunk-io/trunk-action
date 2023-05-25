@@ -197,6 +197,10 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
 
+    - name: Fetch
+      shell: bash
+      run: ${GITHUB_ACTION_PATH}/fetch.sh
+
     - name: Detect setup strategy
       shell: bash
       run: |
