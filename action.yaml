@@ -197,6 +197,12 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
 
+    - name: Determine check mode
+      shell: bash
+      run: |
+        # Determine check mode
+        ${GITHUB_ACTION_PATH}/determine_check_mode.sh
+
     - name: Fetch
       shell: bash
       run: ${GITHUB_ACTION_PATH}/fetch.sh
@@ -229,12 +235,6 @@ runs:
       if: inputs.post-init
       shell: bash
       run: ${{ inputs.post-init }}
-
-    - name: Determine check mode
-      shell: bash
-      run: |
-        # Determine check mode
-        ${GITHUB_ACTION_PATH}/determine_check_mode.sh
 
     - name: Cache Linters/Formatters
       if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
