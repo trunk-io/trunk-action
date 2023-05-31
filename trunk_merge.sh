@@ -23,12 +23,6 @@ echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream and HE
 
 if [[ -n ${INPUT_CHECK_RUN_ID} ]]; then
   annotation_argument=--trunk-annotate=${INPUT_CHECK_RUN_ID}
-elif [[ ${save_annotations} == "true" ]]; then
-  annotation_argument=--github-annotate-file=${TRUNK_TMPDIR}/annotations.bin
-  # Signal that we need to upload an annotations artifact
-  echo "TRUNK_UPLOAD_ANNOTATIONS=true" >>"${GITHUB_ENV}"
-else
-  annotation_argument=--github-annotate
 fi
 
 if [[ -n ${INPUT_TRUNK_TOKEN} ]]; then
