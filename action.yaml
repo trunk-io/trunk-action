@@ -95,7 +95,12 @@ inputs:
       necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
       eslint dependencies, or @types packages).
     required: false
-    default: false
+    default: "false"
+
+  github-event-path:
+    description: Used by CheckService
+    required: false
+    default: ""
 
   json:
     description: Used by CheckService
@@ -123,7 +128,8 @@ runs:
 
         github_event_filepath = "${{ inputs.github-event-path }}"
         if github_event_filepath != "":
-          inputs_dict = json.load(github_event_filepath)
+          github_event_text = open(github_event_filepath).read()
+          inputs_dict = json.loads(github_event_text)["inputs"]
           client_payload = json.loads(inputs_dict["client_payload"])
           githubToken = client_payload["githubToken"]
           trunkToken = client_payload["token"]
@@ -153,6 +159,8 @@ runs:
             to_write = to_write.get(arg, None)
           if to_write is None:
             to_write = backup
+          if to_write in [True, False]:
+            to_write = str(to_write).lower()
           if to_write is not None:
             print("writing", to_write)
             github_env.write(f"{varname}={to_write}\n")

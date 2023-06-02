@@ -110,6 +110,156 @@ jobs:
         with:
           path: local-action
 
+      - name: Make fake GITHUB_EVENT_PATH file
+        shell: python
+        run: |
+          f = open("/tmp/fake_github_event_file", "w")
+          f.write('''{
+            "inputs": {
+              "clientPayload": "{\\"targetCheckoutRef\\":\\"refs/pull/9004/merge\\",\\"targetRefName\\":\\"9004/merge\\",\\"checkMode\\":\\"pull_request\\",\\"token\\":\\"fake-token\\",\\"pullRequest\\":{\\"number\\":9004,\\"head\\":{\\"sha\\":\\"70d320b0df1c866206958c5be4a0f18f33cfe6e9\\",\\"ref\\":\\"maverick/trunk-7347-finalize-all-in-progress-check-runs-from-on-pr-webhook\\"},\\"base\\":{\\"sha\\":\\"833f6d5cce8448aeeadada109c0d5ca7d7751df5\\",\\"ref\\":\\"main\\"}},\\"checkRunId\\":13970804651,\\"version\\":\\"0.0.0\\",\\"cache\\":true,\\"cacheKey\\":\\"trunk-check\\",\\"cachePath\\":\\"~/.cache/trunk/tools/ruby\\",\\"checkJobName\\":\\"trunk/pull_request\\",\\"checkJobRunsOn\\":[\\"self-hosted\\",\\"linux\\",\\"r6id2xlarge\\"],\\"concurrencyGroup\\":\\"trunk/pull_request/9004\\",\\"githubToken\\":\\"fake-token\\",\\"targetCheckout\\":\\"trunk-io/trunk\\",\\"uploadLandingState\\":true}",
+              "client_payload": "{\\"targetCheckoutRef\\":\\"refs/pull/9004/merge\\",\\"targetRefName\\":\\"9004/merge\\",\\"checkMode\\":\\"pull_request\\",\\"token\\":\\"fake-token\\",\\"pullRequest\\":{\\"number\\":9004,\\"head\\":{\\"sha\\":\\"70d320b0df1c866206958c5be4a0f18f33cfe6e9\\",\\"ref\\":\\"maverick/trunk-7347-finalize-all-in-progress-check-runs-from-on-pr-webhook\\"},\\"base\\":{\\"sha\\":\\"833f6d5cce8448aeeadada109c0d5ca7d7751df5\\",\\"ref\\":\\"main\\"}},\\"checkRunId\\":13970804651,\\"version\\":\\"0.0.0\\",\\"cache\\":true,\\"cacheKey\\":\\"trunk-check\\",\\"cachePath\\":\\"~/.cache/trunk/tools/ruby\\",\\"checkJobName\\":\\"trunk/pull_request\\",\\"checkJobRunsOn\\":[\\"self-hosted\\",\\"linux\\",\\"r6id2xlarge\\"],\\"concurrencyGroup\\":\\"trunk/pull_request/9004\\",\\"githubToken\\":\\"fake-token\\",\\"targetCheckout\\":\\"trunk-io/trunk\\",\\"uploadLandingState\\":true}",
+              "githubToken": "fake-token",
+              "trunkToken": "fake-token"
+            },
+            "organization": {
+              "avatar_url": "https://avatars.githubusercontent.com/u/74779146?v=4",
+              "description": "The new standard for modern software development",
+              "events_url": "https://api.github.com/orgs/trunk-io/events",
+              "hooks_url": "https://api.github.com/orgs/trunk-io/hooks",
+              "id": 74779146,
+              "issues_url": "https://api.github.com/orgs/trunk-io/issues",
+              "login": "trunk-io",
+              "members_url": "https://api.github.com/orgs/trunk-io/members{/member}",
+              "node_id": "MDEyOk9yZ2FuaXphdGlvbjc0Nzc5MTQ2",
+              "public_members_url": "https://api.github.com/orgs/trunk-io/public_members{/member}",
+              "repos_url": "https://api.github.com/orgs/trunk-io/repos",
+              "url": "https://api.github.com/orgs/trunk-io"
+            },
+            "ref": "refs/heads/main",
+            "repository": {
+              "allow_forking": false,
+              "archive_url": "https://api.github.com/repos/trunk-io/.trunk-internal/{archive_format}{/ref}",
+              "archived": false,
+              "assignees_url": "https://api.github.com/repos/trunk-io/.trunk-internal/assignees{/user}",
+              "blobs_url": "https://api.github.com/repos/trunk-io/.trunk-internal/git/blobs{/sha}",
+              "branches_url": "https://api.github.com/repos/trunk-io/.trunk-internal/branches{/branch}",
+              "clone_url": "https://github.com/trunk-io/.trunk-internal.git",
+              "collaborators_url": "https://api.github.com/repos/trunk-io/.trunk-internal/collaborators{/collaborator}",
+              "comments_url": "https://api.github.com/repos/trunk-io/.trunk-internal/comments{/number}",
+              "commits_url": "https://api.github.com/repos/trunk-io/.trunk-internal/commits{/sha}",
+              "compare_url": "https://api.github.com/repos/trunk-io/.trunk-internal/compare/{base}...{head}",
+              "contents_url": "https://api.github.com/repos/trunk-io/.trunk-internal/contents/{+path}",
+              "contributors_url": "https://api.github.com/repos/trunk-io/.trunk-internal/contributors",
+              "created_at": "2023-03-28T18:55:32Z",
+              "default_branch": "main",
+              "deployments_url": "https://api.github.com/repos/trunk-io/.trunk-internal/deployments",
+              "description": null,
+              "disabled": false,
+              "downloads_url": "https://api.github.com/repos/trunk-io/.trunk-internal/downloads",
+              "events_url": "https://api.github.com/repos/trunk-io/.trunk-internal/events",
+              "fork": false,
+              "forks": 0,
+              "forks_count": 0,
+              "forks_url": "https://api.github.com/repos/trunk-io/.trunk-internal/forks",
+              "full_name": "trunk-io/.trunk-internal",
+              "git_commits_url": "https://api.github.com/repos/trunk-io/.trunk-internal/git/commits{/sha}",
+              "git_refs_url": "https://api.github.com/repos/trunk-io/.trunk-internal/git/refs{/sha}",
+              "git_tags_url": "https://api.github.com/repos/trunk-io/.trunk-internal/git/tags{/sha}",
+              "git_url": "git://github.com/trunk-io/.trunk-internal.git",
+              "has_discussions": false,
+              "has_downloads": true,
+              "has_issues": true,
+              "has_pages": false,
+              "has_projects": true,
+              "has_wiki": true,
+              "homepage": null,
+              "hooks_url": "https://api.github.com/repos/trunk-io/.trunk-internal/hooks",
+              "html_url": "https://github.com/trunk-io/.trunk-internal",
+              "id": 620475538,
+              "is_template": false,
+              "issue_comment_url": "https://api.github.com/repos/trunk-io/.trunk-internal/issues/comments{/number}",
+              "issue_events_url": "https://api.github.com/repos/trunk-io/.trunk-internal/issues/events{/number}",
+              "issues_url": "https://api.github.com/repos/trunk-io/.trunk-internal/issues{/number}",
+              "keys_url": "https://api.github.com/repos/trunk-io/.trunk-internal/keys{/key_id}",
+              "labels_url": "https://api.github.com/repos/trunk-io/.trunk-internal/labels{/name}",
+              "language": null,
+              "languages_url": "https://api.github.com/repos/trunk-io/.trunk-internal/languages",
+              "license": null,
+              "merges_url": "https://api.github.com/repos/trunk-io/.trunk-internal/merges",
+              "milestones_url": "https://api.github.com/repos/trunk-io/.trunk-internal/milestones{/number}",
+              "mirror_url": null,
+              "name": ".trunk-internal",
+              "node_id": "R_kgDOJPu0kg",
+              "notifications_url": "https://api.github.com/repos/trunk-io/.trunk-internal/notifications{?since,all,participating}",
+              "open_issues": 1,
+              "open_issues_count": 1,
+              "owner": {
+                "avatar_url": "https://avatars.githubusercontent.com/u/74779146?v=4",
+                "events_url": "https://api.github.com/users/trunk-io/events{/privacy}",
+                "followers_url": "https://api.github.com/users/trunk-io/followers",
+                "following_url": "https://api.github.com/users/trunk-io/following{/other_user}",
+                "gists_url": "https://api.github.com/users/trunk-io/gists{/gist_id}",
+                "gravatar_id": "",
+                "html_url": "https://github.com/trunk-io",
+                "id": 74779146,
+                "login": "trunk-io",
+                "node_id": "MDEyOk9yZ2FuaXphdGlvbjc0Nzc5MTQ2",
+                "organizations_url": "https://api.github.com/users/trunk-io/orgs",
+                "received_events_url": "https://api.github.com/users/trunk-io/received_events",
+                "repos_url": "https://api.github.com/users/trunk-io/repos",
+                "site_admin": false,
+                "starred_url": "https://api.github.com/users/trunk-io/starred{/owner}{/repo}",
+                "subscriptions_url": "https://api.github.com/users/trunk-io/subscriptions",
+                "type": "Organization",
+                "url": "https://api.github.com/users/trunk-io"
+              },
+              "private": true,
+              "pulls_url": "https://api.github.com/repos/trunk-io/.trunk-internal/pulls{/number}",
+              "pushed_at": "2023-06-02T22:31:01Z",
+              "releases_url": "https://api.github.com/repos/trunk-io/.trunk-internal/releases{/id}",
+              "size": 24,
+              "ssh_url": "git@github.com:trunk-io/.trunk-internal.git",
+              "stargazers_count": 0,
+              "stargazers_url": "https://api.github.com/repos/trunk-io/.trunk-internal/stargazers",
+              "statuses_url": "https://api.github.com/repos/trunk-io/.trunk-internal/statuses/{sha}",
+              "subscribers_url": "https://api.github.com/repos/trunk-io/.trunk-internal/subscribers",
+              "subscription_url": "https://api.github.com/repos/trunk-io/.trunk-internal/subscription",
+              "svn_url": "https://github.com/trunk-io/.trunk-internal",
+              "tags_url": "https://api.github.com/repos/trunk-io/.trunk-internal/tags",
+              "teams_url": "https://api.github.com/repos/trunk-io/.trunk-internal/teams",
+              "topics": [],
+              "trees_url": "https://api.github.com/repos/trunk-io/.trunk-internal/git/trees{/sha}",
+              "updated_at": "2023-05-03T16:49:35Z",
+              "url": "https://api.github.com/repos/trunk-io/.trunk-internal",
+              "visibility": "private",
+              "watchers": 0,
+              "watchers_count": 0,
+              "web_commit_signoff_required": false
+            },
+            "sender": {
+              "avatar_url": "https://avatars.githubusercontent.com/in/125632?v=4",
+              "events_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/events{/privacy}",
+              "followers_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/followers",
+              "following_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/following{/other_user}",
+              "gists_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/gists{/gist_id}",
+              "gravatar_id": "",
+              "html_url": "https://github.com/apps/trunk-staging-io",
+              "id": 87141165,
+              "login": "trunk-staging-io[bot]",
+              "node_id": "MDM6Qm90ODcxNDExNjU=",
+              "organizations_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/orgs",
+              "received_events_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/received_events",
+              "repos_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/repos",
+              "site_admin": false,
+              "starred_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D/subscriptions",
+              "type": "Bot",
+              "url": "https://api.github.com/users/trunk-staging-io%5Bbot%5D"
+            },
+            "workflow": ".github/workflows/trunk-check.yaml"
+          }''')
+          f.close()
+
       - name: Run trunk-action in ${{ matrix.repo }}
         id: trunk
         uses: ./local-action/
@@ -121,6 +271,7 @@ jobs:
           arguments: --output-file=.trunk/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
           setup-deps: true
+          github-event-path: /tmp/fake_github_event_file
           json: '{"targetCheckoutRef":"refs/pull/9042/merge","targetRefName":"9042/merge","checkMode":"pull_request","token":"fake-trunk-token","pullRequest":{"number":9042,"head":{"sha":"4e54c7d493b70adf4e4f3fd0188e0ffa5dc58ec2","ref":"elton/fix"},"base":{"sha":"b0fda5a68784996673bd6256085f02ae4dd75c51","ref":"elton/transitions"}},"checkRunId":13970097585,"version":"0.0.0","cache":true,"cacheKey":"trunk-check","cachePath":"~/.cache/trunk/tools/ruby","checkJobName":"trunk/pull_request","checkJobRunsOn":["self-hosted","linux","r6id2xlarge"],"concurrencyGroup":"trunk/pull_request/9042","githubToken":"fake-github-token","targetCheckout":"trunk-io/trunk","uploadLandingState":true}'
         continue-on-error: true
 
