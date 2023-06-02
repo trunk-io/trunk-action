@@ -128,8 +128,8 @@ runs:
           githubToken = client_payload["githubToken"]
           trunkToken = client_payload["token"]
         else:
-          githubToken = env.get("INPUT_GITHUB_TOKEN")
-          trunkToken = env.get("INPUT_TRUNK_TOKEN")
+          githubToken = environ.get("INPUT_GITHUB_TOKEN")
+          trunkToken = environ.get("INPUT_TRUNK_TOKEN")
           try:
             client_payload = json.loads("${{ inputs.json }}")
           except json.decoder.JSONDecodeError:
