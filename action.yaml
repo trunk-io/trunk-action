@@ -131,7 +131,7 @@ runs:
           githubToken = environ.get("INPUT_GITHUB_TOKEN")
           trunkToken = environ.get("INPUT_TRUNK_TOKEN")
           try:
-            client_payload = json.loads("${{ inputs.json }}")
+            client_payload = json.loads('${{ inputs.json }}') # these must be single quotes
           except json.decoder.JSONDecodeError:
             client_payload = None
 
