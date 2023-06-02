@@ -138,7 +138,7 @@ runs:
         print(f"::add-mask::{githubToken}")
         print(f"::add-mask::{trunkToken}")
 
-        github_env.write("GITHUB_TOKEN={{ github.token }}\n")
+        github_env.write("GITHUB_TOKEN=${{ github.token }}\n")
         github_env.write(f"INPUT_GITHUB_TOKEN={githubToken}\n")
         github_env.write(f"INPUT_TRUNK_TOKEN={trunkToken}\n")
 
@@ -152,10 +152,10 @@ runs:
           if to_write is None:
             to_write = backup
           if to_write is not None:
-            github_env.write(f"{varname}={to_write}\n)
+            github_env.write(f"{varname}={to_write}\n")
 
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", "")
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME", "pullRequest.base.repo.name", )
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", None)
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME", "pullRequest.base.repo.name", None)
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_SHA", "pullRequest.base.sha", "${{ github.event.pull_request.base.sha }}")
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK", "pullRequest.head.repo.fork", "${{ github.event.pull_request.head.repo.fork }}")
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA", "pullRequest.head.sha", "${{ github.event.pull_request.head.sha }}")
