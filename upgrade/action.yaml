@@ -14,6 +14,10 @@ inputs:
       demand.
     required: false
 
+  prefix:
+    description: Prefix to be added in the PR title
+    required: false
+
   arguments:
     description: Extra arguments to pass to trunk upgrade
     required: false
@@ -97,14 +101,13 @@ runs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v5
       with:
-        title: |
-          ${{ env.PR_TITLE }}
+        title: ${{ inputs.prefix }} ${{ env.PR_TITLE }}
         body: ${{ env.PR_DESCRIPTION }}
         base: ${{ inputs.base }}
         branch: trunk-io/update-trunk
         labels: trunk
         add-paths: .trunk
-        commit-message: ${{ env.PR_TITLE }}
+        commit-message: ${{ inputs.prefix }} ${{ env.PR_TITLE }}
         delete-branch: true
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
