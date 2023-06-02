@@ -132,8 +132,9 @@ runs:
           trunkToken = environ.get("INPUT_TRUNK_TOKEN")
           try:
             client_payload = json.loads('${{ inputs.json }}') # these must be single quotes
-          except json.decoder.JSONDecodeError:
+          except json.decoder.JSONDecodeError as e:
             client_payload = None
+            raise e
 
         print(f"::add-mask::{githubToken}")
         print(f"::add-mask::{trunkToken}")
@@ -143,8 +144,9 @@ runs:
         github_env.write(f"INPUT_TRUNK_TOKEN={trunkToken}\n")
 
         def env_write(payload: dict | None, varname: str, path: str, backup: str | None):
+          print(payload, varname, path, backup)
           to_write = payload
-          for arg in varname.split("."):
+          for arg in path.split("."):
             if to_write is None:
               to_write = backup
               break
@@ -152,6 +154,7 @@ runs:
           if to_write is None:
             to_write = backup
           if to_write is not None:
+            print("writing", to_write)
             github_env.write(f"{varname}={to_write}\n")
 
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", None)
