@@ -101,13 +101,13 @@ runs:
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v5
       with:
-        title: ${{ inputs.prefix }} ${{ env.PR_TITLE }}
+        title: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         body: ${{ env.PR_DESCRIPTION }}
         base: ${{ inputs.base }}
         branch: trunk-io/update-trunk
         labels: trunk
         add-paths: .trunk
-        commit-message: ${{ inputs.prefix }} ${{ env.PR_TITLE }}
+        commit-message: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         delete-branch: true
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
