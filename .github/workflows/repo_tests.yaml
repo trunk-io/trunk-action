@@ -264,15 +264,14 @@ jobs:
         id: trunk
         uses: ./local-action/
         with:
-          cache: true
-          check-mode: all
-          trunk-path: ${{ matrix.trunk-path }}
-          post-init: ${{ matrix.post-init }}
-          arguments: --output-file=.trunk/landing-state.json
-          cache-key: repo_tests/${{ matrix.repo }}
-          setup-deps: true
+          # cache: true
+          # check-mode: all
+          # trunk-path: ${{ matrix.trunk-path }}
+          # post-init: ${{ matrix.post-init }}
+          # arguments: --output-file=.trunk/landing-state.json
+          # cache-key: repo_tests/${{ matrix.repo }}
+          # setup-deps: true
           github-event-path: /tmp/fake_github_event_file
-          json: '{"targetCheckoutRef":"refs/pull/9042/merge","targetRefName":"9042/merge","checkMode":"pull_request","token":"fake-trunk-token","pullRequest":{"number":9042,"head":{"sha":"4e54c7d493b70adf4e4f3fd0188e0ffa5dc58ec2","ref":"elton/fix"},"base":{"sha":"b0fda5a68784996673bd6256085f02ae4dd75c51","ref":"elton/transitions"}},"checkRunId":13970097585,"version":"0.0.0","cache":true,"cacheKey":"trunk-check","cachePath":"~/.cache/trunk/tools/ruby","checkJobName":"trunk/pull_request","checkJobRunsOn":["self-hosted","linux","r6id2xlarge"],"concurrencyGroup":"trunk/pull_request/9042","githubToken":"fake-github-token","targetCheckout":"trunk-io/trunk","uploadLandingState":true}'
         continue-on-error: true
 
       - name: Check for task failures

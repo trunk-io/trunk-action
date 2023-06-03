@@ -134,13 +134,12 @@ runs:
           githubToken = client_payload["githubToken"]
           trunkToken = client_payload["token"]
         else:
-          githubToken = environ.get("INPUT_GITHUB_TOKEN")
-          trunkToken = environ.get("INPUT_TRUNK_TOKEN")
+          githubToken = "${{ inputs.github-token || fromJSON(inputs.json).githubToken }}"
+          trunkToken = "${{ inputs.trunk-token || fromJSON(inputs.json).token }}"
           try:
             client_payload = json.loads('${{ inputs.json }}') # these must be single quotes
-          except json.decoder.JSONDecodeError as e:
+          except json.decoder.JSONDecodeError:
             client_payload = None
-            raise e
 
         print(f"::add-mask::{githubToken}")
         print(f"::add-mask::{trunkToken}")
@@ -149,29 +148,25 @@ runs:
         github_env.write(f"INPUT_GITHUB_TOKEN={githubToken}\n")
         github_env.write(f"INPUT_TRUNK_TOKEN={trunkToken}\n")
 
-        def env_write(payload: dict | None, varname: str, path: str, backup: str | None):
-          print(payload, varname, path, backup)
+        def env_write(payload: dict | None, varname: str, path: str, backup: str):
           to_write = payload
           for arg in path.split("."):
-            if to_write is None:
+            if to_write is None or type(to_write) != dict:
               to_write = backup
               break
-            to_write = to_write.get(arg, None)
-          if to_write is None:
-            to_write = backup
+            to_write = to_write.get(arg, backup)
+
           if to_write in [True, False]:
             to_write = str(to_write).lower()
-          if to_write is not None:
-            print("writing", to_write)
-            github_env.write(f"{varname}={to_write}\n")
+          github_env.write(f"{varname}={to_write}\n")
 
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", None)
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME", "pullRequest.base.repo.name", None)
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", "")
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME", "pullRequest.base.repo.name", "")
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_SHA", "pullRequest.base.sha", "${{ github.event.pull_request.base.sha }}")
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK", "pullRequest.head.repo.fork", "${{ github.event.pull_request.head.repo.fork }}")
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA", "pullRequest.head.sha", "${{ github.event.pull_request.head.sha }}")
         env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_NUMBER", "pullRequest.number", "${{ github.event.pull_request.number }}")
-        env_write(client_payload, "GITHUB_REF_NAME", "", "${{ github.ref_name }}")
+        env_write(client_payload, "GITHUB_REF_NAME", "targetRefName", "${{ github.ref_name }}")
         env_write(client_payload, "INPUT_ARGUMENTS", "arguments", "${{ inputs.arguments }}")
         env_write(client_payload, "INPUT_CACHE", "cache", "${{ inputs.cache }}")
         env_write(client_payload, "INPUT_CACHE_KEY", "cacheKey", "trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}")
@@ -189,10 +184,6 @@ runs:
         env_write(client_payload, "INPUT_TRUNK_PATH", "trunkPath", "${{ inputs.trunk-path }}")
         env_write(client_payload, "INPUT_UPLOAD_LANDING_STATE", "uploadLandingState", "false")
         env_write(client_payload, "INPUT_UPLOAD_SERIES", "uploadSeries", "${{ inputs.upload-series }}")
-      env:
-        # These are handled specially because we add-mask them.
-        INPUT_GITHUB_TOKEN: ${{ inputs.github-token || fromJSON(inputs.json).githubToken }}
-        INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token || fromJSON(inputs.json).token }}
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
