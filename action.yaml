@@ -203,6 +203,8 @@ runs:
         # Determine check mode
         ${GITHUB_ACTION_PATH}/determine_check_mode.sh
 
+    # This has to come before setup because setup can potentially take long time
+    # (e.g. with bazel build) causing the github token used in fetching to expire
     - name: Fetch
       shell: bash
       run: ${GITHUB_ACTION_PATH}/fetch.sh
