@@ -25,7 +25,6 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     htl_arg=""
   else
     htl_arg="--htl-factories-path=${latest_raw_upload}"
-    git fetch origin "${prev_ref}"
   fi
   "${TRUNK_PATH}" check \
     --all \
