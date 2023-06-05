@@ -24,7 +24,7 @@ echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream and HE
 if [[ -n ${INPUT_CHECK_RUN_ID} ]]; then
   annotation_argument=--trunk-annotate=${INPUT_CHECK_RUN_ID}
 else
-  annotation_argument=--github-annotate
+  annotation_argument=""
 fi
 
 if [[ -n ${INPUT_TRUNK_TOKEN} ]]; then
