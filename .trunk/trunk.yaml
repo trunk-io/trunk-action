@@ -1,7 +1,7 @@
 version: 0.1
 
 cli:
-  version: 1.10.0
+  version: 1.10.1-beta.21
 
 plugins:
   sources:
