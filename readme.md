@@ -55,7 +55,7 @@ steps:
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference)
 
-### Installing your own dependencies {#setup}
+### Custom setup
 
 If you define a composite action in your repository at `.trunk/setup-ci/action.yaml`, we will
 automatically run it before we run any linters. This can be important if, for example, a linter needs
