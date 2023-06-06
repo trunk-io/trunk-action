@@ -57,6 +57,17 @@ inputs:
     description: Steps to run after auto-init / before check
     required: false
 
+  github-token:
+    description: For overriding github.token
+    required: false
+
+  trunk-token:
+    description:
+      You can find a per-repo API token in the Trunk web app settings. This will cause results to be
+      uploaded to the Trunk web app if this job is a scheduled job running on a branch, or if
+      `check-mode` is set to 'all'.
+    required: false
+
   upload-series:
     description:
       Upload series name, for when `trunk-token` is provided. If not provided, we'll use the branch
@@ -86,18 +97,6 @@ inputs:
     required: false
     default: "false"
 
-<<<<<<< HEAD
-  json:
-    description: Used by CheckService
-    required: false
-    default: "{}"
-=======
-  github-event-path:
-    description: Used by CheckService
-    required: false
-    default: ""
->>>>>>> 1203643 (remove old inputs)
-
   debug:
     description: Internal use only
     required: false
@@ -118,16 +117,16 @@ runs:
         github_env = open(github_env_path, "w")
 
         client_payload = None
-        githubToken = ""
-        trunkToken = ""
+        githubToken = "${{ inputs.github-token }}"
+        trunkToken = "${{ inputs.trunk-token }}"
 
         github_event_filepath = environ.get('GITHUB_EVENT_PATH', "")
         if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
           github_event_text = open(github_event_filepath).read()
           inputs_dict = json.loads(github_event_text)["inputs"]
           client_payload = json.loads(inputs_dict["payload"])
-          githubToken = client_payload["githubToken"]
-          trunkToken = client_payload.get("trunkToken", client_payload.get("token", ""))
+          githubToken = client_payload.get("githubToken", githubToken)
+          trunkToken = client_payload.get("trunkToken", client_payload.get("token", "trunkToken)
 
         print(f"::add-mask::{githubToken}")
         print(f"::add-mask::{trunkToken}")
