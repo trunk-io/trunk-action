@@ -3,6 +3,9 @@ version: 0.1
 cli:
   version: 1.10.0
 
+api:
+  address: api.trunk-staging.io:8443
+
 plugins:
   sources:
     - id: trunk
