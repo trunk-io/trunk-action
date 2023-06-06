@@ -55,14 +55,34 @@ steps:
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference)
 
-### Installing your own dependencies
+### Installing your own dependencies {#setup}
 
-You do need to install your own dependencies (`npm install`, etc) as a step in your workflow before
-the `trunk-io/trunk-action` step. Many linters will follow imports/includes in your code to find
-errors in your usage and thus they need you to have your dependencies installed and available.
+If you define a composite action in your repository at `.trunk/setup-ci/action.yaml`, we will
+automatically run it before we run any linters. This can be important if, for example, a linter needs
+some generated code to be present before it can run:
 
-If you've setup basic testing on CI, you're already doing this for other CI jobs; Do it here too 😉.
-Here's some GitHub docs to get you going:
+```yaml
+name: Trunk Check setup
+description: Set up dependencies for Trunk Check
+
+runs:
+  using: composite
+  steps:
+    - name: Build required trunk check inputs
+      shell: bash
+      run: bazel build ... --build_tag_filters=pre-lint
+
+    - name: Install eslint dependencies
+      shell: bash
+      run: npm install
+```
+
+Alternatively, you can handle setup as a separate step in your workflow before running
+`trunk-io/trunk-action`; note however that this approach is not compatible with Trunk's GitHub-native
+integrations.
+
+If you've setup basic testing on CI, you're already doing this for other CI jobs; Dd it here too 😉.
+Here are some GitHub docs to get you going:
 [[nodejs](https://docs.github.com/en/actions/guides/building-and-testing-nodejs),
 [ruby](https://docs.github.com/en/actions/guides/building-and-testing-ruby),
 [python](https://docs.github.com/en/actions/guides/building-and-testing-python),
