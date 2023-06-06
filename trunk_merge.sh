@@ -18,7 +18,6 @@ else
   annotation_argument=""
 fi
 
-
 if [[ -n ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \
