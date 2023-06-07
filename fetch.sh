@@ -18,12 +18,23 @@ fetch() {
 if [[ ${TRUNK_CHECK_MODE} == "all" ]]; then
   if [[ -n ${INPUT_TRUNK_TOKEN} && ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     latest_raw_upload="$(mktemp)"
-    prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
+    # Note: the order of these if clauses is important. We can't invert them using if ! because that
+    # would cause the exit code of prev_ref=$(...) to get discarded
+    if prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
       --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
       --token "${INPUT_TRUNK_TOKEN}" \
-      "${latest_raw_upload}")"
-    if ! [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
-      git fetch origin "${prev_ref}"
+      "${latest_raw_upload}")"; then
+      if [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
+        echo "TRUNK_CHECK_ALL_HTL_ARG=" >>"${GITHUB_ENV}"
+      else
+        echo "TRUNK_CHECK_ALL_HTL_ARG=--htl-factories-path=${latest_raw_upload}" >>"${GITHUB_ENV}"
+        git fetch origin "${prev_ref}"
+      fi
+    else
+      exit_code=$?
+      # In this situation. $prev_ref is actually the error message, because we use stderr incorrectly
+      echo -n "${prev_ref}"
+      exit "${exit_code}"
     fi
   fi
 elif [[ ${TRUNK_CHECK_MODE} == "pull_request" ]]; then
