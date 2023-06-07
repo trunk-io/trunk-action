@@ -23,48 +23,52 @@ issues _before_ pushing your changes. See all supported linters
 
 ## Get Started
 
-Before setting up running Trunk Check on CI, you'll need to initialize trunk in your repo.
-Initializing it (`trunk init`) bootstraps the trunk configuration (`.trunk/trunk.yaml`) which stores
-all the configurations for Trunk. All linters and formatters, as well as the version of Trunk
-itself, are versioned in `trunk.yaml`, so you're guaranteed to get the same results whether you're
-running locally or on CI.
+> **Note** We will soon launch a number of GitHub-native integrations and recommend that you use
+> Trunk Check through those integrations, instead of maintaining your own workflow files. You can
+> sign up to be notified when this happens either by joining
+> [our community Slack](https://slack.trunk.io) or by
+> [upvoting the tracking feature request](https://features.trunk.io/check/p/github-native-integrations).
 
-Check out the Trunk [CLI](https://docs.trunk.io/docs/overview) and [VS Code extension][vscode] to
-start using Trunk locally.
-
-1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
-2. Setup Trunk in your repo → `trunk init`
-3. Locally check your changes for issues → `trunk check`
-4. Locally format your changes → `trunk fmt`
-5. Make sure no lint and format issues leak onto `main` → **You're in the right place 👍**
-
-## Usage
+To run Trunk Check on your pull requests, add this file to your repo as
+`.github/workflows/trunk-check.yaml`:
 
 ```yaml
-steps:
-  - name: Checkout
-    uses: actions/checkout@v3
+name: Pull Request
+on: [pull_request]
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
 
-  # >>> Install your own deps here (npm install, etc) <<<
+permissions: read-all
 
-  - name: Trunk Check
-    uses: trunk-io/trunk-action@v1
+jobs:
+  trunk_check:
+    name: Trunk Check Runner
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write # For trunk to post annotations
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
 ```
 
-(See this repo's
+See this repo's
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
-for further reference)
+for further reference.
 
 ### Custom setup
 
 If you define a composite action in your repository at `.trunk/setup-ci/action.yaml`, we will
-automatically run it before we run any linters. This can be important if, for example, a linter needs
-some generated code to be present before it can run:
+automatically run it before we run any linters. This can be important if, for example, a linter
+needs some generated code to be present before it can run:
 
 ```yaml
 name: Trunk Check setup
 description: Set up dependencies for Trunk Check
-
 runs:
   using: composite
   steps:
@@ -78,15 +82,10 @@ runs:
 ```
 
 Alternatively, you can handle setup as a separate step in your workflow before running
-`trunk-io/trunk-action`; note however that this approach is not compatible with Trunk's GitHub-native
-integrations.
+`trunk-io/trunk-action`; note however that this approach is not compatible with Trunk's
+GitHub-native integrations.
 
-If you've setup basic testing on CI, you're already doing this for other CI jobs; Dd it here too 😉.
-Here are some GitHub docs to get you going:
-[[nodejs](https://docs.github.com/en/actions/guides/building-and-testing-nodejs),
-[ruby](https://docs.github.com/en/actions/guides/building-and-testing-ruby),
-[python](https://docs.github.com/en/actions/guides/building-and-testing-python),
-[many more](https://docs.github.com/en/actions/guides/about-continuous-integration)]
+If you've setup basic testing on CI, you're already doing this for other CI jobs; do it here too 😉.
 
 ### Caching
 
