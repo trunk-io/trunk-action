@@ -1,0 +1,7 @@
+name: Mask tokens
+author: trunk.io
+description: Masks tokens provided in payload
+
+runs:
+  using: node16
+  main: ./mask.ts
