@@ -124,9 +124,9 @@ runs:
         if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
           github_event_text = open(github_event_filepath).read()
           inputs_dict = json.loads(github_event_text)["inputs"]
-          client_payload = json.loads(inputs_dict["payload"])
+          client_payload = json.loads(inputs_dict.get("payload", inputs_dict.get("clientPayload", None)))
           githubToken = client_payload.get("githubToken", githubToken)
-          trunkToken = client_payload.get("trunkToken", client_payload.get("token", "trunkToken)
+          trunkToken = client_payload.get("trunkToken", trunkToken)
 
         print(f"::add-mask::{githubToken}")
         print(f"::add-mask::{trunkToken}")
@@ -135,7 +135,7 @@ runs:
         github_env.write(f"INPUT_GITHUB_TOKEN={githubToken}\n")
         github_env.write(f"INPUT_TRUNK_TOKEN={trunkToken}\n")
 
-        def env_write(payload: dict | None, varname: str, path: str, backup: str):
+        def env_write(payload, varname, path, backup):
           to_write = payload
           for arg in path.split("."):
             if to_write is None or type(to_write) != dict:
