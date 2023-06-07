@@ -125,7 +125,7 @@ runs:
         if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
           github_event_text = open(github_event_filepath).read()
           inputs_dict = json.loads(github_event_text)["inputs"]
-          client_payload = json.loads(inputs_dict.get("payload", inputs_dict.get("clientPayload", None))
+          client_payload = json.loads(inputs_dict.get("payload", inputs_dict.get("clientPayload", None)))
           githubToken = client_payload["githubToken"]
           trunkToken = client_payload.get("trunkToken", client_payload.get("token", ""))
         else:
