@@ -95,7 +95,12 @@ inputs:
       necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
       eslint dependencies, or @types packages).
     required: false
-    default: false
+    default: "false"
+
+  github-event-path:
+    description: Used by CheckService
+    required: false
+    default: ""
 
   json:
     description: Used by CheckService
@@ -111,79 +116,74 @@ runs:
   using: composite
   steps:
     - name: Set up inputs
-      shell: bash
+      shell: python
       run: |
-        echo "::add-mask::$INPUT_GITHUB_TOKEN"
-        echo "::add-mask::$INPUT_TRUNK_TOKEN"
+        from os import environ
+        import json
 
-        cat >>$GITHUB_ENV <<EOF
-        GITHUB_TOKEN=${{ github.token }}
-        INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN
-        INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
-        EOF
+        github_env_path = environ.get('GITHUB_ENV', None)
+        if github_env_path == None:
+          raise OSError("GITHUB_ENV doesn't exist!")
+        github_env = open(github_env_path, "w")
 
-        # Every inputs.field should be referenced as INPUT_FIELD later in the action. This allows
-        # the field to be set either as an argument to the github action or via inputs.json.
-        if [[ -n "${{ fromJSON(inputs.json).version }}" ]]; then
+        github_event_filepath = "${{ inputs.github-event-path }}"
+        if github_event_filepath != "":
+          github_event_text = open(github_event_filepath).read()
+          inputs_dict = json.loads(github_event_text)["inputs"]
+          client_payload = json.loads(inputs_dict["client_payload"])
+          githubToken = client_payload["githubToken"]
+          trunkToken = client_payload["token"]
+        else:
+          githubToken = "${{ inputs.github-token || fromJSON(inputs.json).githubToken }}"
+          trunkToken = "${{ inputs.trunk-token || fromJSON(inputs.json).token }}"
+          try:
+            client_payload = json.loads('${{ inputs.json }}') # these must be single quotes
+          except json.decoder.JSONDecodeError:
+            client_payload = None
 
-          cat >>$GITHUB_ENV <<EOF
-        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=${{ fromJSON(inputs.json).pullRequest.base.repo.owner.login }}
-        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=${{ fromJSON(inputs.json).pullRequest.base.repo.name }}
-        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ fromJSON(inputs.json).pullRequest.base.sha }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ fromJSON(inputs.json).pullRequest.head.repo.fork }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ fromJSON(inputs.json).pullRequest.head.sha }}
-        GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ fromJSON(inputs.json).pullRequest.number }}
-        INPUT_ARGUMENTS=${{ fromJSON(inputs.json).arguments }}
-        INPUT_CACHE=${{ fromJSON(inputs.json).cache }}
-        INPUT_CACHE_KEY=${{ fromJSON(inputs.json).cacheKey }}
-        INPUT_CACHE_PATH=${{ fromJSON(inputs.json).cachePath }}
-        INPUT_CHECK_ALL_MODE=${{ fromJSON(inputs.json).checkAllMode }}
-        INPUT_CHECK_MODE=${{ fromJSON(inputs.json).checkMode }}
-        INPUT_CHECK_RUN_ID=${{ fromJSON(inputs.json).checkRunId }}
-        INPUT_DEBUG=${{ fromJSON(inputs.json).debug }}
-        INPUT_GITHUB_REF_NAME=${{ fromJSON(inputs.json).targetRefName }}
-        INPUT_LABEL=${{ fromJSON(inputs.json).label }}
-        INPUT_SETUP_CACHE_KEY=${{ fromJSON(inputs.json).setupCacheKey }}
-        INPUT_SETUP_DEPS=${{ fromJSON(inputs.json).setupDeps }}
-        INPUT_TARGET_CHECKOUT=${{ fromJSON(inputs.json).targetCheckout }}
-        INPUT_TARGET_CHECKOUT_REF=${{ fromJSON(inputs.json).targetCheckoutRef }}
-        INPUT_TRUNK_PATH=${{ fromJSON(inputs.json).trunkPath }}
-        INPUT_UPLOAD_LANDING_STATE=${{ fromJSON(inputs.json).uploadLandingState }}
-        INPUT_UPLOAD_SERIES=${{ fromJSON(inputs.json).uploadSeries }}
-        EOF
+        print(f"::add-mask::{githubToken}")
+        print(f"::add-mask::{trunkToken}")
 
-        else
+        github_env.write("GITHUB_TOKEN=${{ github.token }}\n")
+        github_env.write(f"INPUT_GITHUB_TOKEN={githubToken}\n")
+        github_env.write(f"INPUT_TRUNK_TOKEN={trunkToken}\n")
 
-          cat >>$GITHUB_ENV <<EOF
-        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ github.event.pull_request.base.sha }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ github.event.pull_request.head.repo.fork }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
-        GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}
-        GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_ARGUMENTS=${{ inputs.arguments }}
-        INPUT_CACHE=${{ inputs.cache }}
-        INPUT_CACHE_KEY=trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
-        INPUT_CACHE_PATH=~/.cache/trunk
-        INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
-        INPUT_CHECK_MODE=${{ inputs.check-mode }}
-        INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
-        INPUT_DEBUG=${{ inputs.debug }}
-        INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
-        INPUT_TARGET_CHECKOUT=
-        INPUT_TARGET_CHECKOUT_REF=
-        INPUT_LABEL=${{ inputs.label }}
-        INPUT_SETUP_CACHE_KEY=${{ inputs.cache-key }}
-        INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
-        INPUT_UPLOAD_LANDING_STATE=false
-        INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
-        EOF
+        def env_write(payload, varname, path, backup):
+          to_write = payload
+          for arg in path.split("."):
+            if to_write is None or type(to_write) != dict:
+              to_write = backup
+              break
+            to_write = to_write.get(arg, backup)
 
-        fi
-      env:
-        # These are handled specially because we add-mask them.
-        INPUT_GITHUB_TOKEN: ${{ inputs.github-token || fromJSON(inputs.json).githubToken }}
-        INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token || fromJSON(inputs.json).token }}
+          if to_write in [True, False]:
+            to_write = str(to_write).lower()
+          github_env.write(f"{varname}={to_write}\n")
+
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", "")
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME", "pullRequest.base.repo.name", "")
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_SHA", "pullRequest.base.sha", "${{ github.event.pull_request.base.sha }}")
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK", "pullRequest.head.repo.fork", "${{ github.event.pull_request.head.repo.fork }}")
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA", "pullRequest.head.sha", "${{ github.event.pull_request.head.sha }}")
+        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_NUMBER", "pullRequest.number", "${{ github.event.pull_request.number }}")
+        env_write(client_payload, "GITHUB_REF_NAME", "targetRefName", "${{ github.ref_name }}")
+        env_write(client_payload, "INPUT_ARGUMENTS", "arguments", "${{ inputs.arguments }}")
+        env_write(client_payload, "INPUT_CACHE", "cache", "${{ inputs.cache }}")
+        env_write(client_payload, "INPUT_CACHE_KEY", "cacheKey", "trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}")
+        env_write(client_payload, "INPUT_CACHE_PATH", "cachePath", "~/.cache/trunk")
+        env_write(client_payload, "INPUT_CHECK_ALL_MODE", "checkAllMode", "${{ inputs.check-all-mode }}")
+        env_write(client_payload, "INPUT_CHECK_MODE", "checkMode", "${{ inputs.check-mode }}")
+        env_write(client_payload, "INPUT_CHECK_RUN_ID", "checkRunId", "${{ inputs.check-run-id }}")
+        env_write(client_payload, "INPUT_DEBUG", "debug", "${{ inputs.debug }}")
+        env_write(client_payload, "INPUT_GITHUB_REF_NAME", "targetRefName", "${{ github.ref_name }}")
+        env_write(client_payload, "INPUT_LABEL", "label", "${{ inputs.label }}")
+        env_write(client_payload, "INPUT_SETUP_CACHE_KEY", "setupCacheKey", "${{ inputs.cache-key }}")
+        env_write(client_payload, "INPUT_SETUP_DEPS", "setupDeps", "${{ inputs.setup-deps }}")
+        env_write(client_payload, "INPUT_TARGET_CHECKOUT", "targetCheckout", "")
+        env_write(client_payload, "INPUT_TARGET_CHECKOUT_REF", "targetCheckoutRef", "")
+        env_write(client_payload, "INPUT_TRUNK_PATH", "trunkPath", "${{ inputs.trunk-path }}")
+        env_write(client_payload, "INPUT_UPLOAD_LANDING_STATE", "uploadLandingState", "false")
+        env_write(client_payload, "INPUT_UPLOAD_SERIES", "uploadSeries", "${{ inputs.upload-series }}")
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
