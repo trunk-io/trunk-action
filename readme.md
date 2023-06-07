@@ -23,10 +23,11 @@ issues _before_ pushing your changes. See all supported linters
 
 ## Get Started
 
-> **Note** We will soon launch a number of GitHub-native integrations and recommend that you use
-> Trunk Check through those integrations, instead of maintaining your own workflow files. You can
-> sign up to be notified when this happens either by joining
-> [our community Slack](https://slack.trunk.io) or by
+> **Note**
+>
+> We will soon launch a number of GitHub-native integrations and recommend that you use Trunk Check
+> through those integrations, instead of maintaining your own workflow files. You can sign up to be
+> notified when this happens either by joining [our community Slack](https://slack.trunk.io) or by
 > [upvoting the tracking feature request](https://features.trunk.io/check/p/github-native-integrations).
 
 To run Trunk Check on your pull requests, add this file to your repo as
