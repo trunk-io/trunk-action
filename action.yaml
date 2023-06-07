@@ -97,11 +97,6 @@ inputs:
     required: false
     default: "false"
 
-  json:
-    description: Used by CheckService
-    required: false
-    default: "{}"
-
   debug:
     description: Internal use only
     required: false
@@ -121,20 +116,17 @@ runs:
           raise OSError("GITHUB_ENV doesn't exist!")
         github_env = open(github_env_path, "w")
 
+        client_payload = None
+        githubToken = "${{ inputs.github-token }}"
+        trunkToken = "${{ inputs.trunk-token }}"
+
         github_event_filepath = environ.get('GITHUB_EVENT_PATH', "")
         if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
           github_event_text = open(github_event_filepath).read()
           inputs_dict = json.loads(github_event_text)["inputs"]
           client_payload = json.loads(inputs_dict.get("payload", inputs_dict.get("clientPayload", None)))
-          githubToken = client_payload["githubToken"]
-          trunkToken = client_payload.get("trunkToken", client_payload.get("token", ""))
-        else:
-          githubToken = "${{ inputs.github-token || fromJSON(inputs.json).githubToken }}"
-          trunkToken = "${{ inputs.trunk-token || fromJSON(inputs.json).trunkToken || fromJSON(inputs.json).token }}"
-          try:
-            client_payload = json.loads('${{ inputs.json }}') # these must be single quotes
-          except json.decoder.JSONDecodeError:
-            client_payload = None
+          githubToken = client_payload.get("githubToken", githubToken)
+          trunkToken = client_payload.get("trunkToken", trunkToken)
 
         print(f"::add-mask::{githubToken}")
         print(f"::add-mask::{trunkToken}")
