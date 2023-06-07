@@ -97,11 +97,6 @@ inputs:
     required: false
     default: "false"
 
-  github-event-path:
-    description: Used by CheckService
-    required: false
-    default: ""
-
   json:
     description: Used by CheckService
     required: false
@@ -126,8 +121,8 @@ runs:
           raise OSError("GITHUB_ENV doesn't exist!")
         github_env = open(github_env_path, "w")
 
-        github_event_filepath = "${{ inputs.github-event-path }}"
-        if github_event_filepath != "":
+        github_event_filepath = environ.get('GITHUB_EVENT_PATH', None)
+        if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
           github_event_text = open(github_event_filepath).read()
           inputs_dict = json.loads(github_event_text)["inputs"]
           client_payload = json.loads(inputs_dict["clientPayload"])
