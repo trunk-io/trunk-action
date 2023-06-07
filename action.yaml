@@ -97,11 +97,6 @@ inputs:
     required: false
     default: "false"
 
-  github-event-path:
-    description: Used by CheckService
-    required: false
-    default: ""
-
   json:
     description: Used by CheckService
     required: false
@@ -126,16 +121,16 @@ runs:
           raise OSError("GITHUB_ENV doesn't exist!")
         github_env = open(github_env_path, "w")
 
-        github_event_filepath = "${{ inputs.github-event-path }}"
-        if github_event_filepath != "":
+        github_event_filepath = environ.get('GITHUB_EVENT_PATH', "")
+        if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
           github_event_text = open(github_event_filepath).read()
           inputs_dict = json.loads(github_event_text)["inputs"]
-          client_payload = json.loads(inputs_dict["client_payload"])
+          client_payload = json.loads(inputs_dict["payload"])
           githubToken = client_payload["githubToken"]
-          trunkToken = client_payload["token"]
+          trunkToken = client_payload.get("trunkToken", client_payload.get("token", ""))
         else:
           githubToken = "${{ inputs.github-token || fromJSON(inputs.json).githubToken }}"
-          trunkToken = "${{ inputs.trunk-token || fromJSON(inputs.json).token }}"
+          trunkToken = "${{ inputs.trunk-token || fromJSON(inputs.json).trunkToken || fromJSON(inputs.json).token }}"
           try:
             client_payload = json.loads('${{ inputs.json }}') # these must be single quotes
           except json.decoder.JSONDecodeError:
