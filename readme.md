@@ -61,6 +61,26 @@ See this repo's
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference.
 
+### Advanced
+
+You can get a lot more out of Trunk if you install it locally and commit a Trunk configuration in
+your repository:
+
+1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
+2. Setup Trunk in your repo → `trunk init`
+3. Locally check your changes for issues → `git commit -m "Create initial Trunk config" .trunk/`
+
+You'll see that in `.trunk/trunk.yaml`, we implement strict versioning of the trunk CLI and every
+linter you're running. This allows you to control all linter versioning using `.trunk/trunk.yaml`,
+as well as enable linters which require manual configuration.
+
+By default, `trunk-io/trunk-action` will run all linters which we can automatically initialize and
+set up for you. This works well in many cases, but there are some where it's insufficient.
+
+For example, if you already have eslint set up and depend on eslint plugins such as
+`@typescript-eslint/eslint-plugin`, you'll need to `trunk check enable eslint` and also
+[add a custom setup action](#custom-setup) to install your eslint dependencies.
+
 ### Custom setup
 
 If you define a composite action in your repository at `.trunk/setup-ci/action.yaml`, we will
