@@ -105,6 +105,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Mask tokens
+      uses: ./mask-payload
+
     - name: Set up inputs
       shell: python
       run: |
