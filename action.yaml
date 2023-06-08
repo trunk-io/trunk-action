@@ -106,7 +106,7 @@ runs:
   using: composite
   steps:
     - name: Mask tokens
-      uses: ./mask-payload
+      uses: ${{ github.action_path }}/mask-payload
 
     - name: Set up inputs
       shell: python
