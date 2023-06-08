@@ -172,8 +172,8 @@ runs:
         env_write(client_payload, "INPUT_TRUNK_PATH", "trunkPath", "${{ inputs.trunk-path }}")
         env_write(client_payload, "INPUT_UPLOAD_LANDING_STATE", "uploadLandingState", "false")
         env_write(client_payload, "INPUT_UPLOAD_SERIES", "uploadSeries", "${{ inputs.upload-series }}")
-        
-        if "trunkApiAddress" in client_payload:
+
+        if client_payload is not None and "trunkApiAddress" in client_payload:
           github_env.write(f"TRUNK_API_ADDRESS={client_payload['trunkApiAddress']}\n")
 
     - name: Checkout
