@@ -1,0 +1,36 @@
+name: Trunk Check
+run-name: ${{ fromJSON(inputs.payload).checkWorkflowRunName }}
+on:
+  workflow_call:
+    inputs:
+      payload:
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  check:
+    name: ${{ fromJSON(inputs.payload).checkJobName }}
+    runs-on: ${{ fromJSON(inputs.payload).checkJobRunsOn }}
+    concurrency:
+      group: ${{ fromJSON(inputs.payload).concurrencyGroup || github.run_id }}
+      cancel-in-progress: true
+
+    steps:
+      # first two steps here just for internal debugging, to be removed in the .trunk template
+      - name: Apply token masks
+        shell: bash
+        run: |
+          echo "::add-mask::$(jq '.inputs.payload | fromjson | .githubToken' $GITHUB_EVENT_PATH)"
+          echo "::add-mask::$(jq '.inputs.payload | fromjson | .token'       $GITHUB_EVENT_PATH)"
+
+      - name: Log input
+        shell: bash
+        run: |
+          jq '.inputs.payload | fromjson' $GITHUB_EVENT_PATH
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@main
+        with:
+          check-mode: payload
