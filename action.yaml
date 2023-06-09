@@ -194,6 +194,13 @@ runs:
         # Determine check mode
         ${GITHUB_ACTION_PATH}/determine_check_mode.sh
 
+    - name: Init on-demand
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          ${TRUNK_PATH:-trunk} init
+        fi
+
     # This has to come before setup because setup can potentially take long time
     # (e.g. with bazel build) causing the github token used in fetching to expire
     - name: Fetch
@@ -216,13 +223,6 @@ runs:
       if: env.INPUT_SETUP_DEPS == 'true'
       with:
         cache-key: ${{ env.INPUT_SETUP_CACHE_KEY }}
-
-    - name: Init on-demand
-      shell: bash
-      run: |
-        if [ ! -e .trunk/trunk.yaml ]; then
-          ${TRUNK_PATH:-trunk} init
-        fi
 
     - name: Post-init steps
       if: inputs.post-init
