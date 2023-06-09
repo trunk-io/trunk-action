@@ -47,6 +47,11 @@ inputs:
     description: A comma or newline separated list of GitHub reviewer usernames
     required: false
 
+  add-paths:
+    description: Specific paths to add to the created pull request. Comma separated.
+    required: false
+    default: .trunk
+
 runs:
   using: composite
   steps:
@@ -106,7 +111,7 @@ runs:
         base: ${{ inputs.base }}
         branch: trunk-io/update-trunk
         labels: trunk
-        add-paths: .trunk
+        add-paths: ${{ inputs.add-paths }}
         commit-message: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         delete-branch: true
         reviewers: ${{ inputs.reviewers }}
