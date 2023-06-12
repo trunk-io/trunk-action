@@ -1,7 +1,7 @@
-import * as core from "@actions/core";
-import { readFileSync } from "fs";
+const core = require("@actions/core");
+const fs = require("fs");
 
-async function run(): Promise<void> {
+function run() {
   try {
     core.info("running action");
     const filepath = process.env.GITHUB_EVENT_PATH;
@@ -9,7 +9,7 @@ async function run(): Promise<void> {
       core.setFailed("No GITHUB_EVENT_PATH env var");
       return;
     }
-    const event = JSON.parse(readFileSync(filepath).toString());
+    const event = JSON.parse(fs.readFileSync(filepath).toString());
     core.setSecret(event?.payload?.githubToken ?? core.getInput("githubToken") ?? "");
     core.setSecret(event?.payload?.trunkToken ?? core.getInput("trunkToken") ?? "");
   } catch (error) {

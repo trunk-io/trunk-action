@@ -4,4 +4,4 @@ description: Masks tokens provided in payload
 
 runs:
   using: node16
-  main: ./mask.ts
+  main: ./mask.js
