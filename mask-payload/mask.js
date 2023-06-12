@@ -14,7 +14,7 @@ function hashFile(filename) {
 }
 
 function envWrite({ payload, fd, varname, path, backup = "" }) {
-  let toWrite = payload;
+  let toWrite = payload ?? {};
   path.split(".").forEach((arg) => {
     toWrite = toWrite[arg] ?? {};
   });
@@ -35,6 +35,8 @@ function run() {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
       payload = JSON.parse(event?.inputs?.payload) ?? {};
     }
+
+    console.log("payload", JSON.stringify(payload, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
