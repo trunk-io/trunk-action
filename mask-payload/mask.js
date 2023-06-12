@@ -1,9 +1,11 @@
 const fs = require("fs");
 const crypto = require("crypto");
 
-function getInput(input_name) {
+function getInput(name) {
   // copied from https://github.com/actions/toolkit/blob/master/packages/core/src/core.ts#L69
-  return process.env[`INPUT_${input_name.replace(/ /g, "_").toUpperCase()}`] || "";
+  const ret = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
+  console.log(`read input ${name} as ${ret}`);
+  return ret;
 }
 
 function hashFile(filename) {
@@ -41,6 +43,7 @@ function run() {
     }
 
     console.log(JSON.stringify(payload, null, 2));
+    console.log(JSON.stringify(process.env, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? getInput("githubToken");
