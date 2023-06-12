@@ -24,7 +24,6 @@ function envWrite({ payload, fd, varname, path, backup }) {
 
 function run() {
   try {
-    process.stdout.write("running action\n");
     const filepath = process.env.GITHUB_EVENT_PATH;
     let payload = {};
     if (filepath) {
@@ -95,6 +94,7 @@ function run() {
     if (error instanceof Error) {
       process.exitCode = 1;
       process.stdout.write(error.message);
+      throw error;
     }
     return;
   }
