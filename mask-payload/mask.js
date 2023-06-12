@@ -36,8 +36,6 @@ function run() {
       payload = JSON.parse(event?.inputs?.payload) ?? {};
     }
 
-    console.log(JSON.stringify(process.env, null, 2));
-
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
     const trunkToken = payload?.trunkToken ?? inputs["trunkToken"] ?? "";
