@@ -21,9 +21,10 @@ function hashFile(filename) {
 function envWrite({ payload, fd, varname, path, backup }) {
   toWrite = payload;
   for (const arg in path.split(".")) {
+    console.log(JSON.stringify(arg), null, 2);
     toWrite = toWrite[arg] ?? {};
   }
-  if (!["string", "boolean", "number"].some(typeof toWrite)) {
+  if (!["string", "boolean", "number"].some((type) => typeof toWrite === type)) {
     toWrite = backup;
   }
   fs.writeSync(fd, Buffer.from(`${varname}=${toWrite}\n`));
