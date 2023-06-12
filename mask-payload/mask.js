@@ -7,8 +7,15 @@ function getInput(input_name) {
 }
 
 function hashFile(filename) {
-  const data = fs.readFileSync(filename).toString();
-  return crypto.createHash("sha256").update(data).digest("hex");
+  try {
+    const data = fs.readFileSync(filename).toString();
+    return crypto.createHash("sha256").update(data).digest("hex");
+  } catch (err) {
+    if (err.message.includes("ENOENT")) {
+      return "";
+    }
+    throw err;
+  }
 }
 
 function envWrite({ payload, fd, varname, path, backup }) {
@@ -26,8 +33,8 @@ function run() {
   try {
     const filepath = process.env.GITHUB_EVENT_PATH;
     let payload = {};
-    if (filepath) {
-      payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload;
+    if (getInput("check-mode") === "payload" && filepath) {
+      payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload ?? {};
     }
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
