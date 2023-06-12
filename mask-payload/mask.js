@@ -33,9 +33,12 @@ function run() {
     console.log(JSON.stringify(inputs, null, 2));
 
     const filepath = process.env.GITHUB_EVENT_PATH;
+    console.log("filepath", filepath);
     let payload = {};
     if (inputs["check-mode"] === "payload" && filepath) {
-      payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload ?? {};
+      const data = fs.readFileSync(filepath).toString();
+      console.log("Data", data);
+      payload = JSON.parse(data)?.payload ?? {};
     }
 
     console.log("payload", JSON.stringify(payload, null, 2));
