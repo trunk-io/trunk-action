@@ -62,22 +62,22 @@ function run() {
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_BASE_SHA",
         path: "pullRequest.base.sha",
-        path: process.env.GITHUB_EVENT_PULL_REQUEST_BASE_SHA,
+        backup: process.env.GITHUB_EVENT_PULL_REQUEST_BASE_SHA,
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK",
         path: "pullRequest.head.repo.fork",
-        path: process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK,
+        backup: process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK,
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA",
         path: "pullRequest.head.sha",
-        path: process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA,
+        backup: process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA,
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_NUMBER",
         path: "pullRequest.number",
-        path: process.env.GITHUB_EVENT_PULL_REQUEST_NUMBER,
+        backup: process.env.GITHUB_EVENT_PULL_REQUEST_NUMBER,
       },
       { varname: "GITHUB_REF_NAME", path: "targetRefName", backup: process.env.GITHUB_REF_NAME },
       { varname: "INPUT_ARGUMENTS", path: "arguments", backup: getInput("arguments") },
@@ -85,7 +85,7 @@ function run() {
       {
         varname: "INPUT_CACHE_KEY",
         path: "cacheKey",
-        path: `trunk-${getInput("cache-key")}-${process.env.RUNNER_OS}-${hashFile(
+        backup: `trunk-${getInput("cache-key")}-${process.env.RUNNER_OS}-${hashFile(
           ".trunk/trunk.yaml"
         )}`,
       },
