@@ -38,7 +38,7 @@ function run() {
     if (inputs["check-mode"] === "payload" && filepath) {
       const data = fs.readFileSync(filepath).toString();
       process.stdout.write(`Data ${data}\n`);
-      payload = JSON.parse(data)?.payload ?? {};
+      payload = JSON.parse(data)?.inputs?.payload ?? {};
     }
 
     console.log("payload", JSON.stringify(payload, null, 2));
