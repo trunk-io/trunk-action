@@ -107,7 +107,9 @@ runs:
   steps:
     - name: all paths
       shell: bash
-      run: find .
+      run: |
+        find .
+        cat ./mask-payload/mask.js
 
     - name: Mask tokens and setup inputs
       uses: ./mask-payload
