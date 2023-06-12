@@ -29,7 +29,6 @@ function run() {
     const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
 
     const filepath = process.env.GITHUB_EVENT_PATH;
-    process.stdout.write(`filepath ${filepath}\n`);
     let payload = {};
     if (inputs["check-mode"] === "payload" && filepath) {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
