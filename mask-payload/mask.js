@@ -77,7 +77,7 @@ function run() {
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_NUMBER",
         path: "pullRequest.number",
-        backup: githu?.event?.pull_request.number,
+        backup: githubEvent?.pull_request.number,
       },
       { varname: "GITHUB_REF_NAME", path: "targetRefName", backup: process.env.GITHUB_REF_NAME },
       { varname: "INPUT_ARGUMENTS", path: "arguments", backup: inputs["arguments"] },
