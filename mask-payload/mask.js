@@ -19,11 +19,11 @@ function hashFile(filename) {
 }
 
 function envWrite({ payload, fd, varname, path, backup }) {
-  toWrite = payload;
-  for (const arg of path.split(".")) {
+  let toWrite = payload;
+  path.split(".").forEach((arg) => {
     console.log(JSON.stringify(arg, null, 2));
     toWrite = toWrite[arg] ?? {};
-  }
+  });
   if (!["string", "boolean", "number"].some((type) => typeof toWrite === type)) {
     toWrite = backup;
   }
