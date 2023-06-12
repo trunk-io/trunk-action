@@ -105,14 +105,15 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: all paths
+    - name: Make mask symlink
       shell: bash
       run: |
-        find .
-        cat ./mask-payload/mask.js || true
+        mkdir -p .trunk
+        ln -s ${{ github.action_path }}/mask-payload .trunk/mask-payload
+        echo .trunk/mask-payload >>.git/info/exclude
 
     - name: Mask tokens and setup inputs
-      uses: ./mask-payload
+      uses: ./.trunk/mask-payload
       env:
         MASK_INPUTS: ${{ toJSON(inputs) }}
 
