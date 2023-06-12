@@ -21,7 +21,9 @@ function envWrite({ payload, fd, varname, path, backup = "" }) {
   if (!["string", "boolean", "number"].some((type) => typeof toWrite === type)) {
     toWrite = backup;
   }
-  fs.writeSync(fd, Buffer.from(`${varname}=${toWrite ?? ""}\n`));
+  if (toWrite) {
+    fs.writeSync(fd, Buffer.from(`${varname}=${toWrite}\n`));
+  }
 }
 
 function run() {
