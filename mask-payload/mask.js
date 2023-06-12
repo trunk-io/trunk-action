@@ -37,7 +37,8 @@ function run() {
     let payload = {};
     if (inputs["check-mode"] === "payload" && filepath) {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
-      payload = JSON.parse(event?.inputs)?.payload ?? {};
+      console.log("event", event);
+      payload = JSON.parse(event?.inputs?.payload) ?? {};
     }
 
     console.log("payload", JSON.stringify(payload, null, 2));
