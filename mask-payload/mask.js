@@ -86,7 +86,7 @@ function run() {
       ["INPUT_GITHUB_REF_NAME", "targetRefName", process.env.GITHUB_REF_NAME],
       ["INPUT_LABEL", "label", getInput("label")],
       ["INPUT_SETUP_CACHE_KEY", "setupCacheKey", getInput("cache-key")],
-      ["INPUT_SETUP_DEPS", "setupDeps", getInput(setup - deps)],
+      ["INPUT_SETUP_DEPS", "setupDeps", getInput("setup-deps")],
       ["INPUT_TARGET_CHECKOUT", "targetCheckout", ""],
       ["INPUT_TARGET_CHECKOUT_REF", "targetCheckoutRef", ""],
       ["INPUT_TRUNK_PATH", "trunkPath", getInput("trunk-path")],
