@@ -21,9 +21,7 @@ function envWrite({ payload, fd, varname, path, backup = "" }) {
   if (!["string", "boolean", "number"].some((type) => typeof toWrite === type)) {
     toWrite = backup;
   }
-  if (toWrite) {
-    fs.writeSync(fd, Buffer.from(`${varname}=${toWrite}\n`));
-  }
+  fs.writeSync(fd, Buffer.from(`${varname}=${toWrite ?? ""}\n`));
 }
 
 function run() {
@@ -36,6 +34,8 @@ function run() {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
       payload = JSON.parse(event?.inputs?.payload) ?? {};
     }
+
+    console.log(JSON.stringify(process.env, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
