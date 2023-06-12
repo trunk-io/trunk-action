@@ -30,13 +30,7 @@ function run() {
       payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload;
     }
 
-    const githubEnv = fs.open(process.env.GITHUB_ENV, "a", (err, fd) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-      return fd;
-    });
+    const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? getInput("githubToken");
     const trunkToken = payload?.trunkToken ?? getInput("trunkToken");
 
@@ -96,6 +90,7 @@ function run() {
     for (const [varname, path, backup] of envVarConfigs) {
       envWrite({ payload, fd: githubEnv, varname, path, backup });
     }
+    fs.closeSync(githubEnv);
   } catch (error) {
     if (error instanceof Error) {
       process.exitCode = 1;
