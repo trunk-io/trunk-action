@@ -2,14 +2,6 @@ name: Mask tokens
 author: trunk.io
 description: Masks tokens provided in payload
 
-# runs:
-#   using: node16
-#   main: ./mask.ts
-
 runs:
-  using: composite
-  steps:
-    - name: Detect npm/yarn/pnpm & custom setup
-      shell: bash
-      run: |
-        echo "running successfully"
+  using: node16
+  main: ./mask.ts
