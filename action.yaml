@@ -109,7 +109,7 @@ runs:
       shell: bash
       run: |
         find .
-        cat ./mask-payload/mask.js
+        cat ./mask-payload/mask.js || true
 
     - name: Mask tokens and setup inputs
       uses: ./mask-payload
