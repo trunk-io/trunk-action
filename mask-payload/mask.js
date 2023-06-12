@@ -13,7 +13,7 @@ function hashFile(filename) {
   }
 }
 
-function envWrite({ payload, fd, varname, path, backup }) {
+function envWrite({ payload, fd, varname, path, backup = "" }) {
   let toWrite = payload;
   path.split(".").forEach((arg) => {
     console.log(JSON.stringify(arg, null, 2));
@@ -38,15 +38,14 @@ function run() {
       payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload ?? {};
     }
 
-    console.log(JSON.stringify(payload, null, 2));
-    console.log(JSON.stringify(process.env, null, 2));
+    console.log("payload", JSON.stringify(payload, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
-    const githubToken = payload?.githubToken ?? inputs["githubToken"];
-    const trunkToken = payload?.trunkToken ?? inputs["trunkToken"];
+    const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
+    const trunkToken = payload?.trunkToken ?? inputs["trunkToken"] ?? "";
 
-    process.stdout.write(`::add-mask::${githubToken}`);
-    process.stdout.write(`::add-mask::${trunkToken}`);
+    process.stdout.write(`::add-mask::${githubToken}\n`);
+    process.stdout.write(`::add-mask::${trunkToken}\n`);
     fs.writeSync(githubEnv, Buffer.from(`INPUT_GITHUB_TOKEN=${githubToken}\n`));
     fs.writeSync(githubEnv, Buffer.from(`INPUT_TRUNK_TOKEN=${trunkToken}\n`));
     fs.writeSync(githubEnv, Buffer.from(`TRUNK_TOKEN=${trunkToken}\n`));
