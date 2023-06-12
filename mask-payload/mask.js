@@ -1,13 +1,6 @@
 const fs = require("fs");
 const crypto = require("crypto");
 
-function getInput(name) {
-  // copied from https://github.com/actions/toolkit/blob/master/packages/core/src/core.ts#L69
-  const ret = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
-  console.log(`read input ${name} as ${ret}`);
-  return ret;
-}
-
 function hashFile(filename) {
   try {
     const data = fs.readFileSync(filename).toString();
@@ -36,9 +29,12 @@ function envWrite({ payload, fd, varname, path, backup }) {
 
 function run() {
   try {
+    const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
+    console.log(JSON.stringify(inputs, null, 2));
+
     const filepath = process.env.GITHUB_EVENT_PATH;
     let payload = {};
-    if (getInput("check-mode") === "payload" && filepath) {
+    if (inputs["check-mode"] === "payload" && filepath) {
       payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload ?? {};
     }
 
@@ -46,8 +42,8 @@ function run() {
     console.log(JSON.stringify(process.env, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
-    const githubToken = payload?.githubToken ?? getInput("githubToken");
-    const trunkToken = payload?.trunkToken ?? getInput("trunkToken");
+    const githubToken = payload?.githubToken ?? inputs["githubToken"];
+    const trunkToken = payload?.trunkToken ?? inputs["trunkToken"];
 
     process.stdout.write(`::add-mask::${githubToken}`);
     process.stdout.write(`::add-mask::${trunkToken}`);
@@ -87,33 +83,33 @@ function run() {
         backup: process.env.GITHUB_EVENT_PULL_REQUEST_NUMBER,
       },
       { varname: "GITHUB_REF_NAME", path: "targetRefName", backup: process.env.GITHUB_REF_NAME },
-      { varname: "INPUT_ARGUMENTS", path: "arguments", backup: getInput("arguments") },
-      { varname: "INPUT_CACHE", path: "cache", backup: getInput("cache") },
+      { varname: "INPUT_ARGUMENTS", path: "arguments", backup: inputs["arguments"] },
+      { varname: "INPUT_CACHE", path: "cache", backup: inputs["cache"] },
       {
         varname: "INPUT_CACHE_KEY",
         path: "cacheKey",
-        backup: `trunk-${getInput("cache-key")}-${process.env.RUNNER_OS}-${hashFile(
+        backup: `trunk-${inputs["cache-key"]}-${process.env.RUNNER_OS}-${hashFile(
           ".trunk/trunk.yaml"
         )}`,
       },
       { varname: "INPUT_CACHE_PATH", path: "cachePath", backup: "~/.cache/trunk" },
-      { varname: "INPUT_CHECK_ALL_MODE", path: "checkAllMode", backup: getInput("check-all-mode") },
-      { varname: "INPUT_CHECK_MODE", path: "checkMode", backup: getInput("check-mode") },
-      { varname: "INPUT_CHECK_RUN_ID", path: "checkRunId", backup: getInput("check-run-id") },
-      { varname: "INPUT_DEBUG", path: "debug", backup: getInput("debug") },
+      { varname: "INPUT_CHECK_ALL_MODE", path: "checkAllMode", backup: inputs["check-all-mode"] },
+      { varname: "INPUT_CHECK_MODE", path: "checkMode", backup: inputs["check-mode"] },
+      { varname: "INPUT_CHECK_RUN_ID", path: "checkRunId", backup: inputs["check-run-id"] },
+      { varname: "INPUT_DEBUG", path: "debug", backup: inputs["debug"] },
       {
         varname: "INPUT_GITHUB_REF_NAME",
         path: "targetRefName",
         backup: process.env.GITHUB_REF_NAME,
       },
-      { varname: "INPUT_LABEL", path: "label", backup: getInput("label") },
-      { varname: "INPUT_SETUP_CACHE_KEY", path: "setupCacheKey", backup: getInput("cache-key") },
-      { varname: "INPUT_SETUP_DEPS", path: "setupDeps", backup: getInput("setup-deps") },
+      { varname: "INPUT_LABEL", path: "label", backup: inputs["label"] },
+      { varname: "INPUT_SETUP_CACHE_KEY", path: "setupCacheKey", backup: inputs["cache-key"] },
+      { varname: "INPUT_SETUP_DEPS", path: "setupDeps", backup: inputs["setup-deps"] },
       { varname: "INPUT_TARGET_CHECKOUT", path: "targetCheckout", backup: "" },
       { varname: "INPUT_TARGET_CHECKOUT_REF", path: "targetCheckoutRef", backup: "" },
-      { varname: "INPUT_TRUNK_PATH", path: "trunkPath", backup: getInput("trunk-path") },
+      { varname: "INPUT_TRUNK_PATH", path: "trunkPath", backup: inputs["trunk-path"] },
       { varname: "INPUT_UPLOAD_LANDING_STATE", path: "uploadLandingState", backup: "false" },
-      { varname: "INPUT_UPLOAD_SERIES", path: "uploadSeries", backup: getInput("upload-series") },
+      { varname: "INPUT_UPLOAD_SERIES", path: "uploadSeries", backup: inputs["upload-series"] },
     ];
 
     envVarConfigs.forEach(({ varname, path, backup }) =>
