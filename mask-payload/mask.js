@@ -29,9 +29,6 @@ function run() {
     const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
     const githubEventPR = JSON.parse(process.env.MASK_GITHUB_EVENT_PR ?? "{}");
 
-    console.log("aaaa", JSON.stringify(process.env.MASK_GITHUB_EVENT_PR, null, 4));
-    console.log(JSON.stringify(githubEventPR, null, 2));
-
     const filepath = process.env.GITHUB_EVENT_PATH;
     let payload = {};
     if (inputs["check-mode"] === "payload" && filepath) {
