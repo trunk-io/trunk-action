@@ -105,6 +105,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: all paths
+      shell: bash
+      run: find .
+
     - name: Mask tokens and setup inputs
       uses: ./local-action/mask-payload
       env:
