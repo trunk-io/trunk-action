@@ -5,7 +5,7 @@ function run() {
     process.stdout.write("running action\n");
     const filepath = process.env.GITHUB_EVENT_PATH;
     if (!filepath) {
-      process.exitCode = ExitCode.Failure;
+      process.exitCode = 1;
       process.stdout.write("::error::No GITHUB_EVENT_PATH env var");
       return;
     }
@@ -18,7 +18,7 @@ function run() {
     );
   } catch (error) {
     if (error instanceof Error) {
-      process.exitCode = ExitCode.Failure;
+      process.exitCode = 1;
       process.stdout.write(error.message);
     }
     return;
