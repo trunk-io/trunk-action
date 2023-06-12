@@ -33,11 +33,11 @@ function run() {
     console.log(JSON.stringify(inputs, null, 2));
 
     const filepath = process.env.GITHUB_EVENT_PATH;
-    console.log("filepath", filepath);
+    process.stdout.write(`filepath ${filepath}\n`);
     let payload = {};
     if (inputs["check-mode"] === "payload" && filepath) {
       const data = fs.readFileSync(filepath).toString();
-      console.log("Data", data);
+      process.stdout.write(`Data ${data}\n`);
       payload = JSON.parse(data)?.payload ?? {};
     }
 
