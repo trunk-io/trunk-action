@@ -14,7 +14,7 @@ function hashFile(filename) {
 }
 
 function envWrite({ payload, fd, varname, path, backup = "" }) {
-  let toWrite = payload ?? {};
+  let toWrite = payload;
   path.split(".").forEach((arg) => {
     toWrite = toWrite[arg] ?? {};
   });
@@ -35,8 +35,6 @@ function run() {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
       payload = JSON.parse(event?.inputs?.payload) ?? {};
     }
-
-    console.log("payload", JSON.stringify(payload, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
@@ -62,22 +60,22 @@ function run() {
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_BASE_SHA",
         path: "pullRequest.base.sha",
-        backup: githubEvent?.pull_request.base.sha,
+        backup: githubEvent?.pull_request?.base?.sha ?? "",
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK",
         path: "pullRequest.head.repo.fork",
-        backup: githubEvent?.pull_request?.head?.repo?.fork,
+        backup: githubEvent?.pull_request?.head?.repo?.fork ?? "",
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA",
         path: "pullRequest.head.sha",
-        backup: githubEvent?.pull_request.head.sha,
+        backup: githubEvent?.pull_request?.head?.sha ?? "",
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_NUMBER",
         path: "pullRequest.number",
-        backup: githubEvent?.pull_request.number,
+        backup: githubEvent?.pull_request?.number ?? "",
       },
       { varname: "GITHUB_REF_NAME", path: "targetRefName", backup: process.env.GITHUB_REF_NAME },
       { varname: "INPUT_ARGUMENTS", path: "arguments", backup: inputs["arguments"] },
