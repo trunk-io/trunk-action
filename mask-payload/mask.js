@@ -27,6 +27,7 @@ function envWrite({ payload, fd, varname, path, backup = "" }) {
 function run() {
   try {
     const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
+    const githubEvent = JSON.parse(process.env.MASK_GITHUB_EVENT ?? "{}");
 
     const filepath = process.env.GITHUB_EVENT_PATH;
     let payload = {};
@@ -61,22 +62,22 @@ function run() {
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_BASE_SHA",
         path: "pullRequest.base.sha",
-        backup: process.env.GITHUB_EVENT_PULL_REQUEST_BASE_SHA,
+        backup: githubEvent?.pull_request.base.sha,
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK",
         path: "pullRequest.head.repo.fork",
-        backup: process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK,
+        backup: githubEvent?.pull_request?.head?.repo?.fork,
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA",
         path: "pullRequest.head.sha",
-        backup: process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA,
+        backup: githubEvent?.pull_request.head.sha,
       },
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_NUMBER",
         path: "pullRequest.number",
-        backup: process.env.GITHUB_EVENT_PULL_REQUEST_NUMBER,
+        backup: githu?.event?.pull_request.number,
       },
       { varname: "GITHUB_REF_NAME", path: "targetRefName", backup: process.env.GITHUB_REF_NAME },
       { varname: "INPUT_ARGUMENTS", path: "arguments", backup: inputs["arguments"] },

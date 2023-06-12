@@ -116,6 +116,7 @@ runs:
       uses: ./.trunk/mask-payload
       env:
         MASK_INPUTS: ${{ toJSON(inputs) }}
+        MASK_GITHUB_EVENT: ${{ toJSON(github.event) }}
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
