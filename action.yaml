@@ -108,7 +108,7 @@ runs:
     - name: Mask tokens and setup inputs
       uses: ./local-action/mask-payload
       env:
-        MASK_INPUTS: ${{ inputs }}
+        MASK_INPUTS: ${{ toJSON(inputs) }}
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
