@@ -105,6 +105,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: find
+      shell: bash
+      run: |
+        find .
+
     - name: Mask tokens
       uses: ./../mask-payload
 
