@@ -17,6 +17,8 @@ plugins:
 
 lint:
   # enabled list inherited from plugin 'configs'
+  disabled:
+    - eslint
   ignore:
     - linters: [ALL]
       paths:

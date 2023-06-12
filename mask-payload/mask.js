@@ -16,32 +16,25 @@ function hashFile(filename) {
 function envWrite({ payload, fd, varname, path, backup = "" }) {
   let toWrite = payload;
   path.split(".").forEach((arg) => {
-    console.log(JSON.stringify(arg, null, 2));
     toWrite = toWrite[arg] ?? {};
   });
-  console.log("final toWrite", toWrite);
   if (!["string", "boolean", "number"].some((type) => typeof toWrite === type)) {
     toWrite = backup;
   }
-  console.log(`writing ${varname}=${toWrite ?? ""}`);
   fs.writeSync(fd, Buffer.from(`${varname}=${toWrite ?? ""}\n`));
 }
 
 function run() {
   try {
     const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
-    console.log(JSON.stringify(inputs, null, 2));
 
     const filepath = process.env.GITHUB_EVENT_PATH;
     process.stdout.write(`filepath ${filepath}\n`);
     let payload = {};
     if (inputs["check-mode"] === "payload" && filepath) {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
-      console.log("event", event);
       payload = JSON.parse(event?.inputs?.payload) ?? {};
     }
-
-    console.log("payload", JSON.stringify(payload, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
