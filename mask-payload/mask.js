@@ -24,10 +24,12 @@ function envWrite({ payload, fd, varname, path, backup }) {
     console.log(JSON.stringify(arg, null, 2));
     toWrite = toWrite[arg] ?? {};
   });
+  console.log("final toWrite", toWrite);
   if (!["string", "boolean", "number"].some((type) => typeof toWrite === type)) {
     toWrite = backup;
   }
-  fs.writeSync(fd, Buffer.from(`${varname}=${toWrite}\n`));
+  console.log(`writing ${varname}=${toWrite ?? ""}`);
+  fs.writeSync(fd, Buffer.from(`${varname}=${toWrite ?? ""}\n`));
 }
 
 function run() {
@@ -37,6 +39,8 @@ function run() {
     if (getInput("check-mode") === "payload" && filepath) {
       payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload ?? {};
     }
+
+    console.log(JSON.stringify(payload, null, 2));
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? getInput("githubToken");
