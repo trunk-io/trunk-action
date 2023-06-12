@@ -48,7 +48,7 @@ function run() {
     fs.writeSync(githubEnv, Buffer.from(`INPUT_TRUNK_TOKEN=${trunkToken}\n`));
     fs.writeSync(githubEnv, Buffer.from(`TRUNK_TOKEN=${trunkToken}\n`));
 
-    envVarConfigs = [
+    const envVarConfigs = [
       {
         varname: "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER",
         path: "pullRequest.base.repo.owner.login",
@@ -109,9 +109,9 @@ function run() {
       { varname: "INPUT_UPLOAD_SERIES", path: "uploadSeries", backup: getInput("upload-series") },
     ];
 
-    for (const [varname, path, backup] of envVarConfigs) {
-      envWrite({ payload, fd: githubEnv, varname, path, backup });
-    }
+    envVarConfigs.forEach(({ varname, path, backup }) =>
+      envWrite({ payload, fd: githubEnv, varname, path, backup })
+    );
     fs.closeSync(githubEnv);
   } catch (error) {
     if (error instanceof Error) {
