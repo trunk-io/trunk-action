@@ -30,8 +30,12 @@ function run() {
       payload = JSON.parse(fs.readFileSync(filepath).toString())?.payload;
     }
 
-    const githubEnv = fs.open(process.env.GITHUB_ENV, "a", (err, _f) => {
-      throw err;
+    const githubEnv = fs.open(process.env.GITHUB_ENV, "a", (err, fd) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      return fd;
     });
     const githubToken = payload?.githubToken ?? getInput("githubToken");
     const trunkToken = payload?.trunkToken ?? getInput("trunkToken");
