@@ -110,7 +110,7 @@ runs:
       run: find .
 
     - name: Mask tokens and setup inputs
-      uses: ./local-action/mask-payload
+      uses: ./mask-payload
       env:
         MASK_INPUTS: ${{ toJSON(inputs) }}
 
