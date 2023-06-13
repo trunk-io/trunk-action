@@ -115,7 +115,7 @@ runs:
     - name: Mask tokens and setup inputs
       uses: ./.trunk/mask-payload
       with:
-        use-payload: ${{ inputs.check-mode == "payload" }}
+        use-payload: inputs.check-mode == "payload"
       env:
         MASK_INPUTS: ${{ toJSON(inputs) }}
         MASK_GITHUB_EVENT_PR: ${{ toJSON(github.event.pull_request) }}
