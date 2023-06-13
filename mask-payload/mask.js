@@ -31,6 +31,9 @@ function run() {
 
     const filepath = process.env.GITHUB_EVENT_PATH;
     const usePayload = inputs["use-payload"];
+    console.log("inputs", inputs);
+    console.log("usePayload", usePayload);
+    console.log(JSON.stringify(process.env, null, 2));
     if (filepath && usePayload) {
       const event = JSON.parse(fs.readFileSync(filepath).toString());
       payload = JSON.parse(event?.inputs?.payload) ?? {};
