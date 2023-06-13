@@ -12,11 +12,13 @@ plugins:
       ref: v0.0.17
       uri: https://github.com/trunk-io/plugins
     - id: configs
-      ref: v0.0.2
+      ref: v0.0.1
       uri: https://github.com/trunk-io/configs
 
 lint:
   # enabled list inherited from plugin 'configs'
+  disabled:
+    - eslint
   ignore:
     - linters: [ALL]
       paths:

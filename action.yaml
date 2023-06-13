@@ -105,76 +105,20 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Set up inputs
-      shell: python
+    - name: Make mask symlink
+      shell: bash
       run: |
-        from os import environ
-        import json
+        mkdir -p .trunk
+        ln -s ${{ github.action_path }}/mask-payload .trunk/mask-payload
+        echo .trunk/mask-payload >>.git/info/exclude
 
-        github_env_path = environ.get('GITHUB_ENV', None)
-        if github_env_path == None:
-          raise OSError("GITHUB_ENV doesn't exist!")
-        github_env = open(github_env_path, "w")
-
-        client_payload = None
-        githubToken = "${{ inputs.github-token }}"
-        trunkToken = "${{ inputs.trunk-token }}"
-
-        github_event_filepath = environ.get('GITHUB_EVENT_PATH', "")
-        if "${{ inputs.check-mode }}" == "payload" and github_event_filepath != "":
-          github_event_text = open(github_event_filepath).read()
-          inputs_dict = json.loads(github_event_text)["inputs"]
-          client_payload = json.loads(inputs_dict.get("payload", inputs_dict.get("clientPayload", None)))
-          githubToken = client_payload.get("githubToken", githubToken)
-          trunkToken = client_payload.get("trunkToken", trunkToken)
-
-        print(f"::add-mask::{githubToken}")
-        print(f"::add-mask::{trunkToken}")
-
-        github_env.write("GITHUB_TOKEN=${{ github.token }}\n")
-        github_env.write(f"INPUT_GITHUB_TOKEN={githubToken}\n")
-        github_env.write(f"INPUT_TRUNK_TOKEN={trunkToken}\n")
-        github_env.write(f"TRUNK_TOKEN={trunkToken}\n")
-
-        def env_write(payload, varname, path, backup):
-          to_write = payload
-          for arg in path.split("."):
-            if to_write is None or type(to_write) != dict:
-              to_write = backup
-              break
-            to_write = to_write.get(arg, backup)
-
-          if to_write in [True, False]:
-            to_write = str(to_write).lower()
-          github_env.write(f"{varname}={to_write}\n")
-
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER", "pullRequest.base.repo.owner.login", "")
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME", "pullRequest.base.repo.name", "")
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_BASE_SHA", "pullRequest.base.sha", "${{ github.event.pull_request.base.sha }}")
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK", "pullRequest.head.repo.fork", "${{ github.event.pull_request.head.repo.fork }}")
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA", "pullRequest.head.sha", "${{ github.event.pull_request.head.sha }}")
-        env_write(client_payload, "GITHUB_EVENT_PULL_REQUEST_NUMBER", "pullRequest.number", "${{ github.event.pull_request.number }}")
-        env_write(client_payload, "GITHUB_REF_NAME", "targetRefName", "${{ github.ref_name }}")
-        env_write(client_payload, "INPUT_ARGUMENTS", "arguments", "${{ inputs.arguments }}")
-        env_write(client_payload, "INPUT_CACHE", "cache", "${{ inputs.cache }}")
-        env_write(client_payload, "INPUT_CACHE_KEY", "cacheKey", "trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}")
-        env_write(client_payload, "INPUT_CACHE_PATH", "cachePath", "~/.cache/trunk")
-        env_write(client_payload, "INPUT_CHECK_ALL_MODE", "checkAllMode", "${{ inputs.check-all-mode }}")
-        env_write(client_payload, "INPUT_CHECK_MODE", "checkMode", "${{ inputs.check-mode }}")
-        env_write(client_payload, "INPUT_CHECK_RUN_ID", "checkRunId", "${{ inputs.check-run-id }}")
-        env_write(client_payload, "INPUT_DEBUG", "debug", "${{ inputs.debug }}")
-        env_write(client_payload, "INPUT_GITHUB_REF_NAME", "targetRefName", "${{ github.ref_name }}")
-        env_write(client_payload, "INPUT_LABEL", "label", "${{ inputs.label }}")
-        env_write(client_payload, "INPUT_SETUP_CACHE_KEY", "setupCacheKey", "${{ inputs.cache-key }}")
-        env_write(client_payload, "INPUT_SETUP_DEPS", "setupDeps", "${{ inputs.setup-deps }}")
-        env_write(client_payload, "INPUT_TARGET_CHECKOUT", "targetCheckout", "")
-        env_write(client_payload, "INPUT_TARGET_CHECKOUT_REF", "targetCheckoutRef", "")
-        env_write(client_payload, "INPUT_TRUNK_PATH", "trunkPath", "${{ inputs.trunk-path }}")
-        env_write(client_payload, "INPUT_UPLOAD_LANDING_STATE", "uploadLandingState", "false")
-        env_write(client_payload, "INPUT_UPLOAD_SERIES", "uploadSeries", "${{ inputs.upload-series }}")
-
-        # if client_payload is not None and "trunkApiAddress" in client_payload:
-        #   github_env.write(f"TRUNK_API_ADDRESS={client_payload['trunkApiAddress']}\n")
+    - name: Mask tokens and setup inputs
+      uses: ./.trunk/mask-payload
+      with:
+        use-payload: ${{ inputs.check-mode == 'payload' }}
+      env:
+        MASK_INPUTS: ${{ toJSON(inputs) }}
+        MASK_GITHUB_EVENT_PR: ${{ toJSON(github.event.pull_request) }}
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT

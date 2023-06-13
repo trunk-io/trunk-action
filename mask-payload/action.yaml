@@ -1,0 +1,13 @@
+name: Mask tokens
+author: trunk.io
+description: Masks tokens provided in payload
+
+inputs:
+  use-payload:
+    description: Whether or not the setup should use the payload
+    required: false
+    default: ""
+
+runs:
+  using: node16
+  main: ./mask.js
