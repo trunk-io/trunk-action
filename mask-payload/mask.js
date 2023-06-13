@@ -27,10 +27,14 @@ function run() {
     const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
     const githubEventPR = JSON.parse(process.env.MASK_GITHUB_EVENT_PR ?? "{}");
 
+    let payload = {};
+
     const filepath = process.env.GITHUB_EVENT_PATH;
-    const event = JSON.parse(fs.readFileSync(filepath).toString());
-    const payload = JSON.parse(event?.inputs?.payload) ?? {};
     const usePayload = inputs["use-payload"];
+    if (filepath && usePayload) {
+      const event = JSON.parse(fs.readFileSync(filepath).toString());
+      payload = JSON.parse(event?.inputs?.payload) ?? {};
+    }
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
     const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
