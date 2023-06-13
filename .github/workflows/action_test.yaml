@@ -1,0 +1,36 @@
+name: action test
+on: [workflow_dispatch, workflow_call]
+
+jobs:
+  action_tests:
+    name: ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - description: matrix entry 1
+          - description: matrix entry 2
+
+    steps:
+      - name: Checkout trunk-action
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Craft TEST_GITHUB_EVENT_PATH
+        shell: bash
+        run: |
+          # this has to say INPUT_TRUNK_PATH=$(pwd)/local-action/trunk_shim.sh
+          echo "TEST_GITHUB_EVENT_PATH=..." >>$GITHUB_ENV
+
+      - name: Run trunk-action in ${{ matrix.repo }}
+        id: trunk
+        uses: ./local-action/
+        with:
+          check-mode: payload
+        continue-on-error: true
+
+      - name: Check for task failures
+        shell: bash
+        run: node ./local-action/verify_trunk_execution_log.js

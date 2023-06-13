@@ -23,3 +23,7 @@ jobs:
   repo_tests:
     name: Repository tests
     uses: ./.github/workflows/repo_tests.yaml
+
+  action_test:
+    name: Action tests
+    uses: ./.github/workflows/action_test.yaml
