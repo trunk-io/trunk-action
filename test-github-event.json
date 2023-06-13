@@ -1,0 +1,5 @@
+{
+  "inputs": {
+    "payload": "{ trunkPath: \"a/b/c/trunk_shim.sh\" }"
+  }
+}
