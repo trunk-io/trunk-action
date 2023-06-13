@@ -13,15 +13,6 @@ function hashFile(filename) {
   }
 }
 
-function envWrite({ fd, varname, payloadValue, backup, usePayload }) {
-  if (usePayload && payloadValue !== undefined) {
-    // doesn't write anything if usePayload is true but payloadValue is undefined
-    fs.writeSync(fd, Buffer.from(`${varname}=${payloadValue}\n`));
-  } else if (!usePayload) {
-    fs.writeSync(fd, Buffer.from(`${varname}=${backup ?? ""}\n`));
-  }
-}
-
 function run() {
   try {
     const inputs = JSON.parse(process.env.MASK_INPUTS ?? "{}");
@@ -147,8 +138,11 @@ function run() {
       },
     ];
 
-    envVarConfigs.forEach(({ varname, path, backup }) =>
-      envWrite({ payload, fd: githubEnv, varname, path, backup, usePayload })
+    envVarConfigs.forEach(({ varname, payloadValue, backup }) =>
+      fs.writeSync(
+        githubEnv,
+        Buffer.from(`${varname}=${(usePayload ? payloadValue : backup) ?? ""}\n`)
+      )
     );
     fs.closeSync(githubEnv);
   } catch (error) {
