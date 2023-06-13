@@ -6,7 +6,7 @@ inputs:
   use-payload:
     description: Whether or not the setup should use the payload
     required: false
-    default: "false"
+    default: ""
 
 runs:
   using: node16

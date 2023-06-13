@@ -30,7 +30,7 @@ function run() {
     let payload = {};
 
     const filepath = process.env.GITHUB_EVENT_PATH;
-    const usePayload = inputs["use-payload"];
+    const usePayload = process.env["INPUTS_USE-PAYLOAD"];
     console.log("inputs", inputs);
     console.log("usePayload", usePayload);
     console.log(JSON.stringify(process.env, null, 2));
