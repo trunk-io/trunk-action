@@ -105,10 +105,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Make mask symlink
-      shell: bash
-      run: ln -s ${{ github.action_path }}/mask-payload ./mask-payload
-
     - name: Mask tokens and setup inputs
       uses: ./mask-payload
       with:
@@ -116,10 +112,6 @@ runs:
       env:
         MASK_INPUTS: ${{ toJSON(inputs) }}
         MASK_GITHUB_EVENT_PR: ${{ toJSON(github.event.pull_request) }}
-
-    - name: Delete mask symlink
-      shell: bash
-      run: rm mask-payload
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
