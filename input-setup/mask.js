@@ -136,6 +136,16 @@ function run() {
         payloadValue: payload?.uploadSeries,
         backup: inputs["upload-series"],
       },
+      {
+        varname: "INPUT_UPLOAD_SERIES",
+        payloadValue: payload?.uploadSeries,
+        backup: inputs["upload-series"],
+      },
+      {
+        varname: "TRUNK_API_ADDRESS",
+        payloadValue: payload?.trunkApiAddress,
+        backup: "",
+      },
     ];
 
     envVarConfigs.forEach(({ varname, payloadValue, backup }) =>
