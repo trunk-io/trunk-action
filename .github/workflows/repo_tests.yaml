@@ -75,10 +75,10 @@ jobs:
             description: (has trunk.yaml)
             post-init: |
               # all of these linters have failures
-              ${TRUNK_PATH} check enable svgo
-              ${TRUNK_PATH} check enable golangci-lint
-              ${TRUNK_PATH} check enable prettier
-              ${TRUNK_PATH} check enable oxipng
+              ${TRUNK_PATH} check disable svgo
+              ${TRUNK_PATH} check disable golangci-lint
+              ${TRUNK_PATH} check disable prettier
+              ${TRUNK_PATH} check disable oxipng
 
           - repo: shopify/draggable
             ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
