@@ -107,14 +107,10 @@ runs:
   steps:
     - name: Input setup (1 of 3)
       shell: bash
-      run: |
-        cd ${{ github.action_path }}
-        pwd
-        ls -al
-        ls -al mask-payload
+      run: ln -s ${{ github.action_path }} .trunk-action
 
     - name: Input setup (2 of 3)
-      uses: ./mask-payload/
+      uses: ./.trunk-action/mask-payload/
       with:
         use-payload: ${{ inputs.check-mode == 'payload' }}
       env:
@@ -123,7 +119,7 @@ runs:
 
     - name: Input setup (3 of 3)
       shell: bash
-      run: cd ${{ github.workspace }}
+      run: rm .trunk-action
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
