@@ -107,7 +107,10 @@ runs:
   steps:
     - name: Input setup (1 of 3)
       shell: bash
-      run: cd ${{ github.action_path }}
+      run: |
+        cd ${{ github.action_path }}
+        pwd
+        ls -al
 
     - name: Input setup (2 of 3)
       uses: ./mask-payload
