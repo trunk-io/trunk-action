@@ -43,10 +43,10 @@ jobs:
 
           # fails because of a malformed html file
 
-          # - repo: pallets/flask
-          #   ref: 2b2a7641430bc7d40dba3c8d701636fc9b16530c
-          #   post-init: |
-          #     cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+          - repo: pallets/flask
+            ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
+            post-init: |
+              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
             ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
@@ -68,9 +68,9 @@ jobs:
 
           # fails because yarn install would update the yarn lockfile
 
-          # - repo: sheldonhull/sheldonhull.hugo
-          #   ref: 4796211f1adeeb1858f2f9bf74d7ee0b4e2d8988
-          #   description: (has trunk.yaml)
+          - repo: sheldonhull/sheldonhull.hugo
+            ref: 0810b7219c6681931bbf727cd9fe81693b414b60
+            description: (has trunk.yaml)
 
           - repo: shopify/draggable
             ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
@@ -87,12 +87,12 @@ jobs:
 
           # fails because pnpm version is too new
 
-          # - repo: vuejs/core
-          #   ref: 2d9f6f926453c46f542789927bcd30d15da9c24b
-          #   description: (uses pnpm)
-          #   post-init: |
-          #     # svgo gets confused by JS module loading
-          #     ${TRUNK_PATH} check disable svgo
+          - repo: vuejs/core
+            ref: 60cd23c7520f9098bf31fc2d0c09d58ded75f173
+            description: (uses pnpm)
+            post-init: |
+              # svgo gets confused by JS module loading
+              ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
             ref: d6d8b5da28c170b3b226705795412497f7059681
