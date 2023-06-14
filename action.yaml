@@ -262,7 +262,7 @@ runs:
         GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
 
     - name: Finalize check run
-      if: always() && (inputs.check-mode == "payload")
+      if: always() && (inputs.check-mode == 'payload')
       continue-on-error: true
       shell: bash
       run: |
