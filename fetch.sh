@@ -20,7 +20,7 @@ if [[ ${TRUNK_CHECK_MODE} == "all" ]]; then
     latest_raw_upload="$(mktemp)"
     # Note: the order of these if clauses is important. We can't invert them using if ! because that
     # would cause the exit code of prev_ref=$(...) to get discarded
-    if prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
+    if prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output --debug --log-level=trace\
       --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
       --token "${INPUT_TRUNK_TOKEN}" \
       "${latest_raw_upload}")"; then
