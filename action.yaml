@@ -113,7 +113,7 @@ runs:
         ls -al
 
     - name: Input setup (2 of 3)
-      uses: ./mask-payload
+      uses: ./mask-payload/
       with:
         use-payload: ${{ inputs.check-mode == 'payload' }}
       env:
