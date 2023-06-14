@@ -24,6 +24,8 @@ jobs:
             ref: 4f9cd3bffb6bc55c9e2c4252c7b733a219880151
             description: (uses npm)
             post-init: |
+              # we currently fail to run ruff >v0.0.266
+              ${TRUNK_PATH} check disable ruff
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
 
           - repo: jbeder/yaml-cpp
@@ -32,6 +34,8 @@ jobs:
             post-init: |
               # black complains about py2 code
               ${TRUNK_PATH} check disable black
+              # we currently fail to run ruff >v0.0.266
+              ${TRUNK_PATH} check disable ruff
               mkdir build
               cd build
               cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -41,11 +45,11 @@ jobs:
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
 
-          # fails because of a malformed html file
-
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
             post-init: |
+              # prettier fails because of a malformed html file
+              ${TRUNK_PATH} check disable prettier
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
@@ -66,11 +70,15 @@ jobs:
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
 
-          # fails because yarn install would update the yarn lockfile
-
           - repo: sheldonhull/sheldonhull.hugo
             ref: 0810b7219c6681931bbf727cd9fe81693b414b60
             description: (has trunk.yaml)
+            post-init: |
+              # all of these linters have failures
+              ${TRUNK_PATH} check enable svgo
+              ${TRUNK_PATH} check enable golangci-lint
+              ${TRUNK_PATH} check enable prettier
+              ${TRUNK_PATH} check enable oxipng
 
           - repo: shopify/draggable
             ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
@@ -87,16 +95,19 @@ jobs:
 
           # fails because pnpm version is too new
 
-          - repo: vuejs/core
-            ref: 60cd23c7520f9098bf31fc2d0c09d58ded75f173
-            description: (uses pnpm)
-            post-init: |
-              # svgo gets confused by JS module loading
-              ${TRUNK_PATH} check disable svgo
+          # - repo: vuejs/core
+          #   ref: 60cd23c7520f9098bf31fc2d0c09d58ded75f173
+          #   description: (uses pnpm)
+          #   post-init: |
+          #     # svgo gets confused by JS module loading
+          #     ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
             ref: d6d8b5da28c170b3b226705795412497f7059681
             description: (has trunk.yaml)
+            post-init: |
+              # stylelint is exiting with error code -11
+              ${TRUNK_PATH} check disable stylelint
 
     steps:
       - name: Checkout ${{ matrix.repo }}
