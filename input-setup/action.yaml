@@ -1,6 +1,6 @@
-name: Mask tokens
+name: Input setup
 author: trunk.io
-description: Masks tokens provided in payload
+description: Sets up INPUT_ env vars and masks sensitive fields in the CheckService payload
 
 inputs:
   use-payload:
