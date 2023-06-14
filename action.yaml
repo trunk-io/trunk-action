@@ -111,6 +111,7 @@ runs:
         cd ${{ github.action_path }}
         pwd
         ls -al
+        ls -al mask-payload
 
     - name: Input setup (2 of 3)
       uses: ./mask-payload/
