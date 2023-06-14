@@ -107,10 +107,7 @@ runs:
   steps:
     - name: Make mask symlink
       shell: bash
-      run: |
-        pwd
-        ls -al
-        ln -s ${{ github.action_path }}/mask-payload ./mask-payload
+      run: cd ${{ github.action_path }}
 
     - name: Mask tokens and setup inputs
       uses: ./mask-payload
@@ -122,7 +119,7 @@ runs:
 
     - name: Delete mask symlink
       shell: bash
-      run: rm mask-payload
+      run: cd -
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
