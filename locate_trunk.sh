@@ -24,3 +24,4 @@ if [[ -z ${trunk_path} ]]; then
   fi
 fi
 echo "TRUNK_PATH=${trunk_path}" >>"${GITHUB_ENV}"
+${trunk_path} # download trunk version here, so it doesn't output later
