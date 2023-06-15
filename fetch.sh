@@ -15,6 +15,8 @@ fetch() {
     "$@"
 }
 
+${trunk_path} # download trunk version here, so it doesn't output later
+
 if [[ ${TRUNK_CHECK_MODE} == "all" ]]; then
   if [[ -n ${INPUT_TRUNK_TOKEN} && ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     latest_raw_upload="$(mktemp)"
