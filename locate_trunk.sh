@@ -24,5 +24,5 @@ if [[ -z ${trunk_path} ]]; then
   fi
 fi
 echo "TRUNK_PATH=${trunk_path}" >>"${GITHUB_ENV}"
-# download trunk version here, so it doesn't output later
+# Ensure that trunk CLI is downloaded before subsequent steps
 ${trunk_path} || echo "Warning: ${trunk_path} does not exist!"
