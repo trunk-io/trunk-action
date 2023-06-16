@@ -12,6 +12,10 @@ def main(github_env_path, repo_test_name, repo_test_description):
     sys.exit(1)
     return
 
+  print("::group::landing state")
+  print(landing_state)
+  print("::endgroup::")
+
   lint_action_count = len(landing_state.get("lintActions", []))
   task_failure_count = len(landing_state.get("taskFailures", []))
 
