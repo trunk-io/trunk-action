@@ -58,6 +58,12 @@ jobs:
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
+          - repo: postcss/postcss
+            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
+            description: (compat test for cli 1.0.0)
+            post-init: |
+              ${TRUNK_PATH} check enable eslint
+
           - repo: replayio/devtools
             ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
             description: (has trunk.yaml)
@@ -132,6 +138,9 @@ jobs:
           arguments: --output-file=.trunk/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
           setup-deps: true
+        env:
+          TRUNK_CLI_VERSION:
+            ${{ matrix.description == '(compat test for cli 1.0.0)' && '1.0.0' || '' }}
         continue-on-error: true
 
       - name: Check for task failures

@@ -278,7 +278,6 @@ runs:
         "${TRUNK_PATH}" check finalize-github-check-run \
           --target "${INPUT_TARGET_CHECKOUT}" \
           --check_run_id "${INPUT_CHECK_RUN_ID}" \
-          --token "${INPUT_TRUNK_TOKEN}"
 
     - name: Upload landing state
       if: env.INPUT_UPLOAD_LANDING_STATE

@@ -16,13 +16,12 @@ fetch() {
 }
 
 if [[ ${TRUNK_CHECK_MODE} == "all" ]]; then
-  if [[ -n ${INPUT_TRUNK_TOKEN} && ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
+  if [[ -n ${TRUNK_TOKEN} && ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     latest_raw_upload="$(mktemp)"
     # Note: the order of these if clauses is important. We can't invert them using if ! because that
     # would cause the exit code of prev_ref=$(...) to get discarded
     if prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
       --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
-      --token "${INPUT_TRUNK_TOKEN}" \
       "${latest_raw_upload}")"; then
       if [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
         echo "TRUNK_CHECK_ALL_HTL_ARG=" >>"${GITHUB_ENV}"
