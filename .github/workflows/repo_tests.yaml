@@ -74,7 +74,7 @@ jobs:
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (compat test for cli 1.0.0)
             post-init: |
-              echo "TRUNK_CLI_VERSION=1.0.0" >> >$GITHUB_ENV
+              echo "TRUNK_CLI_VERSION=1.0.0" >> $GITHUB_ENV
 
           - repo: sheldonhull/sheldonhull.hugo
             ref: 0810b7219c6681931bbf727cd9fe81693b414b60
