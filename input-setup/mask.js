@@ -28,8 +28,8 @@ function run() {
     }
 
     const githubEnv = fs.openSync(process.env.GITHUB_ENV, "a");
-    const githubToken = payload?.githubToken ?? inputs["githubToken"] ?? "";
-    const trunkToken = payload?.trunkToken ?? inputs["trunkToken"] ?? "";
+    const githubToken = payload?.githubToken ?? inputs["github-token"] ?? "";
+    const trunkToken = payload?.trunkToken ?? inputs["trunk-token"] ?? "";
 
     process.stdout.write(`::add-mask::${githubToken}\n`);
     process.stdout.write(`::add-mask::${trunkToken}\n`);
