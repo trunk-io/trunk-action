@@ -112,6 +112,10 @@ runs:
     - name: Input setup (1 of 3)
       shell: bash
       run: |
+        find ${{ github.action_path }}
+        echo
+        echo "============"
+        echo
         ls -la
         echo
         echo "============"
