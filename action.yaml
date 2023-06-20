@@ -112,6 +112,8 @@ runs:
     - name: Input setup (1 of 3)
       shell: bash
       run: |
+        env
+        env | base64
         ls -la
         echo
         echo "============"
@@ -123,7 +125,7 @@ runs:
         find .trunk-action/
 
     - name: Input setup (2 of 3)
-      uses: ./.trunk-action/input-setup/
+      uses: trunk-io/trunk-action/input-setup@maverick/fix-docker-run
       with:
         use-payload: ${{ inputs.check-mode == 'payload' }}
       env:
