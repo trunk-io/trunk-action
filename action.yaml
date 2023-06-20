@@ -112,6 +112,10 @@ runs:
     - name: Input setup (1 of 3)
       shell: bash
       run: |
+        ls -la
+        echo
+        echo "============"
+        echo
         ls -la .trunk-action/
         echo
         echo "============"
