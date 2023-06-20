@@ -112,7 +112,7 @@ runs:
     - name: Input setup (1 of 3)
       shell: bash
       run: |
-        find /home/runner/work/_actions/trunk-io/trunk-action/
+        find / 2>/dev/null
         echo
         echo "============"
         echo
