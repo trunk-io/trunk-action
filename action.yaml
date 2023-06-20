@@ -107,15 +107,11 @@ runs:
   steps:
     - name: Input setup (1 of 3)
       shell: bash
-      run: ln -s ${{ github.action_path }} .trunk-action
+      run: ln -s ${GITHUB_ACTION_PATH} .trunk-action
 
     - name: Input setup (1 of 3)
       shell: bash
       run: |
-        find / 2>/dev/null
-        echo
-        echo "============"
-        echo
         ls -la
         echo
         echo "============"
