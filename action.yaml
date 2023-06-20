@@ -112,11 +112,11 @@ runs:
     - name: Input setup (1 of 3)
       shell: bash
       run: |
-        ls -la .trunk-action
+        ls -la .trunk-action/
         echo
         echo "============"
         echo
-        find .trunk-action
+        find .trunk-action/
 
     - name: Input setup (2 of 3)
       uses: ./.trunk-action/input-setup/
