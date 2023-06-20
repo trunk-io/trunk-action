@@ -112,7 +112,7 @@ runs:
     - name: Input setup (1 of 3)
       shell: bash
       run: |
-        find ${{ github.action_path }}
+        find /home/runner/work/_actions/trunk-io/trunk-action/
         echo
         echo "============"
         echo
