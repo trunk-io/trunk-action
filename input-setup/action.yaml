@@ -14,7 +14,10 @@ runs:
     - name: test
       shell: bash
       run: |
-        node mask.js
+        pwd
+        ls -la
+        env
+        NODE_DEBUG=cluster,net,http,fs,tls,module,timers node ${GITHUB_ACTION_PATH}/input-setup/mask.js
 
 # runs:
 #   using: node16
