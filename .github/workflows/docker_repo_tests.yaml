@@ -5,6 +5,7 @@ jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
+    container: catthehacker/ubuntu:runner-20.04
     strategy:
       fail-fast: false
       matrix:
