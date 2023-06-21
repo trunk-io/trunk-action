@@ -10,4 +10,4 @@ inputs:
 
 runs:
   using: node16
-  main: ./mask.js
+  main: ${{ env.GITHUB_ACTION_PATH }}/mask.js
