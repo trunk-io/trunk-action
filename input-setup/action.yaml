@@ -21,4 +21,4 @@ inputs:
 
 runs:
   using: node16
-  main: "`find / | grep /mask.js`"
+  main: ${CORRECT_ACTION_PATH}/input-setup/mask.js
