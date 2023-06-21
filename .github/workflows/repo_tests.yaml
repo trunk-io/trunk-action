@@ -116,6 +116,8 @@ jobs:
               # stylelint is exiting with error code -11
               ${TRUNK_PATH} check disable stylelint
 
+    container: ${{ matrix.container }}
+
     steps:
       - name: Checkout ${{ matrix.repo }}
         uses: actions/checkout@v3
