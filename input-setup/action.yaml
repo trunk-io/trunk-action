@@ -10,4 +10,4 @@ inputs:
 
 runs:
   using: node16
-  main: ${{ env.GITHUB_ACTION_PATH }}/mask.js
+  main: /__w/_actions/trunk-io/trunk-action/maverick/fix-docker-run/input-setup/mask.js
