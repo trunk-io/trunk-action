@@ -9,5 +9,14 @@ inputs:
     default: ""
 
 runs:
-  using: node16
-  main: /__w/dockertest/dockertest/.trunk-action/input-setup/mask.js
+  using: composite
+  steps:
+    - name: test
+      shell: bash
+      run: |
+        pwd
+        ls -la
+
+# runs:
+#   using: node16
+#   main: /__w/dockertest/dockertest/.trunk-action/input-setup/mask.js
