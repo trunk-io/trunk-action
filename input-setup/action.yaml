@@ -14,9 +14,7 @@ runs:
     - name: test
       shell: bash
       run: |
-        pwd
-        ls -la
-        env
+        find ${GITHUB_ACTION_PATH}
         NODE_DEBUG=cluster,net,http,fs,tls,module,timers node ${GITHUB_ACTION_PATH}/mask.js
 
 # runs:
