@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [catthehacker/ubuntu:runner-20.04, {}]
+        container: [catthehacker/ubuntu:runner-20.04, ""]
         include:
           # Items in this list satisfy a few criteria:
           #
