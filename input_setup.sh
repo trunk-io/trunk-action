@@ -18,7 +18,8 @@ payload() {
 }
 
 githubEventPR() {
-  jq -r ".[\"$1\"] // empty" <<<${SETUP_GITHUB_EVENT_PR}
+  # arg not quoted because the inputs have multiple fields e.g. "base.repo.name" instead of "base"
+  jq -r ".$1 // empty" <<<${SETUP_GITHUB_EVENT_PR}
 }
 
 # This is different from the other scripts because the INPUT_DEBUG variable doesn't exist yet
@@ -44,12 +45,12 @@ if [[ "$(inputs check-mode)" == "payload" ]]; then
 INPUT_GITHUB_TOKEN=${INPUT_GITHUB_TOKEN}
 INPUT_TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
 TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
-GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=$(payload pullRequest.base.repo.owner.login)
-GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=$(payload pullRequest.base.repo.name)
-GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(payload pullRequest.base.sha)
-GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=$(payload pullRequest.head.repo.fork)
-GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(payload pullRequest.head.sha)
-GITHUB_EVENT_PULL_REQUEST_NUMBER=$(payload pullRequest.number)
+GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=$(payload base.repo.owner.login)
+GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=$(payload base.repo.name)
+GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(payload base.sha)
+GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=$(payload head.repo.fork)
+GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(payload head.sha)
+GITHUB_EVENT_PULL_REQUEST_NUMBER=$(payload number)
 INPUT_ARGUMENTS=$(payload arguments)
 INPUT_CACHE=$(payload cache)
 INPUT_CACHE_KEY=$(payload cacheKey)
