@@ -107,85 +107,14 @@ runs:
   steps:
     - name: Input setup
       shell: bash
-      run: |
-        cat >>$GITHUB_ENV <<EOF
-        GITHUB_TOKEN=${{ github.token }}
-        EOF
-
-        # Every inputs.field should be referenced as INPUT_FIELD later in the action. This allows
-        # the field to be set either as an argument to the github action or via inputs.json.
-        if [[ "${{ inputs.check-mode }}" = "payload" ]]; then
-
-        INPUT_GITHUB_TOKEN=$(jq '.inputs.payload | fromjson | .githubToken // empty' $GITHUB_EVENT_PATH)
-        INPUT_TRUNK_TOKEN=$(jq '.inputs.payload | fromjson | .trunkToken // empty' $GITHUB_EVENT_PATH)
-        echo "::add-mask::${INPUT_GITHUB_TOKEN}"
-        echo "::add-mask::${INPUT_TRUNK_TOKEN}"
-
-          cat >>$GITHUB_ENV <<EOF
-        INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN
-        INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
-        TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
-        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=$(jq 'inputs.payload | fromjson | .pullRequest.base.repo.owner.login //empty' $GITHUB_EVENT_PATH)
-        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=$(jq 'inputs.payload | fromjson | .pullRequest.base.repo.name //empty' $GITHUB_EVENT_PATH)
-        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(jq 'inputs.payload | fromjson | .pullRequest.base.sha //empty' $GITHUB_EVENT_PATH)
-        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=$(jq 'inputs.payload | fromjson | .pullRequest.head.repo.fork //empty' $GITHUB_EVENT_PATH)
-        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(jq 'inputs.payload | fromjson | .pullRequest.head.sha //empty' $GITHUB_EVENT_PATH)
-        GITHUB_EVENT_PULL_REQUEST_NUMBER=$(jq 'inputs.payload | fromjson | .pullRequest.number //empty' $GITHUB_EVENT_PATH)
-        INPUT_ARGUMENTS=$(jq 'inputs.payload | fromjson | .arguments //empty' $GITHUB_EVENT_PATH)
-        INPUT_CACHE=$(jq 'inputs.payload | fromjson | .cache //empty' $GITHUB_EVENT_PATH)
-        INPUT_CACHE_KEY=$(jq 'inputs.payload | fromjson | .cacheKey //empty' $GITHUB_EVENT_PATH)
-        INPUT_CACHE_PATH=$(jq 'inputs.payload | fromjson | .cachePath //empty' $GITHUB_EVENT_PATH)
-        INPUT_CHECK_ALL_MODE=$(jq 'inputs.payload | fromjson | .checkAllMode //empty' $GITHUB_EVENT_PATH)
-        INPUT_CHECK_MODE=$(jq 'inputs.payload | fromjson | .checkMode //empty' $GITHUB_EVENT_PATH)
-        INPUT_CHECK_RUN_ID=$(jq 'inputs.payload | fromjson | .checkRunId //empty' $GITHUB_EVENT_PATH)
-        INPUT_DEBUG=$(jq 'inputs.payload | fromjson | .debug //empty' $GITHUB_EVENT_PATH)
-        INPUT_GITHUB_REF_NAME=$(jq 'inputs.payload | fromjson | .targetRefName //empty' $GITHUB_EVENT_PATH)
-        INPUT_LABEL=$(jq 'inputs.payload | fromjson | .label //empty' $GITHUB_EVENT_PATH)
-        INPUT_SETUP_CACHE_KEY=$(jq 'inputs.payload | fromjson | .setupCacheKey //empty' $GITHUB_EVENT_PATH)
-        INPUT_SETUP_DEPS=$(jq 'inputs.payload | fromjson | .setupDeps //empty' $GITHUB_EVENT_PATH)
-        INPUT_TARGET_CHECKOUT=$(jq 'inputs.payload | fromjson | .targetCheckout //empty' $GITHUB_EVENT_PATH)
-        INPUT_TARGET_CHECKOUT_REF=$(jq 'inputs.payload | fromjson | .targetCheckoutRef //empty' $GITHUB_EVENT_PATH)
-        INPUT_TRUNK_PATH=$(jq 'inputs.payload | fromjson | .trunkPath //empty' $GITHUB_EVENT_PATH)
-        INPUT_UPLOAD_LANDING_STATE=$(jq 'inputs.payload | fromjson | .uploadLandingState //empty' $GITHUB_EVENT_PATH)
-        INPUT_UPLOAD_SERIES=$(jq 'inputs.payload | fromjson | .uploadSeries //empty' $GITHUB_EVENT_PATH)
-        EOF
-
-        else
-
-        INPUT_GITHUB_TOKEN=${{ inputs.github-token }}
-        INPUT_TRUNK_TOKEN=${{ inputs.trunk-token }}
-        echo "::add-mask::${INPUT_GITHUB_TOKEN}"
-        echo "::add-mask::${INPUT_TRUNK_TOKEN}"
-
-          cat >>$GITHUB_ENV <<EOF
-        INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN
-        INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
-        TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
-        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ github.event.pull_request.base.sha }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ github.event.pull_request.head.repo.fork }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
-        GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}
-        GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_ARGUMENTS=${{ inputs.arguments }}
-        INPUT_CACHE=${{ inputs.cache }}
-        INPUT_CACHE_KEY=trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
-        INPUT_CACHE_PATH=~/.cache/trunk
-        INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
-        INPUT_CHECK_MODE=${{ inputs.check-mode }}
-        INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
-        INPUT_DEBUG=${{ inputs.debug }}
-        INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
-        INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
-        INPUT_TARGET_CHECKOUT=
-        INPUT_TARGET_CHECKOUT_REF=
-        INPUT_LABEL=${{ inputs.label }}
-        INPUT_SETUP_CACHE_KEY=${{ inputs.cache-key }}
-        INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
-        INPUT_UPLOAD_LANDING_STATE=false
-        INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
-        EOF
-
-        fi
+      run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
+      env:
+        SETUP_GITHUB_TOKEN: ${{ github.token }}
+        SETUP_GITHUB_REF_NAME: ${{ github.ref_name }}
+        SETUP_RUNNER_OS: ${{ runner.os }}
+        SETUP_FILE_HASH: ${{ hashFiles('.trunk/trunk.yaml') }}
+        SETUP_INPUTS: ${{ toJSON(inputs) }}
+        SETUP_GITHUB_EVENT_PR: ${{ toJSON(github.event.pull_request) }}
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
