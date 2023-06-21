@@ -14,8 +14,7 @@ runs:
     - name: test
       shell: bash
       run: |
-        pwd
-        ls -la
+        node mask.js
 
 # runs:
 #   using: node16
