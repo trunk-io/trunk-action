@@ -8,17 +8,17 @@ inputs:
     required: false
     default: ""
 
-runs:
-  using: composite
-  steps:
-    - name: test
-      shell: bash
-      run: |
-        echo "========="
-        find / | grep /mask.js || true
-        echo "========="
-        node `find / | grep /mask.js`
-
 # runs:
-#   using: node16
-#   main: /__w/dockertest/dockertest/.trunk-action/input-setup/mask.js
+#   using: composite
+#   steps:
+#     - name: test
+#       shell: bash
+#       run: |
+#         echo "========="
+#         find / | grep /mask.js || true
+#         echo "========="
+#         node `find / | grep /mask.js`
+
+runs:
+  using: node16
+  main: "`find / | grep /mask.js`"
