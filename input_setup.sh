@@ -7,7 +7,7 @@
 #
 # SC2312: Consider invoking this command separately to avoid masking its return value (or use '|| true' to ignore).
 
-set -euo pipefail
+set -euxo pipefail
 
 inputs() {
   jq ".[\"$1\"] // empty" <<<${SETUP_INPUTS}
