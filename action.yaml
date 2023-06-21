@@ -107,7 +107,7 @@ runs:
   steps:
     - name: Input setup (1 of 3)
       shell: bash
-      run: ln -s ${GITHUB_ACTION_PATH} .trunk-action
+      run: ln -s ${GITHUB_ACTION_PATH} /.trunk-action
 
     - name: Input setup (1 of 3)
       shell: bash
@@ -125,7 +125,7 @@ runs:
         find .trunk-action/
 
     - name: Input setup (2 of 3)
-      uses: trunk-io/trunk-action/input-setup@maverick/fix-docker-run
+      uses: ./../../../../../../../../../../../.trunk-action/input-setup/
       with:
         use-payload: ${{ inputs.check-mode == 'payload' }}
       env:
