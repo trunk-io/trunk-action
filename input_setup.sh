@@ -10,15 +10,15 @@
 set -euo pipefail
 
 inputs() {
-  jq ".$1 // empty" <<<${SETUP_INPUTS}
+  jq ".[\"$1\"] // empty" <<<${SETUP_INPUTS}
 }
 
 payload() {
-  jq ".inputs.payload | fromjson | .$1 // empty" ${GITHUB_EVENT_PATH}
+  jq ".inputs.payload | fromjson | .[\"$1\"] // empty" ${GITHUB_EVENT_PATH}
 }
 
 githubEventPR() {
-  jq ".$1 // empty" <<<${SETUP_GITHUB_EVENT_PR}
+  jq ".[\"$1\"] // empty" <<<${SETUP_GITHUB_EVENT_PR}
 }
 
 # This is different from the other scripts because the INPUT_DEBUG variable doesn't exist yet
