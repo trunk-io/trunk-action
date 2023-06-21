@@ -9,21 +9,22 @@
 
 set -euo pipefail
 
-if [[ ${INPUT_DEBUG} == "true" ]]; then
-  set -x
-fi
+inputs() {
+  jq '.$@ // empty' <<<${SETUP_INPUTS}
+}
 
 payload() {
   jq '.inputs.payload | fromjson | .$@ // empty' ${GITHUB_EVENT_PATH}
 }
 
-inputs() {
-  jq '.$@ // empty' <<<${SETUP_INPUTS}
-}
-
 githubEventPR() {
   jq '.$@ // empty' <<<${SETUP_GITHUB_EVENT_PR}
 }
+
+# This is different from the other scripts because the INPUT_DEBUG variable doesn't exist yet
+if [[ $(inputs debug) == "true" || $(payload debug) == "true" ]]; then
+  set -x
+fi
 
 # this seems like a no-op?
 cat >>${GITHUB_ENV} <<EOF
