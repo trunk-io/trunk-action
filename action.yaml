@@ -124,6 +124,7 @@ runs:
           cat >>$GITHUB_ENV <<EOF
         INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN
         INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
+        TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
         GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=$(jq 'inputs.payload | fromjson | .pullRequest.base.repo.owner.login //empty' $GITHUB_EVENT_PATH)
         GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=$(jq 'inputs.payload | fromjson | .pullRequest.base.repo.name //empty' $GITHUB_EVENT_PATH)
         GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(jq 'inputs.payload | fromjson | .pullRequest.base.sha //empty' $GITHUB_EVENT_PATH)
@@ -159,6 +160,7 @@ runs:
           cat >>$GITHUB_ENV <<EOF
         INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN
         INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
+        TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
         GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ github.event.pull_request.base.sha }}
         GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ github.event.pull_request.head.repo.fork }}
         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
