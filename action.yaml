@@ -109,21 +109,6 @@ runs:
       shell: bash
       run: ln -s ${GITHUB_ACTION_PATH} /tmp/.trunk-action
 
-    - name: Input setup (1 of 3)
-      shell: bash
-      run: |
-        env
-        env | base64
-        ls -la
-        echo
-        echo "============"
-        echo
-        ls -la .trunk-action/
-        echo
-        echo "============"
-        echo
-        find .trunk-action/
-
     - name: Input setup (2 of 3)
       uses: ./../../../../../../../../../../../tmp/.trunk-action/input-setup/
       with:
