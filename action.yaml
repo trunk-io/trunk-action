@@ -107,7 +107,7 @@ runs:
   steps:
     - name: Input setup (1 of 3)
       shell: bash
-      run: ln -s ${{ github.action_path }} .trunk-action
+      run: ln -s ${{ env.GITHUB_ACTION_PATH }} .trunk-action
 
     - name: Input setup (2 of 3)
       uses: ./.trunk-action/input-setup/
