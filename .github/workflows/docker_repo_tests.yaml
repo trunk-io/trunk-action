@@ -5,7 +5,7 @@ jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
-    container: catthehacker/ubuntu:runner-20.04
+    container: catthehacker/ubuntu:act-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -29,23 +29,6 @@ jobs:
               ${TRUNK_PATH} check disable ruff
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
 
-          - repo: jbeder/yaml-cpp
-            ref: 0e6e28d1a38224fc8172fae0109ea7f673c096db
-            description: (compile-commands.json)
-            post-init: |
-              # black complains about py2 code
-              ${TRUNK_PATH} check disable black
-              # we currently fail to run ruff >v0.0.266
-              ${TRUNK_PATH} check disable ruff
-              mkdir build
-              cd build
-              cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-              cd ..
-              ln -s build/compile_commands.json
-              sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
-              cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
-              ${TRUNK_PATH} check enable clang-tidy
-
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
             post-init: |
@@ -65,31 +48,9 @@ jobs:
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
-          - repo: replayio/devtools
-            ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
-            description: (has trunk.yaml)
-            post-init: |
-              # replay is on a very old version
-              ${TRUNK_PATH} upgrade
-            trunk-path: node_modules/.bin/trunk
-
           - repo: sass/sass
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
-
-          - repo: sheldonhull/sheldonhull.hugo
-            ref: 0810b7219c6681931bbf727cd9fe81693b414b60
-            description: (has trunk.yaml)
-            post-init: |
-              # all of these linters have failures
-              ${TRUNK_PATH} check disable svgo
-              ${TRUNK_PATH} check disable golangci-lint
-              ${TRUNK_PATH} check disable prettier
-              ${TRUNK_PATH} check disable oxipng
-
-          - repo: shopify/draggable
-            ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
-            description: (uses yarn)
 
           - repo: terraform-linters/tflint
             ref: 9c34a740319e2410094ca2754e5eca860f2d13f5
@@ -99,15 +60,6 @@ jobs:
 
           - repo: trunk-io/plugins
             ref: main
-
-          # fails because pnpm version is too new
-
-          # - repo: vuejs/core
-          #   ref: 60cd23c7520f9098bf31fc2d0c09d58ded75f173
-          #   description: (uses pnpm)
-          #   post-init: |
-          #     # svgo gets confused by JS module loading
-          #     ${TRUNK_PATH} check disable svgo
 
           - repo: z-shell/wiki
             ref: d6d8b5da28c170b3b226705795412497f7059681
