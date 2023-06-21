@@ -107,7 +107,7 @@ runs:
   steps:
     - name: Input setup
       shell: bash
-      run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
+      run: ${GITHUB_ACTION_PATH}/input_setup.sh
       env:
         SETUP_GITHUB_TOKEN: ${{ github.token }}
         SETUP_GITHUB_REF_NAME: ${{ github.ref_name }}
