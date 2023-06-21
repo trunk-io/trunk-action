@@ -138,6 +138,7 @@ jobs:
           arguments: --output-file=/tmp/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
           setup-deps: true
+          debug: true
         env:
           TRUNK_CLI_VERSION:
             ${{ matrix.description == '(compat test for cli 1.0.0)' && '1.0.0' || '' }}
