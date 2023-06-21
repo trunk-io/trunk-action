@@ -135,7 +135,7 @@ jobs:
           check-mode: all
           trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
-          arguments: --output-file=.trunk/landing-state.json
+          arguments: --output-file=/tmp/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
           setup-deps: true
         env:

@@ -6,9 +6,9 @@ import sys
 
 def main(github_env_path, repo_test_name, repo_test_description):
   try:
-    landing_state = json.load(open('.trunk/landing-state.json'))
+    landing_state = json.load(open('/tmp/landing-state.json'))
   except FileNotFoundError as e:
-    print("Failed to open .trunk/landing-state.json - did `trunk check` run?")
+    print("Failed to open /tmp/landing-state.json - did `trunk check` run?")
     sys.exit(1)
     return
 
