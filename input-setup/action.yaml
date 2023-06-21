@@ -10,4 +10,4 @@ inputs:
 
 runs:
   using: node16
-  main: mask.js
+  main: /__w/dockertest/dockertest/.trunk-action/input-setup/mask.js
