@@ -21,4 +21,4 @@ inputs:
 
 runs:
   using: node16
-  main: ${{ inputs.good-path }}/input-setup/mask.js
+  main: mask.js
