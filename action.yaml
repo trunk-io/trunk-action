@@ -108,7 +108,6 @@ runs:
     - name: Input setup
       shell: bash
       run: |
-        set -x
         cat >>$GITHUB_ENV <<EOF
         GITHUB_TOKEN=${{ github.token }}
         EOF
