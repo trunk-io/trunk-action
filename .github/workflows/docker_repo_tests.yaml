@@ -25,15 +25,13 @@ jobs:
             ref: 4f9cd3bffb6bc55c9e2c4252c7b733a219880151
             description: (uses npm)
             post-init: |
-              # we currently fail to run ruff >v0.0.266
-              ${TRUNK_PATH} check disable ruff
+              # terrascan scans dockerfile.js (a JS file for parsing dockerfiles) as a dockerfile itself
+              echo "src/languages/dockerfile.js" >> .gitignore
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
 
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
             post-init: |
-              # prettier fails because of a malformed html file
-              ${TRUNK_PATH} check disable prettier
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
@@ -57,6 +55,9 @@ jobs:
             post-init: |
               # golangci-lint needs us to init with a newer go runtime
               ${TRUNK_PATH} check disable golangci-lint
+              # tfsec and terrascan scan these malformed test files and error
+              echo "integrationtest/" >> .gitignore
+              echo "terraform/test-fixtures" >> .gitignore
 
           - repo: trunk-io/plugins
             ref: main
