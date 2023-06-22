@@ -1,10 +1,12 @@
-name: repo_tests
+name: docker_repo_tests
 on: [workflow_dispatch, workflow_call]
 
 jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
+    # This is a docker image that mimics the github runner image
+    # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
     container: catthehacker/ubuntu:runner-20.04
     strategy:
       fail-fast: false

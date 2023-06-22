@@ -161,15 +161,10 @@ runs:
 
         else
 
-          INPUT_GITHUB_TOKEN=${{ inputs.github-token }}
-          INPUT_TRUNK_TOKEN=${{ inputs.trunk-token }}
-          echo "::add-mask::${INPUT_GITHUB_TOKEN}"
-          echo "::add-mask::${INPUT_TRUNK_TOKEN}"
-
           cat >>$GITHUB_ENV <<EOF
-        INPUT_GITHUB_TOKEN=$INPUT_GITHUB_TOKEN
-        INPUT_TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
-        TRUNK_TOKEN=$INPUT_TRUNK_TOKEN
+        INPUT_GITHUB_TOKEN=${{ inputs.github-token }}
+        INPUT_TRUNK_TOKEN=${{ inputs.trunk-token }}
+        TRUNK_TOKEN=${{ inputs.trunk-token }}
         GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ github.event.pull_request.base.sha }}
         GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ github.event.pull_request.head.repo.fork }}
         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
