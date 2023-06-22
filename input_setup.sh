@@ -7,7 +7,7 @@
 #
 # SC2312: Consider invoking this command separately to avoid masking its return value (or use '|| true' to ignore).
 
-set -euxo pipefail
+set -euo pipefail
 
 inputs() {
   # quoted here because of non-legal names (e.g. check-mode - the "-" gets parsed as subtraction)
