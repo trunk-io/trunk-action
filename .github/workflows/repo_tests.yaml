@@ -46,8 +46,8 @@ jobs:
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
             post-init: |
-              # prettier fails because of a malformed html file
-              ${TRUNK_PATH} check disable prettier
+              # bandit is outputting a progress bar (TODO: TRUNK-7656)
+              ${TRUNK_PATH} check disable bandit
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
