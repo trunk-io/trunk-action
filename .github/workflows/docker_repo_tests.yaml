@@ -34,6 +34,8 @@ jobs:
             post-init: |
               # bandit is outputting a progress bar (TODO: TRUNK-7656)
               ${TRUNK_PATH} check disable bandit
+              # prettier chokes on this malformed html file
+              echo "examples/celery/src/task_app/templates/index.html" >> .gitignore
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
 
           - repo: postcss/postcss
