@@ -10,15 +10,15 @@
 set -euxo pipefail
 
 inputs() {
+  # quoted here because of non-legal names (e.g. check-mode - the "-" gets parsed as subtraction)
   jq -r ".[\"$1\"] // empty" <<<${SETUP_INPUTS}
 }
 
 payload() {
-  jq -r ".inputs.payload | fromjson | .[\"$1\"] // empty" ${GITHUB_EVENT_PATH}
+  jq -r ".inputs.payload | fromjson | .$1 // empty" ${GITHUB_EVENT_PATH}
 }
 
 githubEventPR() {
-  # arg not quoted because the inputs have multiple fields e.g. "base.repo.name" instead of "base"
   jq -r ".$1 // empty" <<<${SETUP_GITHUB_EVENT_PR}
 }
 
