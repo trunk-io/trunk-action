@@ -19,11 +19,6 @@ def main(github_env_path, repo_test_name, repo_test_description):
   print(open(".trunk/trunk.yaml").read())
   print("::endgroup::")
 
-  # with open(github_env_path, 'a') as env:
-  #   env.write('landing_state_artifact_name=')
-  #   env.write(f'{repo_test_name.replace("/", " ")} ({repo_test_description})')
-  #   env.write('\n')
-
   print(f'lint_action_count={lint_action_count}')
   print(f'task_failure_count={task_failure_count}')
 
