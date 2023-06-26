@@ -9,7 +9,7 @@ api:
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.17
+      ref: v0.0.21
       uri: https://github.com/trunk-io/plugins
     - id: configs
       ref: v0.0.3
