@@ -1,6 +1,8 @@
 name: repo_tests
 on: [workflow_dispatch, workflow_call]
 
+permissions: read-all
+
 jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
