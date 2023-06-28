@@ -343,17 +343,8 @@ runs:
       env:
         GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
 
-    - name: Finalize check run
-      if: always() && env.INPUT_CHECK_RUN_ID
-      continue-on-error: true
-      shell: bash
-      run: |
-        "${TRUNK_PATH}" check finalize-github-check-run \
-          --target "${INPUT_TARGET_CHECKOUT}" \
-          --check_run_id "${INPUT_CHECK_RUN_ID}" \
-
     - name: Upload landing state
-      if: env.INPUT_UPLOAD_LANDING_STATE
+      if: env.INPUT_UPLOAD_LANDING_STATE == 'true'
       continue-on-error: true
       uses: actions/upload-artifact@v3
       with:
