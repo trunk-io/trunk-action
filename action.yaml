@@ -105,7 +105,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Input setup
+    - name: Set up inputs
       shell: bash
       run: |
         cat >>$GITHUB_ENV <<EOF
