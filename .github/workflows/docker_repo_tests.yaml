@@ -58,13 +58,6 @@ jobs:
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
 
-          - repo: z-shell/wiki
-            ref: d6d8b5da28c170b3b226705795412497f7059681
-            description: (has trunk.yaml)
-            post-init: |
-              # stylelint is exiting with error code -11
-              ${TRUNK_PATH} check disable stylelint
-
     steps:
       - name: Checkout ${{ matrix.repo }}
         uses: actions/checkout@v3
