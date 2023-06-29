@@ -58,18 +58,6 @@ jobs:
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
 
-          - repo: terraform-linters/tflint
-            ref: 9c34a740319e2410094ca2754e5eca860f2d13f5
-            post-init: |
-              # golangci-lint needs us to init with a newer go runtime
-              ${TRUNK_PATH} check disable golangci-lint
-              # tfsec and terrascan scan these malformed test files and error
-              echo "integrationtest/" >> .gitignore
-              echo "terraform/test-fixtures" >> .gitignore
-
-          - repo: trunk-io/plugins
-            ref: main
-
           - repo: z-shell/wiki
             ref: d6d8b5da28c170b3b226705795412497f7059681
             description: (has trunk.yaml)
