@@ -15,10 +15,22 @@ if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
     --github-commit "${GITHUB_SHA}" \
     ${INPUT_ARGUMENTS}
 elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
+  latest_raw_upload="$(mktemp)"
+  prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
+    --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
+    --token "${INPUT_TRUNK_TOKEN}" \
+    "${latest_raw_upload}")"
+  if [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
+    echo "${prev_ref}"
+    htl_arg=""
+  else
+    htl_arg="--htl-factories-path=${latest_raw_upload}"
+    git fetch origin "${prev_ref}"
+  fi
   "${TRUNK_PATH}" check \
     --all \
     --upload \
-    ${TRUNK_CHECK_ALL_HTL_ARG} \
+    ${htl_arg} \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \
     ${INPUT_ARGUMENTS}
