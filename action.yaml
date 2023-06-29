@@ -105,7 +105,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Input setup
+    - name: Set up inputs
       shell: bash
       run: |
         cat >>$GITHUB_ENV <<EOF
@@ -182,11 +182,11 @@ runs:
         INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
+        INPUT_LABEL=${{ inputs.label }}
+        INPUT_SETUP_CACHE_KEY=${{ inputs.cache-key }}
         INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
         INPUT_TARGET_CHECKOUT=
         INPUT_TARGET_CHECKOUT_REF=
-        INPUT_LABEL=${{ inputs.label }}
-        INPUT_SETUP_CACHE_KEY=${{ inputs.cache-key }}
         INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
         INPUT_UPLOAD_LANDING_STATE=false
         INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
@@ -219,12 +219,6 @@ runs:
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
         fi
-
-    # This has to come before setup because setup can potentially take long time
-    # (e.g. with bazel build) causing the github token used in fetching to expire
-    - name: Fetch
-      shell: bash
-      run: ${GITHUB_ACTION_PATH}/fetch.sh
 
     - name: Detect setup strategy
       shell: bash
