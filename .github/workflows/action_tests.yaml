@@ -46,12 +46,12 @@ jobs:
           cd ..
 
           git clone src-repo repo-under-test
-          cd repo-under-test
-          git checkout trunk-merge/of-feature-branch
 
       - name: Run test
         shell: bash
-        run: ./local-action/trunk_merge.sh
+        run:
+          cd repo-under-test git checkout trunk-merge/of-feature-branch
+          ./local-action/trunk_merge.sh
         env:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: ""
