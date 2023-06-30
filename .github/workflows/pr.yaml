@@ -24,6 +24,10 @@ jobs:
     name: Repository tests
     uses: ./.github/workflows/repo_tests.yaml
 
+  action_tests:
+    name: Action tests
+    uses: ./.github/workflows/action_tests.yaml
+
   docker_repo_tests:
     name: Repository tests (docker)
     uses: ./.github/workflows/docker_repo_tests.yaml
