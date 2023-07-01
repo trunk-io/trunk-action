@@ -4,17 +4,6 @@ const fs = require("fs");
 const path = require("node:path");
 
 const getArgv = () => {
-  fs.appendFileSync(
-    process.env.TRUNK_STUB_LOGS,
-    JSON.stringify({
-      argv: process.argv,
-      basename: path.basename(process.argv[1]),
-      first: true,
-      slice: ["trunk"].concat(process.argv.slice(2)),
-    })
-  );
-  fs.appendFileSync(process.env.TRUNK_STUB_LOGS, "\n");
-
   if (path.basename(process.argv[1]) === "stub.js") {
     return ["trunk"].concat(process.argv.slice(2));
   }
@@ -22,8 +11,8 @@ const getArgv = () => {
   fs.appendFileSync(
     process.env.TRUNK_STUB_LOGS,
     JSON.stringify({
+      error: "Failed to sanitize argv",
       argv: process.argv,
-      basename: path.basename(process.argv[1]),
     })
   );
   fs.appendFileSync(process.env.TRUNK_STUB_LOGS, "\n");
@@ -34,5 +23,5 @@ const getArgv = () => {
 // We only want to assert that the calls look like ['trunk', 'check', '--ci', ...], hence the rewrite
 const argv = getArgv();
 
-fs.appendFileSync(process.env.TRUNK_STUB_LOGS, JSON.stringify(process.argv));
+fs.appendFileSync(process.env.TRUNK_STUB_LOGS, JSON.stringify(argv));
 fs.appendFileSync(process.env.TRUNK_STUB_LOGS, "\n");
