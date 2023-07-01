@@ -10,12 +10,7 @@ jobs:
       TRUNK_STUB_LOGS: /tmp/trunk-stub-logs.json
 
     steps:
-      - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v3
-        with:
-          path: local-action
-
-      - uses: actions/checkout@v3
+      - uses: Set up source repo
         with:
           path: src-repo
           repository: prawn-test-staging-rw/check-web
@@ -46,6 +41,11 @@ jobs:
           cd ..
 
           git clone src-repo repo-under-test
+
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+        with:
+          path: local-action
 
       - name: Run test
         shell: bash
