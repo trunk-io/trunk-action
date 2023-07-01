@@ -10,7 +10,8 @@ jobs:
       TRUNK_STUB_LOGS: /tmp/trunk-stub-logs.json
 
     steps:
-      - uses: Set up source repo
+      - name: Set up source repo
+        uses: actions/checkout@v3
         with:
           path: src-repo
           repository: prawn-test-staging-rw/check-web
