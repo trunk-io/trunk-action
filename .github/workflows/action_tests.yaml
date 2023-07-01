@@ -64,5 +64,6 @@ jobs:
       - name: Assert expected
         shell: bash
         run: |
+          cd local-action
           npm install
-          ./local-action/action_tests/assert.js
+          ./action_tests/assert.js
