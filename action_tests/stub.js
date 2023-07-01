@@ -4,6 +4,17 @@ const fs = require("fs");
 const path = require("node:path");
 
 const getArgv = () => {
+  fs.appendFileSync(
+    process.env.TRUNK_STUB_LOGS,
+    JSON.stringify({
+      argv: process.argv,
+      basename: path.basename(process.argv[1]),
+      first: true,
+      slice: ["trunk"].concat(process.argv.slice(2)),
+    })
+  );
+  fs.appendFileSync(process.env.TRUNK_STUB_LOGS, "\n");
+
   if (path.basename(process.argv[1]) === "stub.js") {
     return ["trunk"].concat(process.argv.slice(2));
   }
