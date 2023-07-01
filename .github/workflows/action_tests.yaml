@@ -53,13 +53,13 @@ jobs:
         run: |
           cd repo-under-test
           git checkout trunk-merge/of-feature-branch
-          ./local-action/trunk_merge.sh
+          ../local-action/trunk_merge.sh
         env:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: ""
           INPUT_DEBUG: ""
           INPUT_LABEL: ""
-          TRUNK_PATH: ./local-action/action_tests/stub.js
+          TRUNK_PATH: ../local-action/action_tests/stub.js
 
       - name: Assert expected
         shell: bash
