@@ -49,8 +49,9 @@ jobs:
 
       - name: Run test
         shell: bash
-        run:
-          cd repo-under-test git checkout trunk-merge/of-feature-branch
+        run: |
+          cd repo-under-test
+          git checkout trunk-merge/of-feature-branch
           ./local-action/trunk_merge.sh
         env:
           INPUT_ARGUMENTS: ""
