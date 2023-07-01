@@ -32,5 +32,5 @@ fi
   --upstream "${upstream}" \
   --github-commit "${git_commit}" \
   --github-label "${INPUT_LABEL}" \
-  "${annotation_argument}" \
+  ${annotation_argument} \
   ${INPUT_ARGUMENTS}
