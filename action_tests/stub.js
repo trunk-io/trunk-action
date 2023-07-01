@@ -8,10 +8,14 @@ const getArgv = () => {
     return ["trunk"].concat(process.argv.slice(2));
   }
 
-  console.warn("Failed to sanitize argv", {
-    argv: process.argv,
-    basename: path.basename(process.argv[1]),
-  });
+  fs.appendFileSync(
+    process.env.TRUNK_STUB_LOGS,
+    JSON.stringify({
+      argv: process.argv,
+      basename: path.basename(process.argv[1]),
+    })
+  );
+  fs.appendFileSync(process.env.TRUNK_STUB_LOGS, "\n");
   return process.argv;
 };
 
