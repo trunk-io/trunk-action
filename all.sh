@@ -34,10 +34,16 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     htl_arg="--htl-factories-path=${latest_raw_upload}"
     fetch origin "${prev_ref}"
   fi
+  if [[ -n ${INPUT_UPLOAD_ID} ]]; then
+    upload_id_arg="--upload-id ${INPUT_UPLOAD_ID}"
+  else
+    upload_id_arg=""
+  fi
   "${TRUNK_PATH}" check \
     --all \
     --upload \
     ${htl_arg} \
+    ${upload_id_arg} \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \
     ${INPUT_ARGUMENTS}
