@@ -1,0 +1,161 @@
+name: action test
+on: [workflow_dispatch, workflow_call]
+
+# interface ActualClientPayload extends ClientPayload {
+#   version: string;
+#   githubToken: string;
+
+#   cache: boolean;
+#   cacheKey: string;
+#   cachePath: string;
+
+#   trunkApiAddress: string;
+#   checkJobName: string;
+#   checkJobRunsOn: string[]; // ["ubuntu-latest"] for everyone, ["self-hosted", "linux", "r6id2xlarge-org"] for ourselves
+#   checkWorkflowRunName: string; // a name to distinguish
+#   targetCheckout: string; // e.g. trunk-io/plugins, prawn-test-staging-rw/check-web
+#   concurrencyGroup: string; // controls the concurrency of the check _job_, not the workflow
+#   uploadLandingState?: boolean; // whether or not landing state should be uploaded as landing-state.json
+
+#   // only meaningful when checkMode === CheckMode.All
+#   checkAllMode?: string;
+#   uploadSeries?: string;
+
+#   debug?: boolean;
+# }
+
+# export interface ClientPayload {
+#   // is ${{ github.ref_name }}; used by pull_request.sh
+#   // either the default branch or, for PR #1234 merging into main from featureA, "1234/merge"
+#   targetRefName: string;
+#   // used for actions/checkout - either the default branch or, for a PR, "refs/pull/1234/merge"
+#   targetCheckoutRef: string;
+
+#   arguments?: string;
+#   checkMode: CheckMode;
+#   trunkToken: string; // the trunk api token for the repo
+
+#   // only meaningful when checkMode === CheckMode.PullRequest
+#   // https://docs.github.com/webhooks-and-events/webhooks/webhook-events-and-payloads#pull_request
+#   pullRequest?: {
+#     number: number;
+#     head: {
+#       sha: string;
+#       ref: string;
+#     };
+#     base: {
+#       sha: string;
+#       ref: string;
+#     };
+#   };
+#   checkRunId?: number;
+# }
+
+jobs:
+  # prepare-matrix:
+  #     name: Prepare Matrix
+  #     runs-on: ubuntu-latest
+  #     outputs:
+  #       payload_pull_request: ${{ steps.create_pull_request_payload.outputs.payload }}
+  #       payload_all: ${{steps.create_all_payload.outputs.payload}}
+  #       payload_merge: ${{steps.create_merge_payload.outputs.payload}}
+  #     steps:
+  #       - name: Create Matrix Variable Pull Request
+  #         id: create_pull_request_payload
+  #         run: echo "matrix=${{pull_request_test_payload.json}}" >> $GITHUB_OUTPUT
+  #       - name: Create Matrix Variable All
+  #         id: create_all_payload
+  #         run: echo "matrix=${{all_test_payload.json}}" >> $GITHUB_OUTPUT
+  #       - name: Create Matrix Variable Merge
+  #         id: create_pull_request_payload
+  #         run: echo "matrix=${{merge_test_payload.json}}" >> $GITHUB_OUTPUT
+
+  action_tests:
+    name: ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # need different payload inputs depending on checkMode
+          # - description: pull-request-action-test
+          #   payload: ${{ fromJSON(needs.prepare-matrix.outputs.all_versions) }}
+          - description: pull-request-action-test
+            payload: |
+              {
+                inputs: {
+                  "payload: {
+                    trunkPath: \"local-action/action-test/trunk_shim.sh\",
+                    targetRefName: \"136/merge/\",
+                    targetCheckoutRef: \"refs/pull/136/merge/\",
+                    checkMode: \"pull_request\",
+                    trunkToken: `${process.env.INPUT_TRUNK_TOKEN}`,
+                    pullRequest: {
+                        number: 136,
+                        head: {
+                            sha: \"69b531ac8f611e0ae73639ec606fbc23e8ead576\",
+                            ref: \"action-test-pr\"
+                        },
+                        base: {
+                            sha: \"50039e906e0e53ce03b269e5e9e00879f4c6f05c\",
+                            ref: \"action-test\"
+                        }
+                    },
+                    checkRunId: 14235603498,
+                    version: \"0.0.0\",
+                    githubToken:\"env.INPUT_GITHUB_TOKEN\",
+                    cache: true,
+                    cacheKey: \"trunk-check\",
+                    cachePath: \"~/.cache/trunk/tools/ruby\",
+                    trunkApiAddress: \"localhost-will-not-work:5021\",
+                    checkJobName: \"action-test/trunk-action/pull_request\",
+                    checkJobRunsOn: [\"self-hosted\", \"linux\", \"r6id2xlarge-org\"],
+                    checkWorkflowRunName: \"[action-test] Trunk Check Pull Request Mode\",
+                    targetCheckout: \"trunk-io/trunk-action\",
+                    concurrencyGroup: \"trunk-action/pull_request/136\",
+                    debug: true
+                  }"
+                }
+              }
+          - description: test-case-3
+            payload: |
+              {
+                "inputs": {
+                  "payload": "{ trunkPath: \"a/b/c/trunk_shim.sh\" }"
+                }
+              }
+
+    steps:
+      - name: Checkout trunk-action
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Craft TEST_GITHUB_EVENT_PATH
+        shell: bash
+        # GITHUB_EVENT_PATH is the env var of path to file on runner that contains full webhook payload. we are replacing it
+        run: |
+          TEST_GITHUB_EVENT_PATH=$(mktemp)
+          cat >> $TEST_GITHUB_EVENT_PATH <<EOF
+          ${{matrix.payload}}
+          EOF
+          echo "TEST_GITHUB_EVENT_PATH=TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
+
+      - name: Run trunk-action for ${{matrix.description}}
+        id: trunk
+        uses: ./local-action/
+        with:
+          # using this as input, basically passing this in to run trunk_action which has been passed into local-action
+          # we will go into the local action and run everything - action.yaml will redirect us to either pull_request.sh,
+          # all.sh, or trunk_merge.sh
+          check-mode: payload
+        continue-on-error: true
+
+        # here we need to make sure that for local-action, we have to
+        # 1: be reading off TEST_GITHUB_EVENT_PATH in mask.js instead of GITHUB_EVENT_PATH
+        # 2: cli should be writing out to tmp/trunk-execution-log, using trunk_shim.sh to plug into the trunk-path
+        # do i need to create an execution log file?
+
+      - name: Check for task failures
+        shell: bash
+        run: node ./local-action/action-test/verify_trunk_execution_log.js
