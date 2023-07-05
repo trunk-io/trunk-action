@@ -3,3 +3,6 @@
 __pycache__/
 *.py[cod]
 *$py.class
+
+# from https://github.com/github/gitignore/blob/main/Node.gitignore
+node_modules/

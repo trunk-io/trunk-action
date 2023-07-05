@@ -1,18 +1,15 @@
 version: 0.1
 
 cli:
-  version: 1.10.1-beta.21
-
-api:
-  address: api.trunk-staging.io:8443
+  version: 1.11.1
 
 plugins:
   sources:
     - id: trunk
-      ref: v0.0.17
+      ref: v0.0.21
       uri: https://github.com/trunk-io/plugins
     - id: configs
-      ref: v0.0.1
+      ref: v0.0.3
       uri: https://github.com/trunk-io/configs
 
 lint:

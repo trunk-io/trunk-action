@@ -1,4 +1,4 @@
-name: repo_tests
+name: docker_repo_tests
 on: [workflow_dispatch, workflow_call]
 
 permissions: read-all
@@ -7,6 +7,9 @@ jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
+    # This is a docker image that mimics the github runner image
+    # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
+    container: catthehacker/ubuntu:runner-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -30,21 +33,6 @@ jobs:
               echo "src/languages/dockerfile.js" >> .gitignore
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
 
-          - repo: jbeder/yaml-cpp
-            ref: 0e6e28d1a38224fc8172fae0109ea7f673c096db
-            description: (compile-commands.json)
-            post-init: |
-              # black complains about py2 code
-              ${TRUNK_PATH} check disable black
-              mkdir build
-              cd build
-              cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-              cd ..
-              ln -s build/compile_commands.json
-              sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
-              cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
-              ${TRUNK_PATH} check enable clang-tidy
-
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
             post-init: |
@@ -64,62 +52,9 @@ jobs:
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
-          - repo: replayio/devtools
-            ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
-            description: (has trunk.yaml)
-            post-init: |
-              # replay is on a very old version
-              # trunk upgrade requires 3 calls to guarantee correctness
-              ${TRUNK_PATH} upgrade
-              ${TRUNK_PATH} upgrade
-              ${TRUNK_PATH} upgrade
-            trunk-path: node_modules/.bin/trunk
-
           - repo: sass/sass
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
-
-          - repo: sheldonhull/sheldonhull.hugo
-            ref: 0810b7219c6681931bbf727cd9fe81693b414b60
-            description: (has trunk.yaml)
-            post-init: |
-              # all of these linters have failures
-              ${TRUNK_PATH} check disable svgo
-              ${TRUNK_PATH} check disable golangci-lint
-              ${TRUNK_PATH} check disable prettier
-              ${TRUNK_PATH} check disable oxipng
-
-          - repo: shopify/draggable
-            ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
-            description: (uses yarn)
-
-          - repo: terraform-linters/tflint
-            ref: 9c34a740319e2410094ca2754e5eca860f2d13f5
-            post-init: |
-              # golangci-lint needs us to init with a newer go runtime
-              ${TRUNK_PATH} check disable golangci-lint
-              # tfsec and terrascan scan these malformed test files and error
-              echo "integrationtest/" >> .gitignore
-              echo "terraform/test-fixtures" >> .gitignore
-
-          - repo: trunk-io/plugins
-            ref: main
-
-          # fails because pnpm version is too new
-
-          # - repo: vuejs/core
-          #   ref: 60cd23c7520f9098bf31fc2d0c09d58ded75f173
-          #   description: (uses pnpm)
-          #   post-init: |
-          #     # svgo gets confused by JS module loading
-          #     ${TRUNK_PATH} check disable svgo
-
-          - repo: z-shell/wiki
-            ref: d6d8b5da28c170b3b226705795412497f7059681
-            description: (has trunk.yaml)
-            post-init: |
-              # stylelint is exiting with error code -11
-              ${TRUNK_PATH} check disable stylelint
 
     steps:
       - name: Checkout ${{ matrix.repo }}
@@ -139,7 +74,6 @@ jobs:
         with:
           cache: true
           check-mode: all
-          trunk-path: ${{ matrix.trunk-path }}
           post-init: ${{ matrix.post-init }}
           arguments: --output-file=/tmp/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
