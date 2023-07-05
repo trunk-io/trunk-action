@@ -1,0 +1,69 @@
+name: action_tests
+on: [workflow_dispatch, workflow_call]
+
+permissions: read-all
+
+jobs:
+  trunk_merge:
+    runs-on: ubuntu-latest
+    env:
+      TRUNK_STUB_LOGS: /tmp/trunk-stub-logs.json
+
+    steps:
+      - name: Set up source repo
+        uses: actions/checkout@v3
+        with:
+          path: src-repo
+          repository: prawn-test-staging-rw/check-web
+
+      - name: Set up trunk merge test
+        shell: bash
+        run: |
+          cd src-repo
+
+          git config user.name 'trunk-io/trunk-action action_tests.trunk_merge'
+          git config user.email 'action_tests@trunk-action.trunk.io'
+
+          main=$(git rev-parse HEAD)
+
+          git checkout -b feature-branch
+
+          echo "markdown file for merge test" >>merge-test.md
+          git add .
+          git commit --all --message 'add file for merge test setup'
+
+          git checkout -b trunk-merge/of-feature-branch main
+
+          git merge --no-ff --no-edit feature-branch
+
+          echo "EXPECTED_UPSTREAM=$(git rev-parse HEAD^1)" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse HEAD^2)" >>$GITHUB_ENV
+
+          cd ..
+
+          git clone src-repo repo-under-test
+
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Run test
+        shell: bash
+        run: |
+          cd repo-under-test
+          git checkout trunk-merge/of-feature-branch
+          ../local-action/trunk_merge.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: ""
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+
+      - name: Assert expected
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js
