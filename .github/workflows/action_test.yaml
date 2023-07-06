@@ -72,6 +72,7 @@ jobs:
           pwd
           echo "$TRUNK_PATH"
           echo "${{matrix.payload}}"
+          echo "${{matrix.description}}"
           ls ./local-action
 
       - name: Check for task failures
