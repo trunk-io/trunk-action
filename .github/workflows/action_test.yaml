@@ -70,7 +70,7 @@ jobs:
         run: |
           ls local-action
           pwd
-          echo TRUNK_PATH
+          echo $TRUNK_PATH
           ls ./local-action
 
       - name: Check for task failures
