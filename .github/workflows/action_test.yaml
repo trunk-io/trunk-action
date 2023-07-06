@@ -105,6 +105,7 @@ jobs:
           ls local-action
           pwd
           ls
+          echo "$TEST_GITHUB_EVENT_PATH"
           echo "$TRUNK_PATH"
           echo "${{matrix.payload}}"
           echo "${{matrix.description}}"
