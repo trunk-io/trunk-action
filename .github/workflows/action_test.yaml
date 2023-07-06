@@ -28,7 +28,7 @@ jobs:
       - name: debug
         shell: bash
         run: |
-          ls
+          ls trunk-action
           pwd
           echo "$TEST_TRUNK_MERGE_PAYLOAD"
           echo "$TEST_PULL_REQUEST_PAYLOAD"
