@@ -15,16 +15,24 @@ jobs:
       - name: Create Matrix Variable Pull Request
         id: create-pull-request-payload
         run:
-          echo "TEST_PULL_REQUEST_PAYLOAD"="$(<./action_tests/pull_request_test_payload.json)" >>
+          echo "TEST_PULL_REQUEST_PAYLOAD"="$(</action_tests/pull_request_test_payload.json)" >>
           $GITHUB_OUTPUT
       - name: Create Matrix Variable All
         id: create-all-payload
-        run: echo "TEST_ALL_PAYLOAD"="$(<./action_tests/all_test_payload.json)" >> $GITHUB_OUTPUT
+        run: echo "TEST_ALL_PAYLOAD"="$(</action_tests/all_test_payload.json)" >> $GITHUB_OUTPUT
       - name: Create Matrix Variable Merge
         id: create-trunk-merge-payload
         run:
-          echo "TEST_TRUNK_MERGE_PAYLOAD"="$(<./action_tests/trunk_merge_test_payload.json)" >>
+          echo "TEST_TRUNK_MERGE_PAYLOAD"="$(</action_tests/trunk_merge_test_payload.json)" >>
           $GITHUB_OUTPUT
+      - name: debug
+        shell: bash
+        run: |
+          ls
+          pwd
+          echo "$TEST_TRUNK_MERGE_PAYLOAD"
+          echo "$TEST_PULL_REQUEST_PAYLOAD"
+          echo "$TEST_TRUNK_MERGE_PAYLOAD"
 
   action_tests:
     needs: prepare-matrix
