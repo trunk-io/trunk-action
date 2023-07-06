@@ -70,8 +70,7 @@ jobs:
         run: |
           ls local-action
           pwd
-          ls ./local-action || true
-          ls ../local-action || true
+          ls ./local-action/action-tests || true
 
       - name: Check for task failures
         shell: bash
