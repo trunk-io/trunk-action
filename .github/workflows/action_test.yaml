@@ -70,8 +70,9 @@ jobs:
         run: |
           ls local-action
           pwd
-          ls ./local-action/action-tests || true
 
       - name: Check for task failures
         shell: bash
-        run: node ./local-action/action_tests/verify_trunk_execution_log.js
+        run: |
+          npm install
+          ./local-action/action_tests/verify_trunk_execution_log.js
