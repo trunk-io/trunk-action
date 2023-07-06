@@ -67,4 +67,4 @@ jobs:
 
       - name: Check for task failures
         shell: bash
-        run: node ../local-action/action-tests/verify_trunk_execution_log.js
+        run: node ./local-action/action-tests/verify_trunk_execution_log.js
