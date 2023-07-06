@@ -123,6 +123,7 @@ runs:
 
         # Every inputs.field should be referenced as INPUT_FIELD later in the action. This allows
         # the field to be set either as an argument to the github action or via inputs.json.
+        echo "${{ inputs }}"
         if [[ "${{ inputs.check-mode }}" = "payload" ]]; then
 
           INPUT_GITHUB_TOKEN=$(payload githubToken)

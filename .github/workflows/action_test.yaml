@@ -105,9 +105,10 @@ jobs:
           ls local-action
           pwd
           ls
-          echo "$INPUT_TRUNK_PATH"
+          echo "$TRUNK_PATH"
           echo "${{matrix.payload}}"
           echo "${{matrix.description}}"
+          # echo "$(<./action_tests/pull_request_test_payload.json )"
           ls ./local-action
 
       - name: Check for task failures
