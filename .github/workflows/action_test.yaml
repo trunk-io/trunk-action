@@ -105,7 +105,7 @@ jobs:
           ls local-action
           pwd
           ls
-          echo "${{inputs}}"
+          echo "${{inputs.trunk-path}}"
           echo "${{matrix.payload}}"
           echo "${{matrix.description}}"
           ls ./local-action
