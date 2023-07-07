@@ -160,6 +160,7 @@ runs:
         INPUT_TRUNK_PATH=$(payload trunkPath)
         INPUT_UPLOAD_LANDING_STATE=$(payload uploadLandingState)
         INPUT_UPLOAD_SERIES=$(payload uploadSeries)
+        INPUT_AUTOFIX=$(payload autofix)
         EOF
 
         else
