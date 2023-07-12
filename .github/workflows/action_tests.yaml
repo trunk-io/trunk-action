@@ -3,56 +3,29 @@ on: [workflow_dispatch, workflow_call]
 
 permissions: read-all
 
+env:
+  TRUNK_STUB_LOGS: /tmp/trunk-stub-logs.json
+
 jobs:
   trunk_merge:
     runs-on: ubuntu-latest
-    env:
-      TRUNK_STUB_LOGS: /tmp/trunk-stub-logs.json
-
     steps:
-      - name: Set up source repo
-        uses: actions/checkout@v3
-        with:
-          path: src-repo
-          repository: prawn-test-staging-rw/check-web
-
-      - name: Set up trunk merge test
-        shell: bash
-        run: |
-          cd src-repo
-
-          git config user.name 'trunk-io/trunk-action action_tests.trunk_merge'
-          git config user.email 'action_tests@trunk-action.trunk.io'
-
-          main=$(git rev-parse HEAD)
-
-          git checkout -b feature-branch
-
-          echo "markdown file for merge test" >>merge-test.md
-          git add .
-          git commit --all --message 'add file for merge test setup'
-
-          git checkout -b trunk-merge/of-feature-branch main
-
-          git merge --no-ff --no-edit feature-branch
-
-          echo "EXPECTED_UPSTREAM=$(git rev-parse HEAD^1)" >>$GITHUB_ENV
-          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse HEAD^2)" >>$GITHUB_ENV
-
-          cd ..
-
-          git clone src-repo repo-under-test
-
-      - name: Checkout ${{ github.repository }}
+      - name: Checkout
         uses: actions/checkout@v3
         with:
           path: local-action
 
-      - name: Run test
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
         shell: bash
         run: |
           cd repo-under-test
           git checkout trunk-merge/of-feature-branch
+          echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
           ../local-action/trunk_merge.sh
         env:
           INPUT_ARGUMENTS: ""
@@ -61,9 +34,75 @@ jobs:
           INPUT_LABEL: ""
           TRUNK_PATH: ../local-action/action_tests/stub.js
 
-      - name: Assert expected
+      - name: Assert CLI calls
         shell: bash
         run: |
           cd local-action
           npm install
-          ./action_tests/assert.js
+          ./action_tests/assert.js trunk-merge
+
+  all-hold-the-line-new-series:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          ../local-action/all.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_ALL_MODE: hold-the-line
+          INPUT_DEBUG: ""
+          INPUT_TRUNK_TOKEN: trunk-token
+          INPUT_UPLOAD_SERIES: series-name
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          STUB_GET_LATEST_RAW_OUTPUT_STDOUT: "Starting new series of check runs...\n"
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js all-hold-the-line-first-upload
+
+  all-hold-the-line-existing-series:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          ../local-action/all.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_ALL_MODE: hold-the-line
+          INPUT_DEBUG: ""
+          INPUT_TRUNK_TOKEN: trunk-token
+          INPUT_UPLOAD_SERIES: series-name
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          STUB_GET_LATEST_RAW_OUTPUT_STDOUT: abcdef123456
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js all-hold-the-line-existing-series
