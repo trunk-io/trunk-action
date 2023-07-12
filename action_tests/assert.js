@@ -10,7 +10,7 @@ const stubLog = fs.readFileSync(process.env.TRUNK_STUB_LOGS, "utf8").split("\n")
 // The last element of the split() should be an empty string
 expect(stubLog.slice(-1)).to.deep.equal([""]);
 
-const EXPECTED_OUTPUTS = {
+const EXPECTED_CLI_CALLS_BY_TEST_CASE = {
   "trunk-merge": [
     [
       "trunk",
@@ -34,5 +34,7 @@ const EXPECTED_OUTPUTS = {
   ],
 };
 
+const expectedCliCalls = EXPECTED_CLI_CALLS_BY_TEST_CASE[process.argv[2]];
+
 // Strip the last element before JSON.parse, because '' is not valid JSON.
-expect(stubLog.slice(0, -1).map(JSON.parse)).to.deep.equal(EXPECTED_OUTPUTS.get(process.argv[2]));
+expect(stubLog.slice(0, -1).map(JSON.parse)).to.deep.equal(expectedCliCalls);
