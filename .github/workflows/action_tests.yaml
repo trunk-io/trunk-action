@@ -4,6 +4,7 @@ on: [workflow_dispatch, workflow_call]
 permissions: read-all
 
 env:
+  TMPDIR: /tmp/trunk-stub-tmp
   TRUNK_STUB_LOGS: /tmp/trunk-stub-logs.json
 
 jobs:
@@ -84,7 +85,10 @@ jobs:
 
       - name: Set up test
         shell: bash
-        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+        run: |
+          ./local-action/action_tests/setup.sh src-repo repo-under-test
+          cd repo-under-test
+          echo "EXPECTED_UPSTREAM=$(git rev-parse main^)" >>$GITHUB_ENV
 
       - name: Run trunk-action
         shell: bash
@@ -98,7 +102,7 @@ jobs:
           INPUT_TRUNK_TOKEN: trunk-token
           INPUT_UPLOAD_SERIES: series-name
           TRUNK_PATH: ../local-action/action_tests/stub.js
-          STUB_GET_LATEST_RAW_OUTPUT_STDOUT: abcdef123456
+          STUB_GET_LATEST_RAW_OUTPUT_STDOUT: ${{ env.EXPECTED_UPSTREAM }}
 
       - name: Assert CLI calls
         shell: bash

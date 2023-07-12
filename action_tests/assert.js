@@ -2,6 +2,7 @@
 
 const chai = require("chai");
 const fs = require("fs");
+const path = require("path");
 
 const { expect } = chai;
 
@@ -9,6 +10,8 @@ const stubLog = fs.readFileSync(process.env.TRUNK_STUB_LOGS, "utf8").split("\n")
 
 // The last element of the split() should be an empty string
 expect(stubLog.slice(-1)).to.deep.equal([""]);
+
+const mktempReturned = path.join(process.env.TMPDIR, fs.readdirSync(process.env.TMPDIR)[0]);
 
 const EXPECTED_CLI_CALLS_BY_TEST_CASE = {
   "trunk-merge": [
@@ -25,12 +28,20 @@ const EXPECTED_CLI_CALLS_BY_TEST_CASE = {
     ],
   ],
   "all-hold-the-line-new-series": [
-    ["trunk", "check", "get-latest-raw-output", "--series", "series-name"],
+    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", mktempReturned],
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
   "all-hold-the-line-existing-series": [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name"],
-    ["trunk", "check", "--all", "--upload", "--series", "series-name"],
+    [
+      "trunk",
+      "check",
+      "--all",
+      "--upload",
+      `--htl-factories-path=${mktempReturned}`,
+      "--series",
+      "series-name",
+    ],
   ],
 };
 

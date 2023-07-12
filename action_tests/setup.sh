@@ -52,3 +52,7 @@ mkdir -p "${src_repo}"
 ## Set up repo in `output_repo`
 
 git clone "${src_repo}" "${output_repo}"
+
+## Force mktemp to point at TMPDIR
+
+mkdir -p "${TMPDIR}"
