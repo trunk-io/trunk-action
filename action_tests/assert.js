@@ -63,7 +63,12 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
 };
 
-const expectedCliCalls = EXPECTED_CLI_CALL_FACTORIES[process.argv[2]]();
+const testCase = process.argv[2];
+const expectedCliCalls = EXPECTED_CLI_CALL_FACTORIES[testCase]();
 
 // Strip the last element before JSON.parse, because '' is not valid JSON.
-expect(stubLog.slice(0, -1).map(JSON.parse)).to.deep.equal(expectedCliCalls);
+const actualCliCalls = stubLog.slice(0, -1).map(JSON.parse);
+
+expect(actualCliCalls).to.deep.equal(expectedCliCalls);
+
+console.log(`Test passed: ${testCase}\n\nCLI calls were:\n${JSON.stringify(actualCliCalls)}`);
