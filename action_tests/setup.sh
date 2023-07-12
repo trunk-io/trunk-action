@@ -5,6 +5,8 @@ set -euo pipefail
 src_repo=$1
 output_repo=$2
 
+git config --global init.defaultBranch main
+
 ## Set up repo in `src_repo`
 
 mkdir -p "${src_repo}"
