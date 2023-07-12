@@ -73,7 +73,7 @@ jobs:
         run: |
           cd local-action
           npm install
-          ./action_tests/assert.js all-hold-the-line-first-upload
+          ./action_tests/assert.js all-hold-the-line-new-series
 
   all-hold-the-line-existing-series:
     runs-on: ubuntu-latest
