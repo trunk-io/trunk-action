@@ -20,13 +20,13 @@ jobs:
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
 
-  repo_tests:
-    name: Repository tests
-    uses: ./.github/workflows/repo_tests.yaml
-
   action_tests:
     name: Action tests
     uses: ./.github/workflows/action_tests.yaml
+
+  repo_tests:
+    name: Repository tests
+    uses: ./.github/workflows/repo_tests.yaml
 
   docker_repo_tests:
     name: Repository tests (docker)

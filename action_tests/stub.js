@@ -25,3 +25,7 @@ const argv = getArgv();
 
 fs.appendFileSync(process.env.TRUNK_STUB_LOGS, JSON.stringify(argv));
 fs.appendFileSync(process.env.TRUNK_STUB_LOGS, "\n");
+
+if (argv[1] === "check" && argv[2] === "get-latest-raw-output") {
+  process.stdout.write(process.env.STUB_GET_LATEST_RAW_OUTPUT_STDOUT);
+}
