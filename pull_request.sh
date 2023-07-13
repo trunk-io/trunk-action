@@ -48,7 +48,7 @@ else
   annotation_argument=--github-annotate
 fi
 
-if [[ -n ${INPUT_AUTOFIX} ]]; then
+if [[ -v ${INPUT_AUTOFIX} ]]; then
   "${TRUNK_PATH}" check --fix
   git commit -a -m "Trunk check applied autofixes automatically"
   git push origin "${INPUT_GITHUB_REF_NAME}"
