@@ -25,9 +25,8 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   latest_raw_upload="$(mktemp)"
   prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
-    --token "${INPUT_TRUNK_TOKEN}" \
     "${latest_raw_upload}")"
-  if [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
+  if [[ ${prev_ref} =~ .*"new series".* ]]; then
     echo "${prev_ref}"
     htl_arg=""
   else
@@ -39,7 +38,6 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     --upload \
     ${htl_arg} \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
-    --token "${INPUT_TRUNK_TOKEN}" \
     ${INPUT_ARGUMENTS}
 else
   "${TRUNK_PATH}" check \
