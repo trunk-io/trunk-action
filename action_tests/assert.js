@@ -47,22 +47,6 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "all-hold-the-line-new-series": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
-    ["trunk", "check", "--all", "--upload", "--series", "series-name"],
-  ],
-  "all-hold-the-line-existing-series": () => [
-    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
-    [
-      "trunk",
-      "check",
-      "--all",
-      "--upload",
-      `--htl-factories-path=${getHtlFactoriesPath()}`,
-      "--series",
-      "series-name",
-    ],
-  ],
-  "all-hold-the-line-upload-id": () => [
-    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     [
       "trunk",
       "check",
@@ -73,6 +57,24 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--series",
       "series-name",
     ],
+  ],
+  "all-hold-the-line-existing-series": () => [
+    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
+    [
+      "trunk",
+      "check",
+      "--all",
+      "--upload",
+      "--upload-id",
+      "test-upload-id",
+      `--htl-factories-path=${getHtlFactoriesPath()}`,
+      "--series",
+      "series-name",
+    ],
+  ],
+  "all-hold-the-line-no-upload-id": () => [
+    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
+    ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
 };
 
