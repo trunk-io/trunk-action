@@ -33,7 +33,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     htl_arg="--htl-factories-path=${latest_raw_upload}"
     fetch origin "${prev_ref}"
   fi
-  if [[ -n ${INPUT_UPLOAD_ID} ]]; then
+  if [[ -n ${INPUT_UPLOAD_ID-} ]]; then # if upload ID unset, skip it instead of erroring
     upload_id_arg="--upload-id ${INPUT_UPLOAD_ID}"
   else
     upload_id_arg=""

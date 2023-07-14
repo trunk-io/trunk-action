@@ -61,6 +61,19 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "series-name",
     ],
   ],
+  "all-hold-the-line-upload-id": () => [
+    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
+    [
+      "trunk",
+      "check",
+      "--all",
+      "--upload",
+      "--series",
+      "series-name",
+      "--upload-id",
+      "test-upload-id",
+    ],
+  ],
 };
 
 const testCase = process.argv[2];
