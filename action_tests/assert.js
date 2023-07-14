@@ -68,10 +68,10 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "check",
       "--all",
       "--upload",
-      "--series",
-      "series-name",
       "--upload-id",
       "test-upload-id",
+      "--series",
+      "series-name",
     ],
   ],
 };
