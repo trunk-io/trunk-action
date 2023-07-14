@@ -144,4 +144,4 @@ jobs:
         run: |
           cd local-action
           npm install
-          ./action_tests/assert.js all-hold-the-line-upload-id
+          ./action_tests/assert.js all-hold-the-line-no-upload-id
