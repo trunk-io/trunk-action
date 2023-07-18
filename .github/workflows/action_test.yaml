@@ -90,7 +90,7 @@ jobs:
           cat >> $TEST_GITHUB_EVENT_PATH <<EOF
           ${{matrix.payload}}
           EOF
-          echo "TEST_GITHUB_EVENT_PATH=TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
+          echo "TEST_GITHUB_EVENT_PATH=$TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
 
       - name: Run trunk-action for ${{matrix.description}}
         id: trunk
