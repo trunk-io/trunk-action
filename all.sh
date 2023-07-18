@@ -25,21 +25,25 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   latest_raw_upload="$(mktemp)"
   prev_ref="$("${TRUNK_PATH}" check get-latest-raw-output \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
-    --token "${INPUT_TRUNK_TOKEN}" \
     "${latest_raw_upload}")"
-  if [[ ${prev_ref} =~ .*UNSPECIFIED.* ]]; then
+  if [[ ${prev_ref} =~ .*"new series".* ]]; then
     echo "${prev_ref}"
     htl_arg=""
   else
     htl_arg="--htl-factories-path=${latest_raw_upload}"
     fetch origin "${prev_ref}"
   fi
+  if [[ -n ${INPUT_UPLOAD_ID-} ]]; then # if upload ID unset, skip it instead of erroring
+    upload_id_arg="--upload-id ${INPUT_UPLOAD_ID}"
+  else
+    upload_id_arg=""
+  fi
   "${TRUNK_PATH}" check \
     --all \
     --upload \
     ${htl_arg} \
+    ${upload_id_arg} \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
-    --token "${INPUT_TRUNK_TOKEN}" \
     ${INPUT_ARGUMENTS}
 else
   "${TRUNK_PATH}" check \

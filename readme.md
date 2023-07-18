@@ -48,6 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       checks: write # For trunk to post annotations
+      contents: read # For repo checkout
 
     steps:
       - name: Checkout
