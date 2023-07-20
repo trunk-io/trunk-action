@@ -74,12 +74,19 @@ jobs:
           check-mode: payload
         continue-on-error: true
 
-      - name: Assert CLI calls
+      # - name: Assert CLI calls
+      #   shell: bash
+      #   run: |
+      #     cd local-action
+      #     npm install
+      #     ./action_tests/assert.js ${{matrix.description}}-payload
+
+      - name: Check for task failures
         shell: bash
         run: |
           cd local-action
           npm install
-          ./action_tests/assert.js ${{matrix.description}}-payload
+          ./action_tests/verify_trunk_execution_log.js
 
   trunk_merge:
     runs-on: ubuntu-latest
@@ -108,19 +115,12 @@ jobs:
           INPUT_LABEL: ""
           TRUNK_PATH: ../local-action/action_tests/stub.js
 
-      - name: Check for task failures
+      - name: Assert CLI calls
         shell: bash
         run: |
           cd local-action
           npm install
-          ./action_tests/verify_trunk_execution_log.js
-
-      # - name: Assert CLI calls
-      #   shell: bash
-      #   run: |
-      #     cd local-action
-      #     npm install
-      #     ./action_tests/assert.js trunk-merge
+          ./action_tests/assert.js trunk-merge
 
   all-hold-the-line-new-series:
     runs-on: ubuntu-latest
