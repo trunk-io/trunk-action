@@ -16,15 +16,15 @@ const getHtlFactoriesPath = () => {
 
   if (tmpdirContents.length === 0) {
     throw new Error(
-      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`
+      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`,
     );
   }
 
   if (tmpdirContents.length > 1) {
     throw new Error(
       `TMPDIR=${process.env.TMPDIR} had multiple entries (${JSON.stringify(
-        tmpdirContents
-      )}); could not infer what --htl-factories-path should have been`
+        tmpdirContents,
+      )}); could not infer what --htl-factories-path should have been`,
     );
   }
 
