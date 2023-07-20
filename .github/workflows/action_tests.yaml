@@ -47,12 +47,20 @@ jobs:
       #   shell: bash
       #   run: ./local-action/action_tests/setup.sh src-repo repo-under-test
 
+      - name: debug
+        shell: bash
+        run: |
+          ls local-action
+          pwd
+          ls
+          ls ./local-action
+
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         # GITHUB_EVENT_PATH is the env var of path to file on runner that contains full webhook payload.
         # we are replacing it with TEST_GITHUB_EVENT_PATH so we read our predefined payload for test cases.
         run: |
-          TEST_GITHUB_EVENT_PATH=$(mktemp -p /tmp/trunk-stub-tmp/)
+          TEST_GITHUB_EVENT_PATH=$(mktemp)
           cat >> $TEST_GITHUB_EVENT_PATH <<EOF
           ${{matrix.payload}}
           EOF
