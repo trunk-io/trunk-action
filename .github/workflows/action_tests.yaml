@@ -60,7 +60,8 @@ jobs:
         # GITHUB_EVENT_PATH is the env var of path to file on runner that contains full webhook payload.
         # we are replacing it with TEST_GITHUB_EVENT_PATH so we read our predefined payload for test cases.
         run: |
-          TEST_GITHUB_EVENT_PATH=$(mktemp)
+          mkdir -p ${{env.TMPDIR}}
+          TEST_GITHUB_EVENT_PATH=$(mktemp ${{env.TMPDIR}}/test-payload)
           cat >> $TEST_GITHUB_EVENT_PATH <<EOF
           ${{matrix.payload}}
           EOF
