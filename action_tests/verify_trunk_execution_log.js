@@ -3,7 +3,7 @@
 const chai = require("chai");
 const fs = require("fs");
 
-const filePath = "/tmp/trunk-execution.log";
+const filePath = "./local-action/tmp/trunk-execution.log";
 const logContent = fs.readFileSync(filePath, "utf-8").split("\n");
 const { expect } = chai;
 const upstream = "50039e906e0e53ce03b269e5e9e00879f4c6f05c";

@@ -82,7 +82,6 @@ jobs:
           pwd
           ls ./local-action
           pwd
-          ls ../local-action
 
       - name: Check for task failures
         shell: bash
