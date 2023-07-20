@@ -50,6 +50,8 @@ fi
 
 if [[ -n ${INPUT_AUTOFIX} ]]; then
   "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
   git commit -a -m "Trunk check applied autofixes automatically"
   git push origin "${INPUT_GITHUB_REF_NAME}"
 else
