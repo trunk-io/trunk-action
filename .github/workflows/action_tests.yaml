@@ -65,6 +65,7 @@ jobs:
           INPUT_DEBUG: ""
           INPUT_TRUNK_TOKEN: trunk-token
           INPUT_UPLOAD_SERIES: series-name
+          INPUT_UPLOAD_ID: test-upload-id
           TRUNK_PATH: ../local-action/action_tests/stub.js
           STUB_GET_LATEST_RAW_OUTPUT_STDOUT: "Starting new series of check runs...\n"
 
@@ -101,6 +102,7 @@ jobs:
           INPUT_DEBUG: ""
           INPUT_TRUNK_TOKEN: trunk-token
           INPUT_UPLOAD_SERIES: series-name
+          INPUT_UPLOAD_ID: test-upload-id
           TRUNK_PATH: ../local-action/action_tests/stub.js
           STUB_GET_LATEST_RAW_OUTPUT_STDOUT: ${{ env.EXPECTED_UPSTREAM }}
 

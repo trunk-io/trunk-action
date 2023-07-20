@@ -47,7 +47,16 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "all-hold-the-line-new-series": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
-    ["trunk", "check", "--all", "--upload", "--series", "series-name"],
+    [
+      "trunk",
+      "check",
+      "--all",
+      "--upload",
+      "--upload-id",
+      "test-upload-id",
+      "--series",
+      "series-name",
+    ],
   ],
   "all-hold-the-line-existing-series": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
@@ -57,6 +66,8 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--all",
       "--upload",
       `--htl-factories-path=${getHtlFactoriesPath()}`,
+      "--upload-id",
+      "test-upload-id",
       "--series",
       "series-name",
     ],
