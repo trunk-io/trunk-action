@@ -139,6 +139,7 @@ jobs:
           INPUT_DEBUG: ""
           INPUT_LABEL: ""
           TRUNK_PATH: ../local-action/action_tests/stub.js
+          INPUT_GITHUB_REF_NAME: ""
           INPUT_AUTOFIX: true
 
       - name: Assert CLI calls
