@@ -65,6 +65,8 @@ jobs:
         with:
           check-mode: payload
         continue-on-error: true
+        env:
+          TRUNK_PATH: ../local-action/action_tests/stub.js
 
       - name: Assert CLI calls
         shell: bash
