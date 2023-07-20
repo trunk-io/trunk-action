@@ -49,6 +49,7 @@ else
 fi
 
 github_path=git
+# if in test, we need to fake out calling git too
 if [[ ${TRUNK_PATH} == "../local-action/action_tests/stub.js" ]]; then
   github_path=${TRUNK_PATH}
 fi

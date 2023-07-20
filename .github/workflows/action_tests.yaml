@@ -113,6 +113,39 @@ jobs:
           npm install
           ./action_tests/assert.js all-hold-the-line-existing-series
 
+  all-hold-the-line-no-upload-id:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          ../local-action/all.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_ALL_MODE: hold-the-line
+          INPUT_DEBUG: ""
+          INPUT_TRUNK_TOKEN: trunk-token
+          INPUT_UPLOAD_SERIES: series-name
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          STUB_GET_LATEST_RAW_OUTPUT_STDOUT: "Starting new series of check runs...\n"
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js all-hold-the-line-no-upload-id
+
   pull_request_autofix:
     runs-on: ubuntu-latest
     steps:
