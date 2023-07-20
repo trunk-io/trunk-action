@@ -47,14 +47,6 @@ jobs:
       #   shell: bash
       #   run: ./local-action/action_tests/setup.sh src-repo repo-under-test
 
-      - name: debug
-        shell: bash
-        run: |
-          ls local-action
-          pwd
-          ls
-          ls ./local-action
-
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         # GITHUB_EVENT_PATH is the env var of path to file on runner that contains full webhook payload.
@@ -80,6 +72,17 @@ jobs:
       #     cd local-action
       #     npm install
       #     ./action_tests/assert.js ${{matrix.description}}-payload
+
+      - name: debug
+        shell: bash
+        run: |
+          ls local-action
+          pwd
+          ls
+          pwd
+          ls ./local-action
+          pwd
+          ls ../local-action
 
       - name: Check for task failures
         shell: bash
