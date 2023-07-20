@@ -87,6 +87,7 @@ jobs:
         shell: bash
         run: |
           cd local-action
+          ls
           npm install
           ./action_tests/verify_trunk_execution_log.js
 
