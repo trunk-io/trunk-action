@@ -73,10 +73,10 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ],
   ],
   "pull-request-autofix": () => [
-    ["git_fake", "check", "--ci", "--upstream", "", "--fix"],
-    ["git_fake", "config", "--global", "user.email", ""],
-    ["git_fake", "config", "--global", "user.name", ""],
-    ["git_fake", "commit", "-a", "-m", "Trunk check applied autofixes automatically"],
+    ["trunk", "check", "--ci", "--upstream", "", "--fix"],
+    ["trunk", "config", "--global", "user.email", ""],
+    ["trunk", "config", "--global", "user.name", ""],
+    ["trunk", "commit", "-a", "-m", "Trunk check applied autofixes automatically"],
     ["trunk", "push", "origin", ""],
   ],
 };
