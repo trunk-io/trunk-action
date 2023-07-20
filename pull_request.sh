@@ -48,12 +48,17 @@ else
   annotation_argument=--github-annotate
 fi
 
+github_path=git
+if [[ ${TRUNK_PATH} == "../local-action/action_tests/stub.js" ]]; then
+  github_path=${TRUNK_PATH}
+fi
+
 if [[ -n ${INPUT_AUTOFIX} ]]; then
   "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
-  git config --global user.email "you@example.com"
-  git config --global user.name "Your Name"
-  git commit -a -m "Trunk check applied autofixes automatically"
-  git push origin "${INPUT_GITHUB_REF_NAME}"
+  ${github_path} config --global user.email ""
+  ${github_path} config --global user.name ""
+  ${github_path} commit -a -m "Trunk check applied autofixes automatically"
+  ${github_path} push origin "${INPUT_GITHUB_REF_NAME}"
 else
   "${TRUNK_PATH}" check \
     --ci \
