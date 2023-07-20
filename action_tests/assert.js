@@ -73,20 +73,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ],
   ],
   "pull-request-autofix": () => [
-    [
-      "trunk",
-      "check",
-      "--ci",
-      "--upstream",
-      process.env.EXPECTED_UPSTREAM,
-      --fix,
-      "\n",
-      "git",
-      "commit",
-      "-a",
-      "-m",
-      "",
-    ],
+    ["trunk", "check", "--ci", "--upstream", "", --fix, "\n", "git", "commit", "-a", "-m", ""],
   ],
 };
 
