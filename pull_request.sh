@@ -50,7 +50,7 @@ fi
 
 github_path=git
 if [[ ${TRUNK_PATH} == "../local-action/action_tests/stub.js" ]]; then
-  github_path=${TRUNK_PATH}
+  github_path=git_fake
 fi
 
 if [[ -n ${INPUT_AUTOFIX} ]]; then
