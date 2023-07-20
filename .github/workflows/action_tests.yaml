@@ -73,6 +73,7 @@ jobs:
         run: |
           cd local-action
           npm install
+          ls
           ./action_tests/assert.js ${{matrix.description}}-payload
 
       # - name: debug
@@ -124,6 +125,7 @@ jobs:
         shell: bash
         run: |
           cd local-action
+          ls
           npm install
           ./action_tests/assert.js trunk-merge
 
