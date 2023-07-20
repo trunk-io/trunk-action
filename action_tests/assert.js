@@ -61,6 +61,22 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "series-name",
     ],
   ],
+  "pull-request-autofix": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      --fix,
+      "\n",
+      "git",
+      "commit",
+      "-a",
+      "-m",
+      "",
+    ],
+  ],
 };
 
 const testCase = process.argv[2];
