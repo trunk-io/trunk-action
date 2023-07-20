@@ -130,7 +130,7 @@ jobs:
           git checkout trunk-merge/of-feature-branch
           echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
           echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
-          ../local-action/trunk_merge.sh
+          ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: ""
