@@ -141,6 +141,9 @@ jobs:
           TRUNK_PATH: ../local-action/action_tests/stub.js
           INPUT_GITHUB_REF_NAME: ""
           GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
+          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ""
+          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
           INPUT_SAVE_ANNOTATIONS: ""
           INPUT_AUTOFIX: true
 
