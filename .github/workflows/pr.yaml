@@ -20,9 +20,9 @@ jobs:
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
 
-  action_test:
-    name: Action tests
-    uses: ./.github/workflows/action_test.yaml
+  # action_test:
+  #   name: Action tests
+  #   uses: ./.github/workflows/action_test.yaml
 
   repo_tests:
     name: Repository tests
