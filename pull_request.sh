@@ -35,7 +35,8 @@ if [[ -z ${upstream+x} ]]; then
   # Otherwise use github.event.pull_request.base.sha as the upstream.
   echo "hi, i am in here"
   upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
-  echo ${upstream}
+  echo "${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
+  echo "${upstream}"
   git_commit="${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}"
   fetch origin "${upstream}"
 fi
