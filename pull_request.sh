@@ -48,18 +48,12 @@ else
   annotation_argument=--github-annotate
 fi
 
-github_path=git
-# if in test, we need to fake out calling git too
-if [[ ${TRUNK_PATH} == "../local-action/action_tests/stub.js" ]]; then
-  github_path=${TRUNK_PATH}
-fi
-
-if [[ -n ${INPUT_AUTOFIX} ]]; then
+if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
   "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
-  ${github_path} config --global user.email ""
-  ${github_path} config --global user.name ""
-  ${github_path} commit -a -m "Trunk check applied autofixes automatically"
-  ${github_path} push origin "${INPUT_GITHUB_REF_NAME}"
+  git config --global user.email ""
+  git config --global user.name ""
+  git commit -a -m "Trunk check applied autofixes automatically"
+  git push origin "${INPUT_GITHUB_REF_NAME}"
 else
   "${TRUNK_PATH}" check \
     --ci \

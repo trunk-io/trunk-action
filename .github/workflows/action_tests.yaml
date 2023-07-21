@@ -162,7 +162,8 @@ jobs:
         shell: bash
         run: |
           cd repo-under-test
-          git checkout trunk-merge/of-feature-branch
+          git checkout feature-branch
+          git status
           echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
           echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
@@ -172,13 +173,13 @@ jobs:
           INPUT_DEBUG: ""
           INPUT_LABEL: ""
           TRUNK_PATH: ../local-action/action_tests/stub.js
-          INPUT_GITHUB_REF_NAME: ""
           GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
           GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ""
           GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
           INPUT_SAVE_ANNOTATIONS: ""
-          INPUT_AUTOFIX: true
+          INPUT_AUTOFIX_AND_PUSH: true
+          INPUT_GITHUB_REF_NAME: "feature-branch"
 
       - name: Assert CLI calls
         shell: bash
