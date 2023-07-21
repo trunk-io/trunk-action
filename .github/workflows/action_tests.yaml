@@ -156,14 +156,17 @@ jobs:
 
       - name: Set up test
         shell: bash
-        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+        run: |
+          ./local-action/action_tests/setup.sh src-repo repo-under-test
+          cd repo-under-test
+          git checkout feature-branch
+          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
 
       - name: Run trunk-action
         shell: bash
         run: |
           cd repo-under-test
           git checkout feature-branch
-          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
