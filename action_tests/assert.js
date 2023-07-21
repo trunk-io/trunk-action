@@ -76,7 +76,9 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
-  "pull-request-autofix": () => [["trunk", "check", "--ci", "--upstream", "", "--fix"]],
+  "pull-request-autofix": () => [
+    ["trunk", "check", "--ci", "--upstream", process.env.EXPECTED_UPSTREAM, "--fix"],
+  ],
 };
 
 const testCase = process.argv[2];
