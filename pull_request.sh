@@ -4,6 +4,9 @@
 
 set -euo pipefail
 
+git config --global user.email ""
+git config --global user.name ""
+
 if [[ ${INPUT_DEBUG} == "true" ]]; then
   set -x
 fi
@@ -14,9 +17,6 @@ fetch() {
     --no-recurse-submodules \
     "$@"
 }
-
-git config --global user.email ""
-git config --global user.name ""
 
 if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
