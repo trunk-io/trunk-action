@@ -59,6 +59,10 @@ jobs:
           EOF
           echo "TEST_GITHUB_EVENT_PATH=$TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
 
+      - name: debug
+        shell: bash
+        run: echo $TEST_GITHUB_EVENT_PATH
+
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
         uses: ./local-action/
@@ -102,6 +106,10 @@ jobs:
       - name: Set up test
         shell: bash
         run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: debug
+        shell: bash
+        run: echo $TEST_GITHUB_EVENT_PATH
 
       - name: Run trunk-action
         shell: bash

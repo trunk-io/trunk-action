@@ -205,10 +205,6 @@ runs:
         ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
         token: ${{ env.INPUT_GITHUB_TOKEN }}
 
-    - name: Debug
-      shell: bash
-      run: echo $TEST_GITHUB_EVENT_PATH
-
     - name: Locate trunk
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
