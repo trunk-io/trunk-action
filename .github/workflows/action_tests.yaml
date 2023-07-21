@@ -178,7 +178,7 @@ jobs:
           GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
           INPUT_SAVE_ANNOTATIONS: ""
-          INPUT_AUTOFIX: true
+          INPUT_AUTOFIX_AND_PUSH: true
 
       - name: Assert CLI calls
         shell: bash
