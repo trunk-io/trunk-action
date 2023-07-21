@@ -161,6 +161,7 @@ runs:
         INPUT_UPLOAD_LANDING_STATE=$(payload uploadLandingState)
         INPUT_UPLOAD_SERIES=$(payload uploadSeries)
         INPUT_UPLOAD_ID=$(payload uploadId)
+        INPUT_AUTOFIX=$(payload autofix)
         EOF
 
         else
@@ -192,6 +193,7 @@ runs:
         INPUT_UPLOAD_LANDING_STATE=false
         INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
         INPUT_UPLOAD_ID=
+        INPUT_AUTOFIX=
         EOF
 
         fi

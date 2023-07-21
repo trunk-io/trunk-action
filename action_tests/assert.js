@@ -16,15 +16,15 @@ const getHtlFactoriesPath = () => {
 
   if (tmpdirContents.length === 0) {
     throw new Error(
-      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`
+      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`,
     );
   }
 
   if (tmpdirContents.length > 1) {
     throw new Error(
       `TMPDIR=${process.env.TMPDIR} had multiple entries (${JSON.stringify(
-        tmpdirContents
-      )}); could not infer what --htl-factories-path should have been`
+        tmpdirContents,
+      )}); could not infer what --htl-factories-path should have been`,
     );
   }
 
@@ -75,6 +75,13 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "all-hold-the-line-no-upload-id": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
+  ],
+  "pull-request-autofix": () => [
+    ["trunk", "check", "--ci", "--upstream", "", "--fix"],
+    ["trunk", "config", "--global", "user.email", ""],
+    ["trunk", "config", "--global", "user.name", ""],
+    ["trunk", "commit", "-a", "-m", "Trunk check applied autofixes automatically"],
+    ["trunk", "push", "origin", ""],
   ],
 };
 

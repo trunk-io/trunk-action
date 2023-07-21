@@ -145,3 +145,44 @@ jobs:
           cd local-action
           npm install
           ./action_tests/assert.js all-hold-the-line-no-upload-id
+
+  pull_request_autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          git checkout trunk-merge/of-feature-branch
+          echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
+          ../local-action/pull_request.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: ""
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          INPUT_GITHUB_REF_NAME: ""
+          GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
+          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ""
+          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
+          INPUT_SAVE_ANNOTATIONS: ""
+          INPUT_AUTOFIX: true
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js pull-request-autofix
