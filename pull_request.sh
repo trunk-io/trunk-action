@@ -15,6 +15,9 @@ fetch() {
     "$@"
 }
 
+git config --global user.email ""
+git config --global user.name ""
+
 if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
   # We use this instead of github.event.pull_request.base.sha which can be incorrect sometimes.
@@ -50,8 +53,6 @@ fi
 
 if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
   "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
-  git config --global user.email ""
-  git config --global user.name ""
   # git diff-index --quiet HEAD --
   # if git diff-index --quiet HEAD --; then
   #   git commit --allow-empty -m "No autofixes needed!"
