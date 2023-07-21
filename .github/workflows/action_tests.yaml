@@ -171,17 +171,50 @@ jobs:
           INPUT_DEBUG: ""
           INPUT_LABEL: ""
           TRUNK_PATH: ../local-action/action_tests/stub.js
-          GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
-          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ""
-          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
-          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
-          INPUT_SAVE_ANNOTATIONS: ""
-          INPUT_AUTOFIX_AND_PUSH: true
-          INPUT_GITHUB_REF_NAME: ""
 
       - name: Assert CLI calls
         shell: bash
         run: |
           cd local-action
           npm install
-          ./action_tests/assert.js pull-request-autofix
+          ./action_tests/assert.js  pull-request-autofix
+
+  # pull-request-autofix:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         path: local-action
+
+  #     - name: Set up test
+  #       shell: bash
+  #       run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+  #     - name: Run trunk-action
+  #       shell: bash
+  #       run: |
+  #         cd repo-under-test
+  #         git checkout feature-branch
+  #         echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
+  #         ../local-action/pull_request.sh
+  #       env:
+  #         INPUT_ARGUMENTS: ""
+  #         INPUT_CHECK_RUN_ID: ""
+  #         INPUT_DEBUG: ""
+  #         INPUT_LABEL: ""
+  #         TRUNK_PATH: ../local-action/action_tests/stub.js
+  #         GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
+  #         GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ""
+  #         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
+  #         GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
+  #         INPUT_SAVE_ANNOTATIONS: ""
+  #         INPUT_AUTOFIX_AND_PUSH: true
+  #         INPUT_GITHUB_REF_NAME: ""
+
+  #     - name: Assert CLI calls
+  #       shell: bash
+  #       run: |
+  #         cd local-action
+  #         npm install
+  #         ./action_tests/assert.js pull-request-autofix
