@@ -197,7 +197,7 @@ runs:
         fi
 
     - name: Checkout
-      if: env.INPUT_TARGET_CHECKOUT && TEST_GITHUB_EVENT_PATH == ""
+      if: env.INPUT_TARGET_CHECKOUT
       uses: actions/checkout@v3
       with:
         lfs: true
