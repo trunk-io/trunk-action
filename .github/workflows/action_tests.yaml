@@ -195,7 +195,9 @@ jobs:
           cd repo-under-test
           git fetch origin
           actual_commit_count=$(git rev-list --count feature-branch)
-          expected_commit_Count=2
+          expected_commit_count=2
+          echo $actual_commit_count
+          echo $expected_commit_count
           if [ "$actual_commit_count" -eq "$expected_commit_count" ]; then
             echo "The branch has $expected_commit_count commits as expected."
             exit 0
