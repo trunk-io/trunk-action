@@ -162,8 +162,8 @@ jobs:
         shell: bash
         run: |
           cd repo-under-test
-          git checkout trunk-merge/of-feature-branch
-          echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
+          git checkout feature-branch
+          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
