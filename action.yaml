@@ -194,11 +194,11 @@ runs:
         INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
         INPUT_UPLOAD_ID=
         EOF
-
         fi
+
     - name: debug
       shell: bash
-      run: echo TEST_GITHUB_EVENT_PATH
+      run: echo $TEST_GITHUB_EVENT_PATH
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT && TEST_GITHUB_EVENT_PATH == null
