@@ -52,7 +52,11 @@ if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
   "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
   git config --global user.email ""
   git config --global user.name ""
-  git commit -a -m "Trunk check applied autofixes automatically"
+  if git diff-index --quiet HEAD --; then
+    git commit --allow-empty -m "No autofixes needed!"
+  else
+    git commit -a -m "Trunk check applied autofixes automatically"
+  fi
   git push origin "${INPUT_GITHUB_REF_NAME}"
 else
   "${TRUNK_PATH}" check \

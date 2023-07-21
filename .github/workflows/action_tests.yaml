@@ -146,7 +146,7 @@ jobs:
           npm install
           ./action_tests/assert.js all-hold-the-line-no-upload-id
 
-  pull_request_autofix:
+  pull-request-autofix:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

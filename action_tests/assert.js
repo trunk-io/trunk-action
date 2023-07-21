@@ -87,4 +87,8 @@ const actualCliCalls = stubLog.slice(0, -1).map(JSON.parse);
 
 expect(actualCliCalls).to.deep.equal(expectedCliCalls);
 
+if (testCase === "pull-request-autofix") {
+  // do something
+}
+
 console.log(`Test passed: ${testCase}\n\nCLI calls were:\n${JSON.stringify(actualCliCalls)}`);
