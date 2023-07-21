@@ -94,7 +94,7 @@ jobs:
 
       - name: Run trunk-action for ${{matrix.description}}
         id: trunk
-        uses: ./local-action/
+        uses: ./local-action
         with:
           check-mode: payload
         continue-on-error: true
