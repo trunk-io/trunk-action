@@ -26,6 +26,14 @@ if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]
 fi
 
 if [[ -z ${upstream+x} ]]; then
+  echo "The 'upstream' variable is not defined or is empty."
+else
+  echo "The 'upstream' variable is defined and has a value."
+fi
+
+echo upstream
+
+if [[ -z ${upstream+x} ]]; then
   # Otherwise use github.event.pull_request.base.sha as the upstream.
   echo "hi, i am in here"
   upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
