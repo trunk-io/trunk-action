@@ -164,8 +164,8 @@ jobs:
           cd repo-under-test
           git checkout feature-branch
           git status
-          echo "EXPECTED_UPSTREAM=$(git rev-parse of-feature-branch^1)" >>$GITHUB_ENV
-          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse of-feature-branch^2)" >>$GITHUB_ENV
+          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse feature-branch^2)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
