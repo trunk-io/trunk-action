@@ -220,6 +220,10 @@ runs:
       run: |
         pwd
         ls
+        pwd
+        ls local-action
+        pwd
+        ls ./trunk-action/local-action
 
     - name: Init on-demand
       shell: bash
