@@ -192,4 +192,14 @@ jobs:
       - name: Assert state of feature-branch
         shell: bash
         run: |
-          git status
+          cd repo-under-test
+          git fetch origin
+          actual_commit_count=$(git rev-list --count feature-branch)
+          expected_commit_Count=2
+          if [ "$actual_commit_count" -eq "$expected_commit_count" ]; then
+            echo "The branch has $expected_commit_count commits as expected."
+            exit 0
+          else
+            echo "The branch does not have $expected_commit_count commits."
+            exit 1
+          fi
