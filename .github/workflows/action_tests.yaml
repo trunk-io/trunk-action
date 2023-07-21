@@ -197,6 +197,16 @@ jobs:
           EOF
           echo "TEST_GITHUB_EVENT_PATH=$TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
 
+      - name: debug
+        shell: bash
+        run: |
+          ls local-action
+          pwd
+          ls
+          pwd
+          ls ./local-action
+          pwd
+
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
         uses: ./local-action/
@@ -210,16 +220,6 @@ jobs:
           cd local-action
           npm install
           ./action_tests/assert.js ${{matrix.description}}-payload
-
-      # - name: debug
-      #   shell: bash
-      #   run: |
-      #     ls local-action
-      #     pwd
-      #     ls
-      #     pwd
-      #     ls ./local-action
-      #     pwd
 
       # - name: Check for task failures
       #   shell: bash
