@@ -162,7 +162,11 @@ jobs:
         shell: bash
         run: |
           cd repo-under-test
+          git config --global user.email ""
+          git config --global user.name ""
           git checkout feature-branch
+          git config --global user.email ""
+          git config --global user.name ""
           echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
