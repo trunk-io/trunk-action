@@ -196,10 +196,6 @@ runs:
         EOF
         fi
 
-    - name: debug
-      shell: bash
-      run: echo $TEST_GITHUB_EVENT_PATH
-
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT && TEST_GITHUB_EVENT_PATH == null
       uses: actions/checkout@v3
@@ -208,6 +204,10 @@ runs:
         repository: ${{ env.INPUT_TARGET_CHECKOUT }}
         ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
         token: ${{ env.INPUT_GITHUB_TOKEN }}
+
+    - name: Debug
+      shell: bash
+      run: echo $TEST_GITHUB_EVENT_PATH
 
     - name: Locate trunk
       shell: bash
