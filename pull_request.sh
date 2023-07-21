@@ -52,7 +52,6 @@ if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
   "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
   git config --global user.email ""
   git config --global user.name "${GITHUB_ACTOR}"
-  git diff-index --quiet HEAD --
   if git diff-index --quiet HEAD --; then
     git commit --allow-empty -m "No autofixes needed!"
   else
