@@ -77,14 +77,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
   "pull-request-autofix": () => [
-    [
-      "trunk",
-      "check",
-      "--ci",
-      "--upstream",
-      process.env.GITHUB_EVENT_PULL_REQUEST_BASE_SHA,
-      "--fix",
-    ],
+    ["trunk", "check", "--ci", "--upstream", process.env.EXPECTED_UPSTREAM, "--fix"],
   ],
 };
 

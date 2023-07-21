@@ -185,3 +185,8 @@ jobs:
           cd local-action
           npm install
           ./action_tests/assert.js pull-request-autofix
+
+      - name: Assert state of feature-branch
+        shell: bash
+        run: |
+          git status
