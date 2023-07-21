@@ -179,7 +179,7 @@ jobs:
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
           INPUT_SAVE_ANNOTATIONS: ""
           INPUT_AUTOFIX_AND_PUSH: true
-          INPUT_GITHUB_REF_NAME: "feature-branch"
+          INPUT_GITHUB_REF_NAME: feature-branch
 
       - name: Assert CLI calls
         shell: bash
