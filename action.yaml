@@ -226,7 +226,7 @@ runs:
       shell: bash
       run: |
         if [ -e "$TEST_GITHUB_EVENT_PATH" ] && [ ! -e .trunk/setup-ci ]; then
-          mkdir .git/info/exclude
+          mkdir -p .git/info
         fi
 
     - name: Detect setup strategy
