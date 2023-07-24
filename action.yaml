@@ -222,12 +222,12 @@ runs:
           ${TRUNK_PATH:-trunk} init
         fi
 
-    - name: Set up git exclude file if test
-      shell: bash
-      run: |
-        if [ -e "$TEST_GITHUB_EVENT_PATH" ] && [ ! -e .trunk/setup-ci ]; then
-          mkdir -p .git/info
-        fi
+    # - name: Set up git exclude file if test
+    #   shell: bash
+    #   run: |
+    #     if [ -e "$TEST_GITHUB_EVENT_PATH" ] && [ ! -e .trunk/setup-ci ]; then
+    #       mkdir -p .git/info
+    #     fi
 
     - name: Detect setup strategy
       shell: bash

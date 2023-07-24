@@ -169,8 +169,9 @@ jobs:
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
-          echo "TEST_GITHUB_EVENT_PATH"=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
+          echo "TEST_GITHUB_EVENT_PATH=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
           mkdir ${{env.TMPDIR}}
+          mkdir -p .git/info
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
