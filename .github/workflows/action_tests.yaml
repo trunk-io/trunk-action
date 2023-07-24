@@ -187,4 +187,4 @@ jobs:
         run: |
           cd local-action
           npm install
-          ./action_tests/assert.js ${{matrix.description}}-payload
+          ./action_tests/assert.js ${{matrix.description}}

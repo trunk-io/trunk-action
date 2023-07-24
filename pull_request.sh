@@ -15,7 +15,7 @@ fetch() {
     "$@"
 }
 
-if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]] && [[ ! -e ${TEST_GITHUB_EVENT_PATH} ]]; then
+if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]] && [[ ! -v ${TEST_GITHUB_EVENT_PATH} ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
   # We use this instead of github.event.pull_request.base.sha which can be incorrect sometimes.
   head_sha=$(git rev-parse HEAD)
@@ -25,11 +25,11 @@ if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]
   echo "Detected merge commit, using HEAD^1 (${upstream}) as upstream and HEAD^2 (${git_commit}) as github commit"
 fi
 
-if [[ -z ${upstream+x} ]] || [[ -e ${TEST_GITHUB_EVENT_PATH} ]]; then
+if [[ -z ${upstream+x} ]] || [[ -v ${TEST_GITHUB_EVENT_PATH} ]]; then
   # Otherwise use github.event.pull_request.base.sha as the upstream.
   upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
   git_commit="${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}"
-  if [[ ! -e ${TEST_GITHUB_EVENT_PATH} ]]; then
+  if [[ ! -v ${TEST_GITHUB_EVENT_PATH} ]]; then
     fetch origin "${upstream}"
   fi
 fi
