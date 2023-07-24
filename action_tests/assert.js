@@ -134,6 +134,8 @@ const expectedCliCalls = EXPECTED_CLI_CALL_FACTORIES[testCase]();
 // Strip the last element before JSON.parse, because '' is not valid JSON.
 const actualCliCalls = stubLog.slice(0, -1).map(JSON.parse);
 
+console.log(Object.getOwnPropertyNames(expectedCliCalls));
+console.log(Object.getOwnPropertyNames(actualCliCalls));
 expect(actualCliCalls).to.deep.equal(expectedCliCalls);
 
 console.log(`Test passed: ${testCase}\n\nCLI calls were:\n${JSON.stringify(actualCliCalls)}`);
