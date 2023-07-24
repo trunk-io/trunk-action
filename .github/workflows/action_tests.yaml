@@ -145,3 +145,43 @@ jobs:
           cd local-action
           npm install
           ./action_tests/assert.js all-hold-the-line-no-upload-id
+
+  payload:
+    name: ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - description: pull-request-payload
+            payload_path: action_tests/pull_request_test_payload.json
+          # - description: trunk-merge-payload
+          #   payload_path: action_tests/trunk_merge_test_payload.json
+          # - description: all-payload
+          #   payload_path: action_tests/all_test_payload.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Craft TEST_GITHUB_EVENT_PATH
+        shell: bash
+        run: |
+          echo "TEST_GITHUB_EVENT_PATH"=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
+          mkdir ${{env.TMPDIR}}
+
+      - name: Run trunk-action payload test for ${{matrix.description}}
+        id: trunk
+        uses: ./local-action/
+        with:
+          check-mode: payload
+        continue-on-error: true
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js ${{matrix.description}}-payload

@@ -16,20 +16,23 @@ const getHtlFactoriesPath = () => {
 
   if (tmpdirContents.length === 0) {
     throw new Error(
-      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`
+      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`,
     );
   }
 
   if (tmpdirContents.length > 1) {
     throw new Error(
       `TMPDIR=${process.env.TMPDIR} had multiple entries (${JSON.stringify(
-        tmpdirContents
-      )}); could not infer what --htl-factories-path should have been`
+        tmpdirContents,
+      )}); could not infer what --htl-factories-path should have been`,
     );
   }
 
   return path.join(process.env.TMPDIR, tmpdirContents[0]);
 };
+
+const upstream = "50039e906e0e53ce03b269e5e9e00879f4c6f05c";
+const githubCommit = "69b531ac8f611e0ae73639ec606fbc23e8ead576";
 
 const EXPECTED_CLI_CALL_FACTORIES = {
   "trunk-merge": () => [
@@ -75,6 +78,22 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "all-hold-the-line-no-upload-id": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
+  ],
+  "pull-request-payload": () => [
+    ["trunk", "version"],
+    ["trunk", "init"],
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      upstream,
+      "--github-commit",
+      githubCommit,
+      "--github-label",
+      "",
+      "--trunk-annotate=14235603498",
+    ],
   ],
 };
 

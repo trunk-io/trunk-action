@@ -114,7 +114,7 @@ runs:
 
         payload() {
           if command -v jq >/dev/null; then
-            jq -r ".inputs.payload | fromjson | .$1 // empty" ${GITHUB_EVENT_PATH}
+            jq -r ".inputs.payload | fromjson | .$1 // empty" ${TEST_GITHUB_EVENT_PATH:-${GITHUB_EVENT_PATH}}
           else
             echo "::error::jq not installed on system!"
             exit 1
@@ -220,6 +220,13 @@ runs:
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
+        fi
+
+    - name: Set up git exclude file if test
+      shell: bash
+      run: |
+        if [ -e "$TEST_GITHUB_EVENT_PATH" ] && [ ! -e .trunk/setup-ci ]; then
+          mkdir -p .git/info
         fi
 
     - name: Detect setup strategy
