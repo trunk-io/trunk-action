@@ -133,23 +133,7 @@ const expectedCliCalls = EXPECTED_CLI_CALL_FACTORIES[testCase]();
 
 // Strip the last element before JSON.parse, because '' is not valid JSON.
 const actualCliCalls = stubLog.slice(0, -1).map(JSON.parse);
-if (testCase === "all-payload") {
-  expect(actualCliCalls[0]).to.deep.equal(expectedCliCalls[0]);
-  expect(actualCliCalls[1]).to.deep.equal(expectedCliCalls[1]);
-  expect(actualCliCalls[2][0]).to.deep.equal(expectedCliCalls[2][0]);
-  expect(actualCliCalls[2][1]).to.deep.equal(expectedCliCalls[2][1]);
-  expect(actualCliCalls[2][2]).to.deep.equal(expectedCliCalls[2][2]);
-  expect(actualCliCalls[2][3]).to.deep.equal(expectedCliCalls[2][3]);
-  expect(actualCliCalls[2][4]).to.deep.equal(expectedCliCalls[2][4]);
-  expect(actualCliCalls[2][5]).to.deep.equal(expectedCliCalls[2][5]);
-  expect(actualCliCalls[2][6]).to.deep.equal(expectedCliCalls[2][6]);
-  expect(actualCliCalls[2][7]).to.deep.equal(expectedCliCalls[2][7]);
-  expect(actualCliCalls[2][8]).to.deep.equal(expectedCliCalls[2][8]);
-  expect(actualCliCalls[2][9]).to.deep.equal(expectedCliCalls[2][9]);
-  expect(actualCliCalls[2][10]).to.deep.equal(expectedCliCalls[2][10]);
-  expect(actualCliCalls[2][11]).to.deep.equal(expectedCliCalls[2][11]);
-  expect(actualCliCalls[2]).to.deep.equal(expectedCliCalls[2]);
-}
+
 expect(actualCliCalls).to.deep.equal(expectedCliCalls);
 
 console.log(`Test passed: ${testCase}\n\nCLI calls were:\n${JSON.stringify(actualCliCalls)}`);
