@@ -215,20 +215,18 @@ runs:
         # Determine check mode
         ${GITHUB_ACTION_PATH}/determine_check_mode.sh
 
-    - name: debug
-      shell: bash
-      run: |
-        pwd
-        ls
-        pwd
-        ls local-action
-        pwd
-
     - name: Init on-demand
       shell: bash
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
+        fi
+
+    - name: debug actually set up git ignore for test
+      shell: bash
+      run: |
+        if [ -e "$TEST_GITHUB_EVENT_PATH" ] && [ ! -e .trunk/setup-ci ]; then
+          mkdir .git/info/exclude
         fi
 
     - name: Detect setup strategy
