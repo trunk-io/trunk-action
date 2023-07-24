@@ -92,6 +92,35 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--trunk-annotate=14235603498",
     ],
   ],
+  "trunk-merge-payload": () => [
+    ["trunk", "version"],
+    ["trunk", "init"],
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-label",
+      "",
+    ],
+  ],
+  "all-payload": () => [
+    ["trunk", "version"],
+    ["trunk", "init"],
+    [
+      "trunk",
+      "check",
+      "--all",
+      "--upload",
+      "--upload-id",
+      "test-upload-id",
+      "--series",
+      "series-name",
+    ],
+  ],
 };
 
 const testCase = process.argv[2];

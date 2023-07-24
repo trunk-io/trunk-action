@@ -155,10 +155,10 @@ jobs:
         include:
           - description: pull-request-payload
             payload_path: action_tests/pull_request_test_payload.json
-          # - description: trunk-merge-payload
-          #   payload_path: action_tests/trunk_merge_test_payload.json
-          # - description: all-payload
-          #   payload_path: action_tests/all_test_payload.json
+          - description: trunk-merge-payload
+            payload_path: action_tests/trunk_merge_test_payload.json
+          - description: all-payload
+            payload_path: action_tests/all_test_payload.json
 
     steps:
       - name: Checkout

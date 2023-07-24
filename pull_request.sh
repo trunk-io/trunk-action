@@ -15,11 +15,6 @@ fetch() {
     "$@"
 }
 
-if [[ -n ${TEST_GITHUB_EVENT_PATH+x} ]]; then
-  echo "hi jenny"
-  echo "${TEST_GITHUB_EVENT_PATH}"
-fi
-
 if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]] && [[ -z ${TEST_GITHUB_EVENT_PATH+x} ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
   # We use this instead of github.event.pull_request.base.sha which can be incorrect sometimes.
