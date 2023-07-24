@@ -91,6 +91,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       githubCommit,
       "--github-label",
       "",
+      "--trunk-annotate=14235603498",
     ],
   ],
 };
