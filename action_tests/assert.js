@@ -120,10 +120,10 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "main",
       "--token",
       "***",
-      "",
-      "--replace",
+      '"',
+      '--replace"',
       ":",
-      "",
+      '""',
     ],
   ],
 };
