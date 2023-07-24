@@ -222,7 +222,7 @@ runs:
           ${TRUNK_PATH:-trunk} init
         fi
 
-    - name: debug actually set up git ignore for test
+    - name: Set up git exclude file if test
       shell: bash
       run: |
         if [ -e "$TEST_GITHUB_EVENT_PATH" ] && [ ! -e .trunk/setup-ci ]; then
