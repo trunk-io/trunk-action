@@ -34,19 +34,6 @@ const upstream = "50039e906e0e53ce03b269e5e9e00879f4c6f05c";
 const githubCommit = "69b531ac8f611e0ae73639ec606fbc23e8ead576";
 
 const EXPECTED_CLI_CALL_FACTORIES = {
-  "pull-request-payload": () => [
-    [
-      process.env.TRUNK_PATH,
-      "check",
-      "--ci",
-      "--upstream",
-      upstream,
-      "--github-commit",
-      githubCommit,
-      "--github-label",
-      "",
-    ],
-  ],
   "trunk-merge": () => [
     [
       "trunk",
@@ -90,6 +77,21 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "all-hold-the-line-no-upload-id": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
+  ],
+  "pull-request-payload": () => [
+    ["trunk", "version"],
+    ["trunk", "init"],
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      upstream,
+      "--github-commit",
+      githubCommit,
+      "--github-label",
+      "",
+    ],
   ],
 };
 
