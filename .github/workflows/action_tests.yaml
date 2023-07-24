@@ -200,6 +200,7 @@ jobs:
         # we are replacing it with TEST_GITHUB_EVENT_PATH so we read our predefined payload for test cases.
         run: |
           echo "TEST_GITHUB_EVENT_PATH=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
+          mkdir ${{env.TMPDIR}}
 
       - name: debug
         shell: bash
