@@ -29,7 +29,9 @@ if [[ -z ${upstream+x} ]] || [[ -e ${TEST_GITHUB_EVENT_PATH} ]]; then
   # Otherwise use github.event.pull_request.base.sha as the upstream.
   upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
   git_commit="${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}"
-  fetch origin "${upstream}"
+  if [[ ! -e ${TEST_GITHUB_EVENT_PATH} ]]; then
+    fetch origin "${upstream}"
+  fi
 fi
 
 save_annotations=${INPUT_SAVE_ANNOTATIONS}

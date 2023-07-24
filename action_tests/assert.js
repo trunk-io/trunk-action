@@ -31,9 +31,6 @@ const getHtlFactoriesPath = () => {
   return path.join(process.env.TMPDIR, tmpdirContents[0]);
 };
 
-const upstream = "50039e906e0e53ce03b269e5e9e00879f4c6f05c";
-const githubCommit = "69b531ac8f611e0ae73639ec606fbc23e8ead576";
-
 const EXPECTED_CLI_CALL_FACTORIES = {
   "trunk-merge": () => [
     [
@@ -87,9 +84,9 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "check",
       "--ci",
       "--upstream",
-      upstream,
+      process.env.EXPECTED_UPSTREAM,
       "--github-commit",
-      githubCommit,
+      process.env.EXPECTED_GITHUB_COMMIT,
       "--github-label",
       "",
       "--trunk-annotate=14235603498",
