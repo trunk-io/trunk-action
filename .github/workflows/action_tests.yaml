@@ -187,17 +187,18 @@ jobs:
       #   shell: bash
       #   run: ./local-action/action_tests/setup.sh src-repo repo-under-test
 
+      ## mkdir -p ${{env.TMPDIR}}
+      # TEST_GITHUB_EVENT_PATH=$(mktemp ${{env.TMPDIR}}/payload-test.XXXXXXXXXX)
+      # cat >> $TEST_GITHUB_EVENT_PATH <<EOF
+      # ${{matrix.payload}}
+      # EOF
+      # echo "TEST_GITHUB_EVENT_PATH=$TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
+
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         # GITHUB_EVENT_PATH is the env var of path to file on runner that contains full webhook payload.
         # we are replacing it with TEST_GITHUB_EVENT_PATH so we read our predefined payload for test cases.
         run: |
-          # mkdir -p ${{env.TMPDIR}}
-          # TEST_GITHUB_EVENT_PATH=$(mktemp ${{env.TMPDIR}}/payload-test.XXXXXXXXXX)
-          # cat >> $TEST_GITHUB_EVENT_PATH <<EOF
-          # ${{matrix.payload}}
-          # EOF
-          # echo "TEST_GITHUB_EVENT_PATH=$TEST_GITHUB_EVENT_PATH" >>$GITHUB_ENV
           echo "TEST_GITHUB_EVENT_PATH=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
 
       - name: debug
