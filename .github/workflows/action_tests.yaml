@@ -194,12 +194,12 @@ jobs:
         run: |
           cd repo-under-test
           git fetch origin
-          actual_commit_count=$(git rev-list --count feature-branch)
-          expected_commit_count=3
-          if [ "$actual_commit_count" -eq "$expected_commit_count" ]; then
-            echo "The branch has $expected_commit_count commits as expected."
+          latest_commit_message=$(git log -1 --pretty=format:%s)
+          expected_commit_message="Trunk Check applied autofixes"
+          if [ "$latest_commit_message" = "$expected_commit_message" ]; then
+            echo "The latest commit message was "$latest_commit_message" commits as expected."
             exit 0
           else
-            echo "The branch does not have $expected_commit_count commits."
+            echo "The did not have the expected latest commit message "$latest_commit_message"."
             exit 1
           fi
