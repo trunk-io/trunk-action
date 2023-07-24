@@ -194,6 +194,7 @@ jobs:
         run: |
           cd repo-under-test
           git fetch origin
+          git checkout feature-branch
           latest_commit_message=$(git log -1 --pretty=format:%s)
           expected_commit_message="Trunk Check applied autofixes"
           if [ "$latest_commit_message" = "$expected_commit_message" ]; then
