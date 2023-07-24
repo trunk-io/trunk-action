@@ -119,7 +119,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--series",
       "main",
       "--token",
-      "***",
+      process.env.GITHUB_TOKEN,
       '"',
       '--replace"',
       ":",
