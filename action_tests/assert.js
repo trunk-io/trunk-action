@@ -84,7 +84,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--upstream",
       process.env.EXPECTED_UPSTREAM,
       "--fix",
-      `--trunk-annotate=${process.env.INPUT_CHECK_RUN_ID}`,
+      `--trunk-annotate=12345678`,
     ],
   ],
 };
