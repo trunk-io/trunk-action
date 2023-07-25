@@ -170,7 +170,7 @@ jobs:
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
-          INPUT_CHECK_RUN_ID: ""
+          INPUT_CHECK_RUN_ID: "12345678"
           INPUT_DEBUG: ""
           INPUT_LABEL: ""
           TRUNK_PATH: ../local-action/action_tests/stub.js
