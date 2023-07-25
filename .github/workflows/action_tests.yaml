@@ -193,7 +193,6 @@ jobs:
         shell: bash
         run: |
           cd src-repo
-          git log
           latest_commit_message=$(git log -1 --pretty=format:%s feature-branch)
           expected_commit_message="Trunk Check applied autofixes"
           if [ "$latest_commit_message" = "$expected_commit_message" ]; then
