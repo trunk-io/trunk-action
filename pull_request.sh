@@ -49,7 +49,7 @@ else
 fi
 
 if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
-  "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix
+  "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix "${annotation_argument}" ${INPUT_ARGUMENTS}
   git config --global user.email ""
   git config --global user.name "${GITHUB_ACTOR}"
   git commit --all --allow-empty --message "Trunk Check applied autofixes"
