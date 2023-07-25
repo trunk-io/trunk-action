@@ -77,7 +77,15 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
   "pull-request-autofix": () => [
-    ["trunk", "check", "--ci", "--upstream", process.env.EXPECTED_UPSTREAM, "--fix"],
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--fix",
+      `--trunk-annotate=${process.env.INPUT_CHECK_RUN_ID}`,
+    ],
   ],
 };
 
