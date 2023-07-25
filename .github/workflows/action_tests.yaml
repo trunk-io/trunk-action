@@ -192,10 +192,9 @@ jobs:
       - name: Assert state of feature-branch
         shell: bash
         run: |
-          cd repo-under-test
+          cd src-repo
           git fetch origin
-          git checkout feature-branch
-          latest_commit_message=$(git log -1 --pretty=format:%s)
+          latest_commit_message=$(git log -1 --pretty=format:%s origin/feature-branch)
           expected_commit_message="Trunk Check applied autofixes"
           if [ "$latest_commit_message" = "$expected_commit_message" ]; then
             echo "The latest commit message was "$latest_commit_message" commits as expected."
