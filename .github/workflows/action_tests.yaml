@@ -236,6 +236,7 @@ jobs:
           ls
           ../local-action/action_tests/setup.sh /tmp/src-repo .
           mv ../local-action .
+          git add .
           pwd
           ls
 
