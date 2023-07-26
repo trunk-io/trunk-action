@@ -163,6 +163,9 @@ jobs:
           cd repo-under-test
           git checkout feature-branch
           echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
+          pwd
+          ls
+          ls local-action
 
       - name: Run trunk-action
         shell: bash
@@ -233,6 +236,7 @@ jobs:
           ./local-action/action_tests/setup.sh ../src-repo ../repo-under-test
           pwd
           ls
+          ls local-action
 
       #           mkdir ${{env.TMPDIR}}
 
