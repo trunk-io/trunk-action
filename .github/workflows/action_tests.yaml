@@ -236,7 +236,7 @@ jobs:
         run: |
           payload=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
           echo $payload
-          visible=$(echo '{"inputs":'$(echo '"$payload"' | jq -c '.' )'}')
+          visible=$(echo '{"inputs":'$(echo $payload | jq -c '.' )'}')
           echo $visible
           echo "TEST_GITHUB_EVENT_PATH=$visible">>$GITHUB_ENV
           mkdir -p .git/info
