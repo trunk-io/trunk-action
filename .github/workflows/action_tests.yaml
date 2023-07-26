@@ -234,9 +234,10 @@ jobs:
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
-          json_string=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
-          echo $json_string
-          echo "TEST_GITHUB_EVENT_PATH={inputs: json_string}" >>$GITHUB_ENV
+          payload=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
+          echo $payload
+          echo "TEST_GITHUB_EVENT_PATH={"inputs":'$(echo $payload | jq -c '.' )'}" >>$GITHUB_ENV
+
           echo $TEST_GITHUB_EVENT_PATH
           mkdir -p .git/info
           if [[ "${{ matrix.description }}" == "pull-request-payload" ]]; then
