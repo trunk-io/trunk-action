@@ -42,7 +42,7 @@ mkdir -p "${src_repo}"
 
   ## Prepare a branch for payload pull_request
 
-  git checkout feature-branch main^
+  git checkout feature-branch
 
   git checkout -b 1/merge main
 
