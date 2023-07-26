@@ -157,6 +157,7 @@ jobs:
       - name: Set up test
         shell: bash
         run: |
+          pwd
           ./local-action/action_tests/setup.sh src-repo repo-under-test
           cd repo-under-test
           git checkout feature-branch
@@ -228,7 +229,7 @@ jobs:
         run: |
           pwd
           ls
-          ./local-action/setup.sh ./src-repo ./repo-under-test
+          ../local-action/setup.sh ./src-repo ./repo-under-test
 
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
