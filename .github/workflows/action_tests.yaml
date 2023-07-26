@@ -233,7 +233,7 @@ jobs:
         run: |
           pwd
           ls
-          ./tmp/local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
+          /tmp/local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
           pwd
           ls
 
@@ -249,7 +249,7 @@ jobs:
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
-        uses: /tmp/local-action/
+        uses: ./tmp/local-action/
         with:
           check-mode: payload
         continue-on-error: true
