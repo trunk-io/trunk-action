@@ -16,15 +16,15 @@ const getHtlFactoriesPath = () => {
 
   if (tmpdirContents.length === 0) {
     throw new Error(
-      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`
+      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`,
     );
   }
 
   if (tmpdirContents.length > 1) {
     throw new Error(
       `TMPDIR=${process.env.TMPDIR} had multiple entries (${JSON.stringify(
-        tmpdirContents
-      )}); could not infer what --htl-factories-path should have been`
+        tmpdirContents,
+      )}); could not infer what --htl-factories-path should have been`,
     );
   }
 
@@ -43,6 +43,42 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       process.env.EXPECTED_GITHUB_COMMIT,
       "--github-label",
       "",
+    ],
+  ],
+  "pull-request-trunk-annotate": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.GITHUB_EVENT_PULL_REQUEST_BASE_SHA,
+      "--github-commit",
+      process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA,
+      "--trunk-annotate=8675309",
+    ],
+  ],
+  "pull-request-github-annotate-file": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.GITHUB_EVENT_PULL_REQUEST_BASE_SHA,
+      "--github-commit",
+      process.env.GITHUB_EVENT_PULL_REQUEST_HEAD_SHA,
+      "--github-annotate-file=/tmp/trunk/annotations.bin",
+    ],
+  ],
+  "pull-request-merge": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-annotate",
     ],
   ],
   "all-hold-the-line-new-series": () => [
