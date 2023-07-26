@@ -226,14 +226,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: local-action
+          path: tmp/local-action
 
       - name: Checkout
         shell: bash
         run: |
           pwd
           ls
-          ./local-action/action_tests/setup.sh ../src-repo ../repo-under-test
+          ./local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
           pwd
           ls
           ls local-action
@@ -252,7 +252,7 @@ jobs:
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
-        uses: ./local-action/
+        uses: ./tmp/local-action/
         with:
           check-mode: payload
         continue-on-error: true
