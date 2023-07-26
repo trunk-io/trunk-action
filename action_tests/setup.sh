@@ -44,7 +44,7 @@ mkdir -p "${src_repo}"
 
   git checkout feature-branch
 
-  git checkout -b refs/pull/1/merge
+  git checkout -b 1/merge
 
   git merge --no-ff --no-edit feature-branch
 
