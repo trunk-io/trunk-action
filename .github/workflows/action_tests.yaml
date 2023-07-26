@@ -165,7 +165,7 @@ jobs:
           echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
           pwd
           ls
-          ls local-action
+          ls ./local-action
 
       - name: Run trunk-action
         shell: bash
@@ -237,6 +237,8 @@ jobs:
           pwd
           ls
           ls local-action
+          pwd
+          ls ../trunk-action
 
       #           mkdir ${{env.TMPDIR}}
 
