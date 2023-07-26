@@ -221,14 +221,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: ../local-action
+          path: ./local-action
 
       - name: Checkout
         shell: bash
         run: |
           pwd
           ls
-          ../local-action/setup.sh ./src-repo ./repo-under-test
+          ./local-action/setup.sh ./src-repo ./repo-under-test
 
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
