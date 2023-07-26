@@ -66,6 +66,8 @@ jobs:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: "8675309"
           INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          INPUT_SAVE_ANNOTATIONS: ""
           INPUT_GITHUB_REF_NAME: feature_branch
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
           TRUNK_PATH: ../local-action/action_tests/stub.js
@@ -101,6 +103,7 @@ jobs:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: ""
           INPUT_DEBUG: ""
+          INPUT_LABEL: ""
           INPUT_GITHUB_REF_NAME: feature_branch
           INPUT_SAVE_ANNOTATIONS: auto
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
@@ -141,6 +144,8 @@ jobs:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: ""
           INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          INPUT_SAVE_ANNOTATIONS: ""
           INPUT_GITHUB_REF_NAME: trunk-merge/of-feature-branch/merge
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
           TRUNK_PATH: ../local-action/action_tests/stub.js
