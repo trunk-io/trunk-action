@@ -7,17 +7,17 @@
   "pullRequest": {
     "number": 1,
     "head": {
-      "sha": "",
+      "sha": "fake-head-sha",
       "ref": "feature-branch"
     },
     "base": {
-      "sha": "",
+      "sha": "fake-base-sha",
       "ref": "main"
     }
   },
   "checkRunId": 14235603498,
   "version": "0.0.0",
-  "githubToken": "${{ github.token }}",
+  "githubToken": "fake-token",
   "cache": true,
   "cacheKey": "trunk-check",
   "cachePath": "~/.cache/trunk/tools/ruby",
