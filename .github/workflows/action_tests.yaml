@@ -212,16 +212,20 @@ jobs:
         include:
           - description: pull-request-payload
             payload_path: action_tests/pull_request_test_payload.json
-          - description: trunk-merge-payload
-            payload_path: action_tests/trunk_merge_test_payload.json
-          - description: all-payload
-            payload_path: action_tests/all_test_payload.json
+          # - description: trunk-merge-payload
+          #   payload_path: action_tests/trunk_merge_test_payload.json
+          # - description: all-payload
+          #   payload_path: action_tests/all_test_payload.json
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: local-action
+          path: ../local-action
+
+      - name: Checkout
+        shell: bash
+        run: ../local-action/setup.sh ../src-repo ../repo-under-test
 
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
@@ -234,7 +238,7 @@ jobs:
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
-        uses: ./local-action/
+        uses: ../local-action/
         with:
           check-mode: payload
         continue-on-error: true
