@@ -212,10 +212,10 @@ jobs:
         include:
           - description: pull-request-payload
             payload_path: action_tests/pull_request_test_payload.json
-          # - description: trunk-merge-payload
-          #   payload_path: action_tests/trunk_merge_test_payload.json
-          # - description: all-payload
-          #   payload_path: action_tests/all_test_payload.json
+          - description: trunk-merge-payload
+            payload_path: action_tests/trunk_merge_test_payload.json
+          - description: all-payload
+            payload_path: action_tests/all_test_payload.json
 
     steps:
       - name: Checkout
@@ -239,7 +239,7 @@ jobs:
             git checkout 1/merge
             echo "EXPECTED_UPSTREAM=$(git rev-parse 1/merge^1)" >>$GITHUB_ENV
             echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse 1/merge^2)" >>$GITHUB_ENV
-          else if [[ ${matrix.description} == "trunk-merge-payload" ]]; then
+          elif [[ ${matrix.description} == "trunk-merge-payload" ]]; then
             git checkout trunk-merge/of-feature-branch
             echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
             echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
