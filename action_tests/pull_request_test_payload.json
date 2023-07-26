@@ -7,11 +7,11 @@
   "pullRequest": {
     "number": 1,
     "head": {
-      "sha": "$(git rev-parse HEAD)",
+      "sha": "",
       "ref": "feature-branch"
     },
     "base": {
-      "sha": "$(git rev-parse HEAD^1)",
+      "sha": "",
       "ref": "main"
     }
   },
