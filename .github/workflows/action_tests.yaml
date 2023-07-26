@@ -233,7 +233,7 @@ jobs:
         run: |
           pwd
           ls
-          ./local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
+          ./tmp/local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
           pwd
           ls
           ls local-action
