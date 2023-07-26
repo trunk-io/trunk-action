@@ -233,7 +233,7 @@ jobs:
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
-          echo "TEST_GITHUB_EVENT_PATH=$(jq --null-input --argfile foo ${{ matrix.payload_path }} '{"inputs": ($foo | tostring)}')" >>$GITHUB_ENV
+          echo "TEST_GITHUB_EVENT_PATH=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"inputs": ($foo | tostring)}')" >>$GITHUB_ENV
           mkdir -p .git/info
           if [[ "${{ matrix.description }}" == "pull-request-payload" ]]; then
             git checkout 1/merge
