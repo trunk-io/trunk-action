@@ -24,7 +24,7 @@
   "trunkApiAddress": "localhost-will-not-work:5021",
   "checkJobName": "repo-under-test/pull_request",
   "checkJobRunsOn": ["self-hosted", "linux", "r6id2xlarge-org"],
-  "checkWorkflowRunName": "[action-test] Trunk Check Pull Request Mode",
+  "checkWorkflowRunName": "[action-test]",
   "concurrencyGroup": "repo-under-test/1",
   "debug": true
 }
