@@ -259,9 +259,6 @@ jobs:
       - name: Assert CLI calls
         shell: bash
         run: |
-          pwd
-          cd ..
-          pwd
           cd local-action
           npm install
           ./action_tests/assert.js ${{matrix.description}}
