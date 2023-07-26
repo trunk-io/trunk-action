@@ -3,7 +3,7 @@
   "targetRefName": "1/merge",
   "targetCheckoutRef": "refs/pull/1/merge",
   "checkMode": "pull_request",
-  "trunkToken": "",
+  "trunkToken": "fake-token",
   "pullRequest": {
     "number": 1,
     "head": {
@@ -17,7 +17,7 @@
   },
   "checkRunId": 14235603498,
   "version": "0.0.0",
-  "githubToken": "",
+  "githubToken": "fake-token",
   "cache": true,
   "cacheKey": "trunk-check",
   "cachePath": "~/.cache/trunk/tools/ruby",
