@@ -246,6 +246,8 @@ jobs:
             git checkout trunk-merge/of-feature-branch
             echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
             echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
+          else
+            echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse main^)" >>$GITHUB_ENV
           fi
 
       - name: Run trunk-action payload test for ${{matrix.description}}
