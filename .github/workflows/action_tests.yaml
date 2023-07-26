@@ -230,14 +230,12 @@ jobs:
           ../local-action/action_tests/setup.sh /tmp/src-repo .
           mv ../local-action .
 
-      # echo "TEST_GITHUB_EVENT_PATH=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
           payload=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
-          echo $payload
-          visible=$(echo '{"inputs":'$(echo $payload | jq -c '.' )'}')
-          echo "$visible">>local-action/payload.json
+          input=$(echo '{"inputs":'$(echo $payload | jq -c '.' )'}')
+          echo "$input">>local-action/payload.json
           echo "TEST_GITHUB_EVENT_PATH=local-action/payload.json">>$GITHUB_ENV
           mkdir -p .git/info
           if [[ "${{ matrix.description }}" == "pull-request-payload" ]]; then
