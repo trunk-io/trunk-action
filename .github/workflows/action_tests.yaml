@@ -251,6 +251,8 @@ jobs:
           git checkout feature-branch
           git branch refs/pull/1/merge
           git checkout refs/pull/1/merge
+          git config --global user.email ""
+          git config --global user.name "action-test.pull-request-payload"
           git add .
           git commit -a -m "commit for new refs/pull/1/merge/ branch"
 
