@@ -46,7 +46,7 @@ mkdir -p "${src_repo}"
 
   git checkout -b 1/merge feature-branch
 
-  git add .
+  git merge --no-ff --no-edit feature-branch
 
   ## Go back to `main`
 
