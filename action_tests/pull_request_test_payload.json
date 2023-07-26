@@ -1,5 +1,30 @@
 {
-  "inputs": {
-    "payload": "{\"trunkPath\": \"./local-action/action_tests/stub.js\", \"targetRefName\": \"1/merge\", \"targetCheckoutRef\": \"refs/pull/1/merge\", \"checkMode\": \"pull_request\", \"trunkToken\": \"fake-trunk-token\", \"pullRequest\": { \"number\": 1, \"head\": { \"sha\": \"69b531ac8f611e0ae73639ec606fbc23e8ead576\", \"ref\": \"feature-branch\" }, \"base\": { \"sha\": \"50039e906e0e53ce03b269e5e9e00879f4c6f05c\", \"ref\": \"main\" } }, \"checkRunId\": 14235603498, \"version\": \"0.0.0\", \"githubToken\":\"${{ github.token }}\", \"cache\": true, \"cacheKey\": \"trunk-check\", \"cachePath\": \"~/.cache/trunk/tools/ruby\", \"trunkApiAddress\": \"localhost-will-not-work:5021\", \"checkJobName\": \"repo-under-test/pull_request\", \"checkJobRunsOn\": [\"self-hosted\", \"linux\", \"r6id2xlarge-org\"], \"checkWorkflowRunName\": \"[action-test] Trunk Check Pull Request Mode\", \"concurrencyGroup\": \"repo-under-test/1\", \"debug\": true }"
-  }
+  "trunkPath": "./local-action/action_tests/stub.js",
+  "targetRefName": "1/merge",
+  "targetCheckoutRef": "refs/pull/1/merge",
+  "checkMode": "pull_request",
+  "trunkToken": "fake-trunk-token",
+  "pullRequest": {
+    "number": 1,
+    "head": {
+      "sha": "$(git rev-parse HEAD)",
+      "ref": "feature-branch"
+    },
+    "base": {
+      "sha": "$(git rev-parse HEAD^1)",
+      "ref": "main"
+    }
+  },
+  "checkRunId": 14235603498,
+  "version": "0.0.0",
+  "githubToken": "${{ github.token }}",
+  "cache": true,
+  "cacheKey": "trunk-check",
+  "cachePath": "~/.cache/trunk/tools/ruby",
+  "trunkApiAddress": "localhost-will-not-work:5021",
+  "checkJobName": "repo-under-test/pull_request",
+  "checkJobRunsOn": ["self-hosted", "linux", "r6id2xlarge-org"],
+  "checkWorkflowRunName": "[action-test] Trunk Check Pull Request Mode",
+  "concurrencyGroup": "repo-under-test/1",
+  "debug": true
 }
