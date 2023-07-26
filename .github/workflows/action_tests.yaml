@@ -146,6 +146,63 @@ jobs:
           npm install
           ./action_tests/assert.js all-hold-the-line-no-upload-id
 
+  pull_request_autofix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: |
+          ./local-action/action_tests/setup.sh src-repo repo-under-test
+          cd repo-under-test
+          git checkout feature-branch
+          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          git checkout feature-branch
+          ../local-action/pull_request.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: 12345678
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          INPUT_GITHUB_REF_NAME: feature-branch
+          GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
+          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ${{ env.EXPECTED_UPSTREAM }}
+          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
+          INPUT_SAVE_ANNOTATIONS: ""
+          INPUT_AUTOFIX_AND_PUSH: true
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js pull-request-autofix
+
+      - name: Assert state of feature-branch
+        shell: bash
+        run: |
+          cd src-repo
+          latest_commit_message=$(git log -1 --pretty=format:%s feature-branch)
+          expected_commit_message="Trunk Check applied autofixes"
+          if [ "$latest_commit_message" = "$expected_commit_message" ]; then
+            echo "The latest commit message was "$latest_commit_message" commits as expected."
+            exit 0
+          else
+            echo "The did not have the expected latest commit message "$latest_commit_message"."
+            exit 1
+          fi
+
   payload:
     name: ${{ matrix.description }}
     runs-on: ubuntu-latest

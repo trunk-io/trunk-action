@@ -50,10 +50,18 @@ else
   annotation_argument=--github-annotate
 fi
 
-"${TRUNK_PATH}" check \
-  --ci \
-  --upstream "${upstream}" \
-  --github-commit "${git_commit}" \
-  --github-label "${INPUT_LABEL}" \
-  "${annotation_argument}" \
-  ${INPUT_ARGUMENTS}
+if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
+  "${TRUNK_PATH}" check --ci --upstream "${upstream}" --fix "${annotation_argument}" ${INPUT_ARGUMENTS}
+  git config --global user.email ""
+  git config --global user.name "${GITHUB_ACTOR}"
+  git commit --all --allow-empty --message "Trunk Check applied autofixes"
+  git push origin "${INPUT_GITHUB_REF_NAME}"
+else
+  "${TRUNK_PATH}" check \
+    --ci \
+    --upstream "${upstream}" \
+    --github-commit "${git_commit}" \
+    --github-label "${INPUT_LABEL}" \
+    "${annotation_argument}" \
+    ${INPUT_ARGUMENTS}
+fi

@@ -76,6 +76,17 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
+  "pull-request-autofix": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--fix",
+      "--trunk-annotate=12345678",
+    ],
+  ],
   "pull-request-payload": () => [
     ["trunk", "version"],
     ["trunk", "init"],
