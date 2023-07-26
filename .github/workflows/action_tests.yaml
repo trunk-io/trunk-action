@@ -97,11 +97,11 @@ jobs:
         shell: bash
         run: |
           cd repo-under-test
-          git checkout feature-branch
-          export GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse feature-branch)
-          export GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)
-          echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
-          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
+          git checkout trunk-merge/of-feature-branch
+          export GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse trunk-merge/of-feature-branch^2)
+          export GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse trunk-merge/of-feature-branch^1)
+          echo "EXPECTED_UPSTREAM=${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
@@ -139,8 +139,8 @@ jobs:
         run: |
           cd repo-under-test
           git checkout trunk-merge/of-feature-branch
-          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch)" >>$GITHUB_ENV
-          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse main)" >>$GITHUB_ENV
+          export GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse feature-branch)
+          export GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)
           echo "EXPECTED_UPSTREAM=${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}" >>$GITHUB_ENV
           echo "EXPECTED_GITHUB_COMMIT=${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" >>$GITHUB_ENV
           ../local-action/pull_request.sh
