@@ -226,14 +226,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: /tmp/local-action
+          path: local-action
 
       - name: Checkout
         shell: bash
         run: |
+          mv local-action ..
           pwd
           ls
-          /tmp/local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
+          ../local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
           pwd
           ls
 
