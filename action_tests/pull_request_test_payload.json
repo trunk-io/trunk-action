@@ -17,14 +17,14 @@
   },
   "checkRunId": 14235603498,
   "version": "0.0.0",
-  "githubToken": "fake-token",
+  "githubToken": "fake-github-token",
   "cache": true,
   "cacheKey": "trunk-check",
   "cachePath": "~/.cache/trunk/tools/ruby",
   "trunkApiAddress": "localhost-will-not-work:5021",
   "checkJobName": "repo-under-test/pull_request",
   "checkJobRunsOn": ["self-hosted", "linux", "r6id2xlarge-org"],
-  "checkWorkflowRunName": "[action-test]",
+  "checkWorkflowRunName": "action-test-pull-request",
   "concurrencyGroup": "repo-under-test/1",
   "debug": true
 }
