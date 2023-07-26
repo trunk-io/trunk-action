@@ -15,7 +15,7 @@ mkdir -p "${src_repo}"
 
   git init
 
-  git config user.name 'trunk-io/trunk-action action_tests.trunk_merge'
+  git config user.name 'trunk-io/trunk-action action_tests'
   git config user.email 'action_tests@trunk-action.trunk.io'
 
   echo "This is a README." >>readme.md
@@ -37,6 +37,14 @@ mkdir -p "${src_repo}"
   ## Prepare a merge graph commit
 
   git checkout -b trunk-merge/of-feature-branch main
+
+  git merge --no-ff --no-edit feature-branch
+
+  ## Prepare a branch for payload pull_request
+
+  git checkout feature-branch
+
+  git checkout -b refs/pull/1/merge
 
   git merge --no-ff --no-edit feature-branch
 
