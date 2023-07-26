@@ -55,6 +55,7 @@ mkdir -p "${src_repo}"
   ## Dump the state of the repo
 
   git log --graph --pretty=oneline trunk-merge/of-feature-branch
+  git log --graph --pretty=oneline 1/merge
 )
 
 ## Set up repo in `output_repo`
