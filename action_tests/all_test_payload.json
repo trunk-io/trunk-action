@@ -1,0 +1,19 @@
+{
+  "trunkPath": "./local-action/action_tests/stub.js",
+  "targetRefName": "main",
+  "targetCheckoutRef": "main",
+  "checkMode": "all",
+  "trunkToken": "fake-token",
+  "version": "0.0.0",
+  "arguments": "\" --replace\" : \"\"",
+  "githubToken": "fake-token",
+  "cache": true,
+  "cacheKey": "trunk-check",
+  "cachePath": "~/.cache/trunk/tools/ruby",
+  "trunkApiAddress": "localhost-will-not-work:5021",
+  "checkJobName": "action-test/trunk-action/all",
+  "checkJobRunsOn": ["self-hosted", "linux", "r6id2xlarge-org"],
+  "checkWorkflowRunName": "action-test-all",
+  "concurrencyGroup": "trunk-action/all/main",
+  "debug": true
+}

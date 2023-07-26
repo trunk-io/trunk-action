@@ -114,7 +114,7 @@ runs:
 
         payload() {
           if command -v jq >/dev/null; then
-            jq -r ".inputs.payload | fromjson | .$1 // empty" ${GITHUB_EVENT_PATH}
+            jq -r ".inputs.payload | fromjson | .$1 // empty" ${TEST_GITHUB_EVENT_PATH:-${GITHUB_EVENT_PATH}}
           else
             echo "::error::jq not installed on system!"
             exit 1

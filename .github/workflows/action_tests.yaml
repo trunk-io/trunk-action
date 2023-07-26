@@ -202,3 +202,64 @@ jobs:
             echo "The did not have the expected latest commit message "$latest_commit_message"."
             exit 1
           fi
+
+  payload:
+    name: ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - description: pull-request-payload
+            payload_path: action_tests/pull_request_test_payload.json
+          - description: trunk-merge-payload
+            payload_path: action_tests/trunk_merge_test_payload.json
+          - description: all-payload
+            payload_path: action_tests/all_test_payload.json
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Checkout
+        shell: bash
+        run: |
+          mv local-action ..
+          ../local-action/action_tests/setup.sh /tmp/src-repo .
+          mv ../local-action .
+
+      - name: Craft TEST_GITHUB_EVENT_PATH
+        shell: bash
+        run: |
+          payload=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
+          input=$(echo '{"inputs":'$(echo $payload | jq -c '.' )'}')
+          echo "$input">>local-action/payload.json
+          echo "TEST_GITHUB_EVENT_PATH=local-action/payload.json">>$GITHUB_ENV
+          mkdir -p .git/info
+          if [[ "${{ matrix.description }}" == "pull-request-payload" ]]; then
+            git checkout 1/merge
+            echo "EXPECTED_UPSTREAM=$(git rev-parse 1/merge^1)" >>$GITHUB_ENV
+            echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse 1/merge^2)" >>$GITHUB_ENV
+          elif [[ "${{ matrix.description }}" == "trunk-merge-payload" ]]; then
+            git checkout trunk-merge/of-feature-branch
+            echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
+            echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
+          else
+            echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse main^)" >>$GITHUB_ENV
+          fi
+
+      - name: Run trunk-action payload test for ${{matrix.description}}
+        id: trunk
+        uses: ./local-action/
+        with:
+          check-mode: payload
+        continue-on-error: true
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js ${{matrix.description}}
