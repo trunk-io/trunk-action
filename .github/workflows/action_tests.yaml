@@ -226,7 +226,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          path: tmp/local-action
+          path: /tmp/local-action
 
       - name: Checkout
         shell: bash
