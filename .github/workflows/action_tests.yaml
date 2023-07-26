@@ -59,6 +59,8 @@ jobs:
         run: |
           cd repo-under-test
           git checkout feature-branch
+          echo "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse feature-branch)" >>$GITHUB_ENV
+          echo "GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
@@ -66,8 +68,6 @@ jobs:
           INPUT_DEBUG: ""
           INPUT_GITHUB_REF_NAME: feature_branch
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
-          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ba53456789abcdef0123456789abcdef
-          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: 4ead456789abcdef0123456789abcdef
           TRUNK_PATH: ../local-action/action_tests/stub.js
 
       - name: Assert CLI calls
@@ -94,6 +94,8 @@ jobs:
         run: |
           cd repo-under-test
           git checkout feature-branch
+          echo "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse feature-branch)" >>$GITHUB_ENV
+          echo "GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
@@ -102,8 +104,6 @@ jobs:
           INPUT_GITHUB_REF_NAME: feature_branch
           INPUT_SAVE_ANNOTATIONS: auto
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
-          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ba53456789abcdef0123456789abcdef
-          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: 4ead456789abcdef0123456789abcdef
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: "true"
           TRUNK_PATH: ../local-action/action_tests/stub.js
           TRUNK_TMPDIR: /tmp/trunk
@@ -134,6 +134,8 @@ jobs:
           git checkout trunk-merge/of-feature-branch
           echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
           echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
+          echo "GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse trunk-merge/of-feature-branch)" >>$GITHUB_ENV
+          echo "GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)" >>$GITHUB_ENV
           ../local-action/pull_request.sh
         env:
           INPUT_ARGUMENTS: ""
