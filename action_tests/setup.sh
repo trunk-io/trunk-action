@@ -44,9 +44,11 @@ mkdir -p "${src_repo}"
 
   git checkout feature-branch
 
-  git checkout -b 1/merge
+  git checkout -b 1/merge feature-branch
 
-  git merge --no-ff --no-edit feature-branch
+  git add .
+
+  git commit -a -m "commit for payload pull_request"
 
   ## Go back to `main`
 
