@@ -236,7 +236,7 @@ jobs:
           ls
           ../local-action/action_tests/setup.sh ../tmp/src-repo ../tmp/repo-under-test
           pwd
-          ls /trunk-action
+          ls
 
       #mkdir ${{env.TMPDIR}}
 
