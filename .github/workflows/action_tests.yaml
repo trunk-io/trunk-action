@@ -157,15 +157,10 @@ jobs:
       - name: Set up test
         shell: bash
         run: |
-          pwd
-          ls
           ./local-action/action_tests/setup.sh src-repo repo-under-test
           cd repo-under-test
           git checkout feature-branch
           echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
-          pwd
-          ls
-          ls ./local-action
 
       - name: Run trunk-action
         shell: bash
@@ -217,10 +212,10 @@ jobs:
         include:
           - description: pull-request-payload
             payload_path: action_tests/pull_request_test_payload.json
-          # - description: trunk-merge-payload
-          #   payload_path: action_tests/trunk_merge_test_payload.json
-          # - description: all-payload
-          #   payload_path: action_tests/all_test_payload.json
+          - description: trunk-merge-payload
+            payload_path: action_tests/trunk_merge_test_payload.json
+          - description: all-payload
+            payload_path: action_tests/all_test_payload.json
 
     steps:
       - name: Checkout
@@ -232,21 +227,23 @@ jobs:
         shell: bash
         run: |
           mv local-action ..
-          pwd
-          ls
           ../local-action/action_tests/setup.sh /tmp/src-repo .
           mv ../local-action .
-          pwd
-          ls
 
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
           echo "TEST_GITHUB_EVENT_PATH=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
           mkdir -p .git/info
-          git checkout 1/merge
-          echo "EXPECTED_UPSTREAM=$(git rev-parse 1/merge^1)" >>$GITHUB_ENV
-          echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse 1/merge^2)" >>$GITHUB_ENV
+          if [[ ${matrix.description} == "pull-request-payload" ]]; then
+            git checkout 1/merge
+            echo "EXPECTED_UPSTREAM=$(git rev-parse 1/merge^1)" >>$GITHUB_ENV
+            echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse 1/merge^2)" >>$GITHUB_ENV
+          else if [[ ${matrix.description} == "trunk-merge-payload" ]]; then
+            git checkout trunk-merge/of-feature-branch
+            echo "EXPECTED_UPSTREAM=$(git rev-parse trunk-merge/of-feature-branch^1)" >>$GITHUB_ENV
+            echo "EXPECTED_GITHUB_COMMIT=$(git rev-parse trunk-merge/of-feature-branch^2)" >>$GITHUB_ENV
+          fi
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk

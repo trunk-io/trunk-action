@@ -29,7 +29,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   if [[ ${prev_ref} =~ .*"new series".* ]]; then
     echo "${prev_ref}"
     htl_arg=""
-  elif [[ -z ${TEST_GITHUB_EVENT_PATH+x} ]]; then
+  else
     htl_arg="--htl-factories-path=${latest_raw_upload}"
     fetch origin "${prev_ref}"
   fi
