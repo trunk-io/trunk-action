@@ -234,9 +234,9 @@ jobs:
           mv local-action ..
           pwd
           ls
-          ../local-action/action_tests/setup.sh tmp/src-repo tmp/repo-under-test
+          ../local-action/action_tests/setup.sh ../tmp/src-repo ../tmp/repo-under-test
           pwd
-          ls
+          ls /trunk-action
 
       #mkdir ${{env.TMPDIR}}
 
@@ -247,6 +247,7 @@ jobs:
           mkdir -p .git/info
           echo "EXPECTED_UPSTREAM=50039e906e0e53ce03b269e5e9e00879f4c6f05c" >>$GITHUB_ENV
           echo "EXPECTED_GITHUB_COMMIT=69b531ac8f611e0ae73639ec606fbc23e8ead576" >>$GITHUB_ENV
+          mv ../local-action .
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
