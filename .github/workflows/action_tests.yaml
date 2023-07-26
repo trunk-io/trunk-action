@@ -250,7 +250,7 @@ jobs:
 
       - name: Run trunk-action payload test for ${{matrix.description}}
         id: trunk
-        uses: ../local-action/
+        uses: ./local-action/
         with:
           check-mode: payload
         continue-on-error: true
@@ -258,6 +258,9 @@ jobs:
       - name: Assert CLI calls
         shell: bash
         run: |
-          cd tmp/local-action
+          pwd
+          cd ..
+          pwd
+          cd local-action
           npm install
           ./action_tests/assert.js ${{matrix.description}}
