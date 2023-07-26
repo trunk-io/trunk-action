@@ -242,8 +242,8 @@ jobs:
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
-          echo "TEST_GITHUB_EVENT_PATH=local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
-          mkdir -p .git/info
+          echo "TEST_GITHUB_EVENT_PATH=tmp/local-action/${{ matrix.payload_path }}" >>$GITHUB_ENV
+          mkdir -p tmp/.git/info
           echo "EXPECTED_UPSTREAM=50039e906e0e53ce03b269e5e9e00879f4c6f05c" >>$GITHUB_ENV
           echo "EXPECTED_GITHUB_COMMIT=69b531ac8f611e0ae73639ec606fbc23e8ead576" >>$GITHUB_ENV
 
@@ -257,6 +257,6 @@ jobs:
       - name: Assert CLI calls
         shell: bash
         run: |
-          cd local-action
+          cd tmp/local-action
           npm install
           ./action_tests/assert.js ${{matrix.description}}
