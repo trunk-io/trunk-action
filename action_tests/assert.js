@@ -133,8 +133,6 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       process.env.INPUT_TRUNK_TOKEN,
       '"',
       '--replace"',
-      ":",
-      '""',
     ],
   ],
 };

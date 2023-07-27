@@ -5,7 +5,7 @@
   "checkMode": "all",
   "trunkToken": "fake-token",
   "version": "0.0.0",
-  "arguments": "\" --replace\" : \"\"",
+  "arguments": "\" --replace\"",
   "githubToken": "fake-token",
   "cache": true,
   "cacheKey": "trunk-check",
