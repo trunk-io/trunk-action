@@ -234,7 +234,7 @@ jobs:
         shell: bash
         run: |
           payload=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
-          echo '{"inputs":"$(echo $payload | jq -c '.' )"}'>>local-action/payload.json
+          echo "$(echo '{"inputs":'$(echo $payload | jq -c '.' )'}')">>local-action/payload.json
           echo "TEST_GITHUB_EVENT_PATH=local-action/payload.json">>$GITHUB_ENV
           mkdir -p .git/info
           if [[ "${{ matrix.description }}" == "pull-request-payload" ]]; then
