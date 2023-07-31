@@ -42,6 +42,125 @@ jobs:
           npm install
           ./action_tests/assert.js trunk-merge
 
+  pull-request-trunk-annotate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          git checkout feature-branch
+          export GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse feature-branch)
+          export GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)
+          echo "EXPECTED_UPSTREAM=${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" >>$GITHUB_ENV
+          ../local-action/pull_request.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: "8675309"
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          INPUT_SAVE_ANNOTATIONS: ""
+          INPUT_GITHUB_REF_NAME: feature_branch
+          GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js pull-request-trunk-annotate
+
+  pull-request-github-annotate-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          git checkout trunk-merge/of-feature-branch
+          export GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse trunk-merge/of-feature-branch^2)
+          export GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse trunk-merge/of-feature-branch^1)
+          echo "EXPECTED_UPSTREAM=${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" >>$GITHUB_ENV
+          ../local-action/pull_request.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: ""
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          INPUT_GITHUB_REF_NAME: feature_branch
+          INPUT_SAVE_ANNOTATIONS: auto
+          GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: "true"
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          TRUNK_TMPDIR: /tmp/trunk
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js pull-request-github-annotate-file
+
+  pull-request-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: ./local-action/action_tests/setup.sh src-repo repo-under-test
+
+      - name: Run trunk-action
+        shell: bash
+        run: |
+          cd repo-under-test
+          git checkout trunk-merge/of-feature-branch
+          export GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(git rev-parse feature-branch)
+          export GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(git rev-parse main)
+          echo "EXPECTED_UPSTREAM=${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}" >>$GITHUB_ENV
+          echo "EXPECTED_GITHUB_COMMIT=${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}" >>$GITHUB_ENV
+          ../local-action/pull_request.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: ""
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          INPUT_SAVE_ANNOTATIONS: ""
+          INPUT_GITHUB_REF_NAME: trunk-merge/of-feature-branch/merge
+          GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+
+      - name: Assert CLI calls
+        shell: bash
+        run: |
+          cd local-action
+          npm install
+          ./action_tests/assert.js pull-request-merge
+
   all-hold-the-line-new-series:
     runs-on: ubuntu-latest
     steps:

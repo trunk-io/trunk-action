@@ -45,6 +45,48 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "",
     ],
   ],
+  "pull-request-trunk-annotate": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-label",
+      "",
+      "--trunk-annotate=8675309",
+    ],
+  ],
+  "pull-request-github-annotate-file": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-label",
+      "",
+      "--github-annotate-file=/tmp/trunk/annotations.bin",
+    ],
+  ],
+  "pull-request-merge": () => [
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-label",
+      "",
+      "--github-annotate",
+    ],
+  ],
   "all-hold-the-line-new-series": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     [
