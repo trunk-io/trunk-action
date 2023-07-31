@@ -73,6 +73,7 @@ jobs:
           INPUT_GITHUB_REF_NAME: feature_branch
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
           TRUNK_PATH: ../local-action/action_tests/stub.js
+          INPUT_AUTOFIX_AND_PUSH: ""
 
       - name: Assert CLI calls
         shell: bash
@@ -114,6 +115,7 @@ jobs:
           GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: "true"
           TRUNK_PATH: ../local-action/action_tests/stub.js
           TRUNK_TMPDIR: /tmp/trunk
+          INPUT_AUTOFIX_AND_PUSH: ""
 
       - name: Assert CLI calls
         shell: bash
@@ -153,6 +155,7 @@ jobs:
           INPUT_GITHUB_REF_NAME: trunk-merge/of-feature-branch/merge
           GITHUB_EVENT_PULL_REQUEST_NUMBER: "1337"
           TRUNK_PATH: ../local-action/action_tests/stub.js
+          INPUT_AUTOFIX_AND_PUSH: ""
 
       - name: Assert CLI calls
         shell: bash
