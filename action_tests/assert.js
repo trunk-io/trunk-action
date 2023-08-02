@@ -89,6 +89,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "all-hold-the-line-new-series": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -102,6 +103,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "all-hold-the-line-existing-series": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -113,6 +115,11 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--series",
       "series-name",
     ],
+  ],
+  // the stub hands back an old version in env.TRUNK_CLI_VERSION for this test
+  "all-hold-the-line-old-cli-version": () => [
+    ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
+    ["trunk", "version"],
   ],
   "all-hold-the-line-no-upload-id": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
