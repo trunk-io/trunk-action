@@ -42,7 +42,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     if [[ "$(printf "%s\n%s\n" "${MINIMUM_UPLOAD_ID_VERSION}" "${trunk_version}" |
       sort --version-sort |
       head -n 1)" == "${trunk_version}"* ]]; then
-      echo "::error::Please update your CLI to ${MINIMUM_UPLOAD_ID_VERSION} or higher."
+      echo "::error::Please update your CLI to ${MINIMUM_UPLOAD_ID_VERSION} or higher (current version ${trunk_version})."
       exit 1
     fi
     # trunk-ignore-end(shellcheck/SC2312)

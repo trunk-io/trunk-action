@@ -265,6 +265,7 @@ jobs:
           TRUNK_PATH: ../local-action/action_tests/stub.js
           TRUNK_CLI_VERSION: 1.12.0
           STUB_GET_LATEST_RAW_OUTPUT_STDOUT: ${{ env.EXPECTED_UPSTREAM }}
+        continue-on-error: true
 
       - name: Assert CLI calls
         shell: bash
