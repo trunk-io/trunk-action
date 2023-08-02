@@ -15,6 +15,8 @@ fetch() {
     "$@"
 }
 
+MINIMUM_UPLOAD_ID_VERSION=1.12.3
+
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \
@@ -35,6 +37,15 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   fi
   if [[ -n ${INPUT_UPLOAD_ID-} ]]; then # if upload ID unset, skip it instead of erroring
     upload_id_arg="--upload-id ${INPUT_UPLOAD_ID}"
+    trunk_version="$(${TRUNK_PATH} version)"
+    # trunk-ignore-begin(shellcheck/SC2312): the == will fail if anything inside the $() fails
+    if [[ "$(printf "%s\n%s\n" "${MINIMUM_UPLOAD_ID_VERSION}" "${trunk_version}" |
+      sort --version-sort |
+      head -n 1)" == "${MINIMUM_UPLOAD_ID_VERSION}"* ]]; then
+      echo "::error::Please update your CLI to ${MINIMUM_UPLOAD_ID_VERSION} or higher."
+      exit 1
+    fi
+    # trunk-ignore-end(shellcheck/SC2312)
   else
     upload_id_arg=""
   fi
