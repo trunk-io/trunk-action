@@ -116,6 +116,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "series-name",
     ],
   ],
+  // the stub hands back an old version in env.TRUNK_CLI_VERSION for this test
   "all-hold-the-line-old-cli-version": () => [
     ["trunk", "check", "get-latest-raw-output", "--series", "series-name", getHtlFactoriesPath()],
     ["trunk", "version"],
