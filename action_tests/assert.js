@@ -45,7 +45,8 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "",
     ],
   ],
-  "pull-request-trunk-annotate": () => [
+  "trunk-merge-annotate": () => [
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -59,6 +60,23 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--trunk-annotate=8675309",
     ],
   ],
+  "trunk-merge-annotate-old-cli": () => [["trunk", "version"]],
+  "pull-request-trunk-annotate": () => [
+    ["trunk", "version"],
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-label",
+      "",
+      "--trunk-annotate=8675309",
+    ],
+  ],
+  "pull-request-trunk-annotate-old-cli": () => [["trunk", "version"]],
   "pull-request-github-annotate-file": () => [
     [
       "trunk",
@@ -126,6 +144,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
   "pull-request-autofix": () => [
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -139,6 +158,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "pull-request-payload": () => [
     ["trunk", "version"],
     ["trunk", "init"],
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -155,6 +175,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "trunk-merge-payload": () => [
     ["trunk", "version"],
     ["trunk", "init"],
+    ["trunk", "version"],
     [
       "trunk",
       "check",
