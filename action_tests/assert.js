@@ -62,6 +62,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "trunk-merge-annotate-old-cli": () => [["trunk", "version"]],
   "pull-request-trunk-annotate": () => [
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -143,6 +144,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
   "pull-request-autofix": () => [
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -156,6 +158,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "pull-request-payload": () => [
     ["trunk", "version"],
     ["trunk", "init"],
+    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -172,6 +175,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   "trunk-merge-payload": () => [
     ["trunk", "version"],
     ["trunk", "init"],
+    ["trunk", "version"],
     [
       "trunk",
       "check",
