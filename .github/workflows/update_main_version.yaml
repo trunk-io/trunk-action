@@ -1,0 +1,33 @@
+name: Update release version
+run-name: Move ${{ github.event.inputs.major_version }} to ${{ github.event.inputs.target }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: The tag to use
+        required: true
+      major_version:
+        type: choice
+        description: Target major version
+        options:
+          - v1
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Git config
+        run: |
+          git config user.name trunkio
+          git config user.email github-actions@trunk.io
+      # ignoring the shell injection is mildly worrying but this will always only be run by us, so it should be fine
+      # trunk-ignore-begin(semgrep/yaml.github-actions.security.run-shell-injection.run-shell-injection)
+      - name: Tag new target
+        run: git tag -f ${{ github.event.inputs.major_version }} ${{ github.event.inputs.target }}
+      - name: Push new tag
+        run: git push origin ${{ github.event.inputs.major_version }} --force
+      # trunk-ignore-end(semgrep/yaml.github-actions.security.run-shell-injection.run-shell-injection)
