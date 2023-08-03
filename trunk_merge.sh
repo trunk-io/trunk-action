@@ -26,11 +26,13 @@ echo "Detected merge queue commit, using HEAD^1 (${upstream}) as upstream and HE
 if [[ -n ${INPUT_CHECK_RUN_ID} ]]; then
   trunk_version="$(${TRUNK_PATH} version)"
   # trunk-ignore-begin(shellcheck/SC2312): the == will fail if anything inside the $() fails
-  if [[ "$(printf "%s\n%s\n" "${MINIMUM_CHECK_RUN_ID_VERSION}" "${trunk_version}" |
-    sort --version-sort |
-    head -n 1)" == "${trunk_version}"* ]]; then
-    echo "::error::Please update your CLI to ${MINIMUM_CHECK_RUN_ID_VERSION} or higher (current version ${trunk_version})."
-    exit 1
+  if sort_result=$(printf "%s\n%s\n" "${MINIMUM_CHECK_RUN_ID_VERSION}" "${trunk_version}" | sort --version-sort); then
+    if [[ $(echo "${sort_result}" | head -n 1) == "${trunk_version}" ]]; then
+      echo "::error::Please update your CLI to ${MINIMUM_CHECK_RUN_ID_VERSION} or higher (current version ${trunk_version})."
+      exit 1
+    fi
+  else
+    echo "::warning::sort --version-sort failed - continuing without checking CLI version"
   fi
   # trunk-ignore-end(shellcheck/SC2312)
   annotation_argument=--trunk-annotate=${INPUT_CHECK_RUN_ID}
