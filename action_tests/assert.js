@@ -45,6 +45,22 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "",
     ],
   ],
+  "trunk-merge-annotate": () => [
+    ["trunk", "version"],
+    [
+      "trunk",
+      "check",
+      "--ci",
+      "--upstream",
+      process.env.EXPECTED_UPSTREAM,
+      "--github-commit",
+      process.env.EXPECTED_GITHUB_COMMIT,
+      "--github-label",
+      "",
+      "--trunk-annotate=8675309",
+    ],
+  ],
+  "trunk-merge-annotate-old-cli": () => [["trunk", "version"]],
   "pull-request-trunk-annotate": () => [
     [
       "trunk",
@@ -59,6 +75,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--trunk-annotate=8675309",
     ],
   ],
+  "pull-request-trunk-annotate-old-cli": () => [["trunk", "version"]],
   "pull-request-github-annotate-file": () => [
     [
       "trunk",
