@@ -7,6 +7,8 @@
 [![slack](https://img.shields.io/badge/-slack-611f69?logo=slack)][slack]
 [![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
 
+Making a change.
+
 # Trunk.io GitHub Action
 
 This action runs and shows inline annotations of issues found by
