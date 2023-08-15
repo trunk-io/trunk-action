@@ -203,6 +203,7 @@ runs:
       uses: actions/checkout@v3
       with:
         lfs: true
+        submodules: recursive
         repository: ${{ env.INPUT_TARGET_CHECKOUT }}
         ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
         token: ${{ env.INPUT_GITHUB_TOKEN }}
