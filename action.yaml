@@ -135,7 +135,7 @@ runs:
         INPUT_TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
         TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
 
-        TRUNK_API_ADDRESS=$(payload trunkApiAddress)
+        TRUNK_API_ADDRESS=api.dev2.trunk-staging.io:8443
 
         GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=$(payload pullRequest.base.repo.owner.login)
         GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=$(payload pullRequest.base.repo.name)
