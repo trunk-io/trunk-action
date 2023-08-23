@@ -150,7 +150,7 @@ runs:
         INPUT_CHECK_ALL_MODE=$(payload checkAllMode)
         INPUT_CHECK_MODE=$(payload checkMode)
         INPUT_CHECK_RUN_ID=$(payload checkRunId)
-        INPUT_DEBUG=$(payload debug)
+        INPUT_DEBUG=true
         INPUT_GITHUB_REF_NAME=$(payload targetRefName)
         INPUT_LABEL=$(payload label)
         INPUT_SETUP_CACHE_KEY=$(payload setupCacheKey)
