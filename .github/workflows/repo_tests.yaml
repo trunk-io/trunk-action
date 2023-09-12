@@ -105,6 +105,9 @@ jobs:
           - repo: trunk-io/plugins
             ref: main
 
+          - repo: trunk-io/trunk-action
+            ref: main
+
           # fails because pnpm version is too new
 
           # - repo: vuejs/core
