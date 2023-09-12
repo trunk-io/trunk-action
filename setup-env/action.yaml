@@ -88,12 +88,10 @@ runs:
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
       shell: bash
       run: |
-        if ! command -v node >/dev/null; then
-          echo "::warning::Failed to install specified node version - installing latest node instead."
-          cat >>$GITHUB_ENV <<EOF
+        echo "::warning::Failed to install specified node version - installing latest node instead."
+        cat >>$GITHUB_ENV <<EOF
         FAILED_NODE_INSTALL=true
         EOF
-        fi
 
     - name: Install backup node version
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.FAILED_NODE_INSTALL == 'true'
