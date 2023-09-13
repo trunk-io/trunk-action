@@ -64,6 +64,14 @@ jobs:
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
+          - repo: prawn-test-staging-rw/setup-node-test
+            ref: main
+            post-init: |
+              if [ "${FAILED_NODE_INSTALL}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+
           - repo: replayio/devtools
             ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
             description: (has trunk.yaml)
@@ -104,14 +112,6 @@ jobs:
 
           - repo: trunk-io/plugins
             ref: main
-
-          - repo: prawn-test-staging-rw/setup-node-test
-            ref: main
-            post-init: |
-              if [ "${FAILED_NODE_INSTALL}" != "true" ]; then
-                echo "::error::Initial setup node didn't fail"
-                exit 1
-              fi
 
           # fails because pnpm version is too new
 
