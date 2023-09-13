@@ -105,8 +105,13 @@ jobs:
           - repo: trunk-io/plugins
             ref: main
 
-          - repo: trunk-io/trunk-action
+          - repo: trunk-io/setup-node-test
             ref: main
+            post-init: |
+              if [ $FAILED_NODE_INSTALL != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
 
           # fails because pnpm version is too new
 

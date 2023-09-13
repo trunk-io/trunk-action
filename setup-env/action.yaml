@@ -90,9 +90,7 @@ runs:
       run: |
         if ! command -v node >/dev/null; then
           echo "::warning::Failed to install specified node version - installing latest node instead."
-          cat >>$GITHUB_ENV <<EOF
-        FAILED_NODE_INSTALL=true
-        EOF
+          echo "FAILED_NODE_INSTALL=true" >>$GITHUB_ENV
         fi
 
     - name: Install backup node version
