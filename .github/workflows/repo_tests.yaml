@@ -108,7 +108,7 @@ jobs:
           - repo: prawn-test-staging-rw/setup-node-test
             ref: main
             post-init: |
-              if [ $FAILED_NODE_INSTALL != "true" ]; then
+              if [ ${FAILED_NODE_INSTALL} != "true" ]; then
                 echo "::error::Initial setup node didn't fail"
                 exit 1
               fi
