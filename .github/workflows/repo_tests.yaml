@@ -105,7 +105,7 @@ jobs:
           - repo: trunk-io/plugins
             ref: main
 
-          - repo: trunk-io/setup-node-test
+          - repo: prawn-test-staging-rw/setup-node-test
             ref: main
             post-init: |
               if [ $FAILED_NODE_INSTALL != "true" ]; then
