@@ -78,6 +78,7 @@ runs:
         version: latest
 
     - name: Install Node dependencies
+      id: setup_node
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
       uses: actions/setup-node@v3
       with:
@@ -88,13 +89,18 @@ runs:
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
       shell: bash
       run: |
+        if [ ${{ steps.setup_node.outcome }} == "success" ]; then
+          exit 0
+        fi
+        echo "::warning::Failed to install specified node version."
+        echo "FAILED_NODE_INSTALL=true" >>$GITHUB_ENV
         if ! command -v node >/dev/null; then
-          echo "::warning::Failed to install specified node version - installing latest node instead."
-          echo "FAILED_NODE_INSTALL=true" >>$GITHUB_ENV
+          echo "::warning::No existing node install detected - installing latest node instead."
+          echo "INSTALL_LATEST_NODE=true" >>$GITHUB_ENV
         fi
 
     - name: Install backup node version
-      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.FAILED_NODE_INSTALL == 'true'
+      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.INSTALL_LATEST_NODE == 'true'
       uses: actions/setup-node@v3
       with:
         node-version-file: latest
