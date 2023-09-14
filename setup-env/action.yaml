@@ -94,16 +94,13 @@ runs:
         fi
         echo "::warning::Failed to install specified node version."
         echo "FAILED_NODE_INSTALL=true" >>$GITHUB_ENV
-        if ! command -v node >/dev/null; then
-          echo "::warning::No existing node install detected - installing latest node instead."
-          echo "INSTALL_LATEST_NODE=true" >>$GITHUB_ENV
-        fi
+        echo "::warning::No existing node install detected - installing latest node instead."
 
     - name: Install backup node version
-      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.INSTALL_LATEST_NODE == 'true'
+      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.FAILED_NODE_INSTALL == 'true'
       uses: actions/setup-node@v3
       with:
-        node-version-file: latest
+        node-version: latest
 
     - name: Cache node_modules
       if: inputs.cache-key && env.PACKAGE_MANAGER
