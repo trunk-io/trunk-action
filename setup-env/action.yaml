@@ -103,7 +103,7 @@ runs:
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.INSTALL_LATEST_NODE == 'true'
       uses: actions/setup-node@v3
       with:
-        node-version-file: latest
+        node-version: latest
 
     - name: Cache node_modules
       if: inputs.cache-key && env.PACKAGE_MANAGER
