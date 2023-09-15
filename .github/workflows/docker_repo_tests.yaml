@@ -12,7 +12,7 @@ jobs:
       matrix:
         # This is a docker image that mimics the github runner image
         # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
-        container: ["catthehacker/ubuntu:runner-20.04", "ubuntu:latest"]
+        container: "catthehacker/ubuntu:runner-20.04"
 
         include:
           # Items in this list satisfy a few criteria:
@@ -64,6 +64,7 @@ jobs:
                 echo "::error::Latest Node not installed"
                 exit 1
               fi
+            container: "ubuntu:latest"
 
           - repo: sass/sass
             ref: 225e176115211387e014d97ae0076d94de3152a1
