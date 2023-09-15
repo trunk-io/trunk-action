@@ -7,12 +7,13 @@ jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
     runs-on: ubuntu-latest
-    # This is a docker image that mimics the github runner image
-    # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
-    container: catthehacker/ubuntu:runner-20.04
     strategy:
       fail-fast: false
       matrix:
+        # This is a docker image that mimics the github runner image
+        # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
+        container: [catthehacker/ubuntu:runner-20.04, ubuntu:latest]
+
         include:
           # Items in this list satisfy a few criteria:
           #
@@ -52,10 +53,23 @@ jobs:
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
+          - repo: prawn-test-staging-rw/setup-node-test
+            ref: main
+            post-init: |
+              if [ "${FAILED_NODE_INSTALL}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+              if [ "${INSTALL_LATEST_NODE}" != "true" && ! command -v node >/dev/null ]; then
+                echo "::error::Latest Node not installed"
+                exit 1
+              fi
+
           - repo: sass/sass
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
 
+    container: ${{ matrix.container }}
     steps:
       - name: Checkout ${{ matrix.repo }}
         uses: actions/checkout@v3
