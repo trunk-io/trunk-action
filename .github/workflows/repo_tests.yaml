@@ -6,7 +6,7 @@ permissions: read-all
 jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, m5dxlarge]
     strategy:
       fail-fast: false
       matrix:
@@ -68,6 +68,10 @@ jobs:
             ref: main
             post-init: |
               if [ "${FAILED_NODE_INSTALL}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+              if [ "${INSTALL_LATEST_NODE}" != "true" ]; then
                 echo "::error::Initial setup node didn't fail"
                 exit 1
               fi
