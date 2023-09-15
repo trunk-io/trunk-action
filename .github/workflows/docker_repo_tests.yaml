@@ -12,7 +12,7 @@ jobs:
       matrix:
         # This is a docker image that mimics the github runner image
         # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
-        container: [catthehacker/ubuntu:runner-20.04, ubuntu:latest]
+        container: ["catthehacker/ubuntu:runner-20.04", "ubuntu:latest"]
 
         include:
           # Items in this list satisfy a few criteria:
