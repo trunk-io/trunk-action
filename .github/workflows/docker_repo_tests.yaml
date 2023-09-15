@@ -52,6 +52,23 @@ jobs:
             post-init: |
               ${TRUNK_PATH} check enable eslint
 
+          - repo: prawn-test-staging-rw/setup-node-test
+            ref: main
+            post-init: |
+              if [ "${FAILED_NODE_INSTALL}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+              if [ "${INSTALL_LATEST_NODE}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+            description: (test for setup-node)
+            pre-init: |
+              while which node > /dev/null; do
+                rm $(which node)
+              done
+
           - repo: sass/sass
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
@@ -67,6 +84,10 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: local-action
+
+      - name: Run pre-init
+        shell: bash
+        run: ${{ matrix.pre-init }}
 
       - name: Run trunk-action in ${{ matrix.repo }}
         id: trunk

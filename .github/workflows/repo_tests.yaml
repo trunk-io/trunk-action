@@ -6,7 +6,7 @@ permissions: read-all
 jobs:
   repo_tests:
     name: ${{ matrix.repo }} ${{ matrix.description }}
-    runs-on: [self-hosted, linux, m5dxlarge]
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -71,10 +71,7 @@ jobs:
                 echo "::error::Initial setup node didn't fail"
                 exit 1
               fi
-              if [ "${INSTALL_LATEST_NODE}" != "true" ]; then
-                echo "::error::Initial setup node didn't fail"
-                exit 1
-              fi
+            description: (test for setup-node)
 
           - repo: replayio/devtools
             ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
