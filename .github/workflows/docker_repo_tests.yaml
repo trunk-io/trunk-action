@@ -12,7 +12,6 @@ jobs:
       matrix:
         # This is a docker image that mimics the github runner image
         # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
-        container: "catthehacker/ubuntu:runner-20.04"
 
         include:
           # Items in this list satisfy a few criteria:
@@ -33,6 +32,7 @@ jobs:
               # terrascan scans dockerfile.js (a JS file for parsing dockerfiles) as a dockerfile itself
               echo "src/languages/dockerfile.js" >> .gitignore
               cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
+            container: "catthehacker/ubuntu:runner-20.04"
 
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
@@ -40,18 +40,21 @@ jobs:
               # prettier chokes on this malformed html file
               echo "examples/celery/src/task_app/templates/index.html" >> .gitignore
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+            container: "catthehacker/ubuntu:runner-20.04"
 
           - repo: postcss/postcss
             ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
             description: (uses pnpm)
             post-init: |
               ${TRUNK_PATH} check enable eslint
+            container: "catthehacker/ubuntu:runner-20.04"
 
           - repo: postcss/postcss
             ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
             description: (compat test for cli 1.0.0)
             post-init: |
               ${TRUNK_PATH} check enable eslint
+            container: "catthehacker/ubuntu:runner-20.04"
 
           - repo: prawn-test-staging-rw/setup-node-test
             ref: main
@@ -69,6 +72,7 @@ jobs:
           - repo: sass/sass
             ref: 225e176115211387e014d97ae0076d94de3152a1
             description: (uses npm)
+            container: "catthehacker/ubuntu:runner-20.04"
 
     container: ${{ matrix.container }}
     steps:
