@@ -143,14 +143,14 @@ runs:
         GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=$(payload pullRequest.head.repo.fork)
         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(payload pullRequest.head.sha)
         GITHUB_EVENT_PULL_REQUEST_NUMBER=$(payload pullRequest.number)
-        INPUT_ARGUMENTS=$(payload arguments)
+        INPUT_ARGUMENTS=$(payload arguments) --debug
         INPUT_CACHE=$(payload cache)
         INPUT_CACHE_KEY=$(payload cacheKey)
         INPUT_CACHE_PATH=$(payload cachePath)
         INPUT_CHECK_ALL_MODE=$(payload checkAllMode)
         INPUT_CHECK_MODE=$(payload checkMode)
         INPUT_CHECK_RUN_ID=$(payload checkRunId)
-        INPUT_DEBUG=$(payload debug)
+        INPUT_DEBUG=true
         INPUT_GITHUB_REF_NAME=$(payload targetRefName)
         INPUT_LABEL=$(payload label)
         INPUT_SETUP_CACHE_KEY=$(payload setupCacheKey)
