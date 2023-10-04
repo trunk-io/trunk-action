@@ -9,6 +9,10 @@
 
 # Trunk.io GitHub Action
 
+> **Note**
+>
+> We strongly encourage using Trunk Check's integration with GitHub to run Trunk Check on CI. [Get started here!](https://docs.trunk.io/check/get-started)
+
 This action runs and shows inline annotations of issues found by
 [`trunk check`](https://docs.trunk.io/docs/check), a powerful meta linter and formatter. Trunk runs
 hermetically, _locally_ or on CI, so you can always quickly see lint, formatting, and security
@@ -21,14 +25,11 @@ issues _before_ pushing your changes. See all supported linters
   <em>Example annotations</em>
 </p>
 
-## Get Started
+## Get Started 
 
-> **Note**
->
-> We will soon launch a number of GitHub-native integrations and recommend that you use Trunk Check
-> through those integrations, instead of maintaining your own workflow files. You can sign up to be
-> notified when this happens either by joining [our community Slack](https://slack.trunk.io) or by
-> [upvoting the tracking feature request](https://features.trunk.io/check/p/github-native-integrations).
+[Follow these instructions to set up Trunk Check CI for your GitHub repository](https://docs.trunk.io/check/get-started)
+
+## Run it yourself
 
 To run Trunk Check on your pull requests, add this file to your repo as
 `.github/workflows/trunk-check.yaml`:
