@@ -44,6 +44,7 @@ jobs:
               sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
+              # markdownlint fails for some reason, and what we really care about anyways is clang-tidy
               ${TRUNK_PATH} check disable markdownlint
 
           - repo: pallets/flask
