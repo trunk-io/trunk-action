@@ -11,7 +11,8 @@
 
 > **Note**
 >
-> We strongly encourage using Trunk Check's integration with GitHub to run Trunk Check on CI. [Get started here!](https://docs.trunk.io/check/get-started)
+> We strongly encourage using Trunk Check's integration with GitHub to run Trunk Check on CI.
+> [Get started here!](https://docs.trunk.io/check/get-started)
 
 This action runs and shows inline annotations of issues found by
 [`trunk check`](https://docs.trunk.io/docs/check), a powerful meta linter and formatter. Trunk runs
@@ -25,7 +26,7 @@ issues _before_ pushing your changes. See all supported linters
   <em>Example annotations</em>
 </p>
 
-## Get Started 
+## Get Started
 
 [Follow these instructions to set up Trunk Check CI for your GitHub repository](https://docs.trunk.io/check/get-started)
 
