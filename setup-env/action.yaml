@@ -80,7 +80,7 @@ runs:
     - name: Install Node dependencies
       id: setup_node
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
       continue-on-error: true
@@ -101,7 +101,7 @@ runs:
 
     - name: Install backup node version
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.INSTALL_LATEST_NODE == 'true'
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: latest
 
