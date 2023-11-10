@@ -12,7 +12,7 @@
   "cachePath": "~/.cache/trunk/tools/ruby",
   "trunkApiAddress": "localhost-will-not-work:5021",
   "checkJobName": "action-test/trunk-action/trunk_merge",
-  "checkJobRunsOn": ["self-hosted", "linux", "public", "x86", "2xlarge"],
+  "checkJobRunsOn": ["self-hosted", "linux", "arbitrary", "test", "values"],
   "checkWorkflowRunName": "action-test-trunk-merge",
   "concurrencyGroup": "trunk-action/trunk_merge/trunk-merge/of-feature-branch",
   "debug": true
