@@ -1,15 +1,15 @@
 version: 0.1
 
 cli:
-  version: 1.17.2
+  version: 1.18.0
 
 plugins:
   sources:
     - id: trunk
-      ref: v1.3.0
+      ref: v1.4.0
       uri: https://github.com/trunk-io/plugins
     - id: configs
-      ref: v0.0.8
+      ref: v1.0.0
       uri: https://github.com/trunk-io/configs
 
 lint:
