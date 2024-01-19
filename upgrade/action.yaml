@@ -52,6 +52,11 @@ inputs:
     required: false
     default: .trunk
 
+  lowercase-title:
+    description: A boolean to decide if the PR and commit message title should be in lowercase
+    required: false
+    default: false
+
 runs:
   using: composite
   steps:
@@ -95,6 +100,7 @@ runs:
         ${{ github.action_path }}/upgrade.sh
       env:
         UPGRADE_ARGUMENTS: ${{ inputs.arguments }}
+        LOWERCASE_TITLE: ${{ inputs.lowercase-title }}
 
     - name: Cleanup temporary files
       if: always()

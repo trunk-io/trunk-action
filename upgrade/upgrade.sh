@@ -21,6 +21,10 @@ if [[ ${trimmed_upgrade_output} == *"cli upgrade"* ]]; then
   title_message="Upgrade trunk to ${new_cli_version}"
 fi
 
+if [[ ${LOWERCASE_TITLE} == "true" ]]; then
+  title_message=$(echo "${title_message}" | tr '[:upper:]' '[:lower:]')
+fi
+
 # Step 3: Prepare for pull request creation action.
 # Avoid triggering a git-hook, and avoid resetting git hook config via daemon
 ${TRUNK_PATH} daemon shutdown
