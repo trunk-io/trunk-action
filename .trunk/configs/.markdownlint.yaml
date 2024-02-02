@@ -5,6 +5,7 @@ bullet: false
 html: false
 indentation: false
 line_length: false
+MD041: false
 spaces: false
 url: false
 whitespace: false

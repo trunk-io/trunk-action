@@ -1,0 +1,30 @@
+{
+  "trunkPath": "./local-action/action_tests/stub.js",
+  "targetRefName": "1/merge",
+  "targetCheckoutRef": "refs/pull/1/merge",
+  "checkMode": "pull_request",
+  "trunkToken": "fake-token",
+  "pullRequest": {
+    "number": 1,
+    "head": {
+      "sha": "fake-head-sha",
+      "ref": "feature-branch"
+    },
+    "base": {
+      "sha": "fake-base-sha",
+      "ref": "main"
+    }
+  },
+  "checkRunId": 14235603498,
+  "version": "0.0.0",
+  "githubToken": "fake-token",
+  "cache": true,
+  "cacheKey": "trunk-check",
+  "cachePath": "~/.cache/trunk/tools/ruby",
+  "trunkApiAddress": "localhost-will-not-work:5021",
+  "checkJobName": "repo-under-test/pull_request",
+  "checkJobRunsOn": ["self-hosted", "linux", "public", "x86", "2xlarge"],
+  "checkWorkflowRunName": "action-test-pull-request",
+  "concurrencyGroup": "repo-under-test/1",
+  "debug": true
+}

@@ -1,32 +1,22 @@
 version: 0.1
+
 cli:
   version: 1.19.0
+
 plugins:
   sources:
     - id: trunk
       ref: v1.4.2
       uri: https://github.com/trunk-io/plugins
+    - id: configs
+      ref: v1.0.1
+      uri: https://github.com/trunk-io/configs
+
 lint:
-  enabled:
-    - checkov@3.2.3
-    - trivy@0.48.3
-    - trufflehog@3.66.3
-    - yamllint@1.33.0
-    - actionlint@1.6.26
-    - git-diff-check
-    - gitleaks@8.18.2
-    - markdownlint@0.39.0
-    - prettier@3.2.4
-    - shellcheck@0.9.0
-    - shfmt@3.6.0
-runtimes:
-  enabled:
-    - python@3.10.8
-    - go@1.21.0
-    - node@18.12.1
-actions:
-  enabled:
-    - trunk-announce
-    - trunk-check-pre-push
-    - trunk-fmt-pre-commit
-    - trunk-upgrade-available
+  # enabled list inherited from plugin 'configs'
+  disabled:
+    - eslint
+  ignore:
+    - linters: [ALL]
+      paths:
+        - repo_tests/**

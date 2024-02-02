@@ -1,0 +1,125 @@
+name: docker_repo_tests
+on: [workflow_dispatch, workflow_call]
+
+permissions: read-all
+
+jobs:
+  repo_tests:
+    name: ${{ matrix.repo }} ${{ matrix.description }}
+    runs-on: ubuntu-latest
+    # This is a docker image that mimics the github runner image
+    # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
+    container: catthehacker/ubuntu:runner-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Items in this list satisfy a few criteria:
+          #
+          #   * test has to be useful/interesting and add value atop the monorepo tests for
+          #     trunk init
+          #
+          #   * the repo has to exercise some functionality specific to action.yaml (e.g. our
+          #     custom Node functionality for npm/yarn/pnpm)
+          #
+          #   * the repo and its dependency closure should be fast to set up, since we trigger
+          #     this workflow on PRs
+          #
+          - repo: highlightjs/highlight.js
+            ref: 4f9cd3bffb6bc55c9e2c4252c7b733a219880151
+            description: (uses npm)
+            post-init: |
+              # terrascan scans dockerfile.js (a JS file for parsing dockerfiles) as a dockerfile itself
+              echo "src/languages/dockerfile.js" >> .gitignore
+              cp local-action/repo_tests/highlightjs.yaml .trunk/user.yaml
+            cache: true
+
+          - repo: pallets/flask
+            ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
+            post-init: |
+              # prettier chokes on this malformed html file
+              echo "examples/celery/src/task_app/templates/index.html" >> .gitignore
+              cp local-action/repo_tests/flask.yaml .trunk/user.yaml
+            cache: true
+
+          - repo: postcss/postcss
+            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
+            description: (uses pnpm)
+            post-init: |
+              ${TRUNK_PATH} check enable eslint
+            cache: true
+
+          - repo: postcss/postcss
+            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
+            description: (compat test for cli 1.0.0)
+            post-init: |
+              ${TRUNK_PATH} check enable eslint
+            cache: true
+
+          - repo: prawn-test-staging-rw/setup-node-test
+            ref: main
+            post-init: |
+              if [ "${FAILED_NODE_INSTALL}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+              if [ "${INSTALL_LATEST_NODE}" != "true" ]; then
+                echo "::error::Initial setup node didn't fail"
+                exit 1
+              fi
+            description: (test for setup-node)
+            pre-init: |
+              while which node > /dev/null; do
+                rm $(which node)
+              done
+            cache: false
+
+          - repo: sass/sass
+            ref: 225e176115211387e014d97ae0076d94de3152a1
+            description: (uses npm)
+            cache: true
+
+    steps:
+      - name: Checkout ${{ matrix.repo }}
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ matrix.repo }}
+          ref: ${{ matrix.ref }}
+
+      - name: Checkout ${{ github.repository }}
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Run pre-init
+        shell: bash
+        run: ${{ matrix.pre-init }}
+
+      - name: Run trunk-action in ${{ matrix.repo }}
+        id: trunk
+        uses: ./local-action/
+        with:
+          cache: ${{ matrix.cache }}
+          check-mode: all
+          post-init: ${{ matrix.post-init }}
+          arguments: --output-file=/tmp/landing-state.json
+          cache-key: repo_tests/${{ matrix.repo }}
+          setup-deps: true
+        env:
+          TRUNK_CLI_VERSION:
+            ${{ matrix.description == '(compat test for cli 1.0.0)' && '1.0.0' || '' }}
+        continue-on-error: true
+
+      - name: Check for task failures
+        shell: bash
+        run: |
+          python3 local-action/repo_tests/check_for_task_failures.py \
+            '${{ github.env }}' \
+            '${{ matrix.repo }}' \
+            '${{ matrix.description }}'
+
+      - name: Upload landing state
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.landing_state_artifact_name }} landing state
+          path: .trunk/landing-state.json

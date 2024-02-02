@@ -1,0 +1,120 @@
+name: Setup environment
+author: trunk.io
+description: Automatic setup for trunk check dependencies (e.g. Node)
+
+inputs:
+  cache-key:
+    description:
+      Cache key for setup (either passed into .trunk/setup-ci/, or used to cache node_modules in
+      this action).
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Detect npm/yarn/pnpm & custom setup
+      shell: bash
+      run: |
+        if [ -e package-lock.json ]; then
+          cat >>$GITHUB_ENV <<EOF
+        PACKAGE_MANAGER=npm
+        INSTALL_CMD=npm ci
+        HASH_GLOB=**/package-lock.json
+        EOF
+        elif [ -e yarn.lock ]; then
+          cat >>$GITHUB_ENV <<EOF
+        PACKAGE_MANAGER=yarn
+        INSTALL_CMD=yarn install --immutable
+        HASH_GLOB=**/yarn.lock
+        EOF
+        elif [ -e pnpm-lock.yaml ]; then
+          cat >>$GITHUB_ENV <<EOF
+        PACKAGE_MANAGER=pnpm
+        INSTALL_CMD=pnpm install --frozen-lockfile
+        HASH_GLOB=**/pnpm-lock.yaml
+        EOF
+        else
+          exit 0
+        fi
+
+        if [ -e .nvmrc ]; then
+          cat >>$GITHUB_ENV <<EOF
+        NODE_VERSION_FILE=.nvmrc
+        EOF
+          exit 0
+        elif [ -e .node-version ]; then
+          cat >>$GITHUB_ENV <<EOF
+        NODE_VERSION_FILE=.node-version
+        EOF
+          exit 0
+        elif [ -e .tool-versions ]; then
+          cat >>$GITHUB_ENV <<EOF
+        NODE_VERSION_FILE=.tool-versions
+        EOF
+          exit 0
+        elif [ -e package.json ]; then
+          cat >>$GITHUB_ENV <<EOF
+        NODE_VERSION_FILE=package.json
+        EOF
+          exit 0
+        fi
+
+        echo "Found node lockfiles but no node version to install"
+
+        if which node > /dev/null; then
+          echo "Detected existing node install"
+          cat >>$GITHUB_ENV <<EOF
+        RUN_INSTALL_NODE_PACKAGES=true
+        EOF
+        else
+          echo "Could not find existing node install, skipping node package installation"
+        fi
+
+    - name: Install pnpm
+      if: env.PACKAGE_MANAGER == 'pnpm'
+      uses: pnpm/action-setup@v2
+      with:
+        version: latest
+
+    - name: Install Node dependencies
+      id: setup_node
+      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: ${{ env.NODE_VERSION_FILE }}
+      continue-on-error: true
+
+    - name: Check for node installation
+      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
+      shell: bash
+      run: |
+        if [ ${{ steps.setup_node.outcome }} == "success" ]; then
+          exit 0
+        fi
+        echo "::warning::Failed to install specified node version."
+        echo "FAILED_NODE_INSTALL=true" >>$GITHUB_ENV
+        if ! command -v node >/dev/null; then
+          echo "::warning::No existing node install detected - installing latest node instead."
+          echo "INSTALL_LATEST_NODE=true" >>$GITHUB_ENV
+        fi
+
+    - name: Install backup node version
+      if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.INSTALL_LATEST_NODE == 'true'
+      uses: actions/setup-node@v3
+      with:
+        node-version: latest
+
+    - name: Cache node_modules
+      if: inputs.cache-key && env.PACKAGE_MANAGER
+      uses: actions/cache@v3
+      with:
+        path: node_modules/
+        key:
+          ${{ env.PACKAGE_MANAGER }}-${{ runner.os }}-${{ inputs.cache-key }}-${{
+          hashFiles(env.HASH_GLOB) }}
+
+    - name: Install ${{ env.PACKAGE_MANAGER }} packages
+      if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
+      shell: bash
+      run: ${{ env.INSTALL_CMD }}

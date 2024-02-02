@@ -2,6 +2,10 @@
 
 set -euo pipefail
 
+if [[ ${INPUT_DEBUG:-false} == "true" ]]; then
+  set -x
+fi
+
 tmpdir="$(mktemp -d)"
 echo "TRUNK_TMPDIR=${tmpdir}" >>"${GITHUB_ENV}"
 
@@ -20,3 +24,5 @@ if [[ -z ${trunk_path} ]]; then
   fi
 fi
 echo "TRUNK_PATH=${trunk_path}" >>"${GITHUB_ENV}"
+# Ensure that trunk CLI is downloaded before subsequent steps
+${trunk_path} version || echo "::warning::${trunk_path} does not exist!"

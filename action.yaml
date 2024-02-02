@@ -4,7 +4,7 @@ description: The official trunk.io GitHub action
 
 branding:
   icon: check
-  color: orange
+  color: green
 
 inputs:
   trunk-path:
@@ -26,9 +26,19 @@ inputs:
 
   check-mode:
     description:
-      Trunk check mode. Leave unset to autodetect just changes. Set to 'all' to check the entire
-      repository. If `trunk-token` is set with 'all', 'all' will also upload results to the Trunk
-      web app.
+      Trunk check mode. Leave unset to autodetect. Set to 'all' to check the entire repository. Set
+      to 'populate_cache_only' in a dedicated workflow to populate the GitHub Actions cache with
+      Trunk artifacts (see docs for more details).
+    required: false
+
+  check-all-mode:
+    description:
+      If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
+    required: false
+    default: ""
+
+  check-run-id:
+    description: Check run ID. If set, posts annotations using CheckService.
     required: false
 
   cache:
@@ -37,6 +47,19 @@ inputs:
       runners.
     required: false
     default: "true"
+
+  cache-key:
+    description:
+      A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
+    required: false
+
+  post-init:
+    description: Steps to run after auto-init / before check
+    required: false
+
+  github-token:
+    description: For overriding github.token
+    required: false
 
   trunk-token:
     description:
@@ -55,102 +78,221 @@ inputs:
     description:
       Save annotations as an artifact instead of posting them from this action. This is neccesary if
       your repository will be used with forks as they will will not have permissions to upload
-      annotations. By default forks will be autod-etected.
+      annotations. By default forks will be auto-detected.
     required: false
     default: auto
 
   post-annotations:
-    description: Post annotations previously uploaded with the `save-annotations` option.
+    description:
+      Post annotations previously uploaded with the `save-annotations` option (specific to posting
+      annotations from forks).
+    required: false
+    default: "false"
+
+  setup-deps:
+    description:
+      Install dependencies for trunk check that the trunk CLI does not manage. This is only
+      necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
+      eslint dependencies, or @types packages).
+    required: false
+    default: "false"
+
+  debug:
+    description: Internal use only
     required: false
     default: "false"
 
 runs:
   using: composite
   steps:
-    - name: Locate trunk
+    - name: Set up inputs
       shell: bash
       run: |
-        # Locate trunk
-        ${GITHUB_ACTION_PATH}/locate_trunk.sh
-      env:
-        INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
+        cat >>$GITHUB_ENV <<EOF
+        GITHUB_TOKEN=${{ github.token }}
+        EOF
+
+        payload() {
+          if command -v jq >/dev/null; then
+            jq -r ".inputs.payload | fromjson | .$1 // empty" ${TEST_GITHUB_EVENT_PATH:-${GITHUB_EVENT_PATH}}
+          else
+            echo "::error::jq not installed on system!"
+            exit 1
+          fi
+        }
+
+        # Every inputs.field should be referenced as INPUT_FIELD later in the action. This allows
+        # the field to be set either as an argument to the github action or via inputs.json.
+        if [[ "${{ inputs.check-mode }}" = "payload" ]]; then
+
+          INPUT_GITHUB_TOKEN=$(payload githubToken)
+          INPUT_TRUNK_TOKEN=$(payload trunkToken)
+          echo "::add-mask::${INPUT_GITHUB_TOKEN}"
+          echo "::add-mask::${INPUT_TRUNK_TOKEN}"
+
+          cat >>$GITHUB_ENV <<EOF
+        INPUT_GITHUB_TOKEN=${INPUT_GITHUB_TOKEN}
+        INPUT_TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
+        TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
+
+        TRUNK_API_ADDRESS=$(payload trunkApiAddress)
+
+        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_OWNER=$(payload pullRequest.base.repo.owner.login)
+        GITHUB_EVENT_PULL_REQUEST_BASE_REPO_NAME=$(payload pullRequest.base.repo.name)
+        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=$(payload pullRequest.base.sha)
+        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=$(payload pullRequest.head.repo.fork)
+        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=$(payload pullRequest.head.sha)
+        GITHUB_EVENT_PULL_REQUEST_NUMBER=$(payload pullRequest.number)
+        INPUT_ARGUMENTS=$(payload arguments)
+        INPUT_CACHE=$(payload cache)
+        INPUT_CACHE_KEY=$(payload cacheKey)
+        INPUT_CACHE_PATH=$(payload cachePath)
+        INPUT_CHECK_ALL_MODE=$(payload checkAllMode)
+        INPUT_CHECK_MODE=$(payload checkMode)
+        INPUT_CHECK_RUN_ID=$(payload checkRunId)
+        INPUT_DEBUG=$(payload debug)
+        INPUT_GITHUB_REF_NAME=$(payload targetRefName)
+        INPUT_LABEL=$(payload label)
+        INPUT_SETUP_CACHE_KEY=$(payload setupCacheKey)
+        INPUT_SETUP_DEPS=$(payload setupDeps)
+        INPUT_TARGET_CHECKOUT=$(payload targetCheckout)
+        INPUT_TARGET_CHECKOUT_REF=$(payload targetCheckoutRef)
+        INPUT_TRUNK_PATH=$(payload trunkPath)
+        INPUT_UPLOAD_LANDING_STATE=$(payload uploadLandingState)
+        INPUT_UPLOAD_SERIES=$(payload uploadSeries)
+        INPUT_UPLOAD_ID=$(payload uploadId)
+        INPUT_AUTOFIX_AND_PUSH=$(payload autofixAndPush)
+        EOF
+
+        else
+
+          cat >>$GITHUB_ENV <<EOF
+        INPUT_GITHUB_TOKEN=${{ inputs.github-token }}
+        INPUT_TRUNK_TOKEN=${{ inputs.trunk-token }}
+        TRUNK_TOKEN=${{ inputs.trunk-token }}
+        GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ github.event.pull_request.base.sha }}
+        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ github.event.pull_request.head.repo.fork }}
+        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
+        GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}
+        GITHUB_REF_NAME=${{ github.ref_name }}
+        INPUT_ARGUMENTS=${{ inputs.arguments }}
+        INPUT_CACHE=${{ inputs.cache }}
+        INPUT_CACHE_KEY=trunk-${{ inputs.cache-key }}-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+        INPUT_CACHE_PATH=~/.cache/trunk
+        INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
+        INPUT_CHECK_MODE=${{ inputs.check-mode }}
+        INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
+        INPUT_DEBUG=${{ inputs.debug }}
+        INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
+        INPUT_LABEL=${{ inputs.label }}
+        INPUT_SETUP_CACHE_KEY=${{ inputs.cache-key }}
+        INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
+        INPUT_TARGET_CHECKOUT=
+        INPUT_TARGET_CHECKOUT_REF=
+        INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
+        INPUT_UPLOAD_LANDING_STATE=false
+        INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
+        INPUT_UPLOAD_ID=
+        INPUT_AUTOFIX_AND_PUSH=
+        EOF
+
+        fi
+
+    - name: Checkout
+      if: env.INPUT_TARGET_CHECKOUT
+      uses: actions/checkout@v3
+      with:
+        lfs: true
+        submodules: recursive
+        repository: ${{ env.INPUT_TARGET_CHECKOUT }}
+        ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
+        token: ${{ env.INPUT_GITHUB_TOKEN }}
+
+    - name: Locate trunk
+      shell: bash
+      run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
 
     - name: Determine check mode
       shell: bash
       run: |
         # Determine check mode
         ${GITHUB_ACTION_PATH}/determine_check_mode.sh
-      env:
-        INPUT_CHECK_MODE: ${{ inputs.check-mode }}
+
+    - name: Init on-demand
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          ${TRUNK_PATH:-trunk} init
+        fi
+
+    - name: Detect setup strategy
+      shell: bash
+      run: |
+        if [ -e .trunk/setup-ci ]; then
+          echo "INPUT_SETUP_DEPS=true" >>$GITHUB_ENV
+        else
+          mkdir -p .trunk
+          ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
+          echo .trunk/setup-ci >>.git/info/exclude
+        fi
+
+    - name: Set up env
+      uses: ./.trunk/setup-ci
+      if: env.INPUT_SETUP_DEPS == 'true'
+      with:
+        cache-key: ${{ env.INPUT_SETUP_CACHE_KEY }}
+
+    - name: Post-init steps
+      if: inputs.post-init
+      shell: bash
+      run: ${{ inputs.post-init }}
 
     - name: Cache Linters/Formatters
-      if: env.TRUNK_CHECK_MODE != 'none' && inputs.cache == 'true'
+      if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
       uses: actions/cache@v3
       with:
-        path: ~/.cache/trunk
-        key: trunk-${{ runner.os }}-${{ hashFiles('.trunk/trunk.yaml') }}
+        path: ${{ env.INPUT_CACHE_PATH }}
+        key: ${{ env.INPUT_CACHE_KEY }}
 
     - name: Run trunk check on pull request
       if: env.TRUNK_CHECK_MODE == 'pull_request'
       shell: bash
       run: |
-        # Run trunk check on pull request
+        # Run 'trunk check' on pull request
         ${GITHUB_ACTION_PATH}/pull_request.sh
       env:
-        GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ${{ github.event.pull_request.base.sha }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ${{ github.event.pull_request.head.repo.fork }}
-        GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        GITHUB_EVENT_PULL_REQUEST_NUMBER: ${{ github.event.pull_request.number }}
-        GITHUB_REF_NAME: ${{ github.ref_name }}
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
         INPUT_SAVE_ANNOTATIONS: ${{ inputs.save-annotations }}
 
     - name: Run trunk check on push
       if: env.TRUNK_CHECK_MODE == 'push'
       shell: bash
       run: |
-        # Run trunk check on push
+        # Run 'trunk check' on push
         ${GITHUB_ACTION_PATH}/push.sh
       env:
-        GITHUB_EVENT_AFTER: ${{ github.event.after }}
-        GITHUB_EVENT_BEFORE: ${{ github.event.before }}
-        GITHUB_REF_NAME: ${{ github.ref_name }}
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
+        GITHUB_EVENT_AFTER: ${{ env.GITHUB_EVENT_AFTER || github.event.after }}
+        GITHUB_EVENT_BEFORE: ${{ env.GITHUB_EVENT_BEFORE || github.event.before }}
 
     - name: Run trunk check on all
       if: env.TRUNK_CHECK_MODE == 'all'
       shell: bash
       run: |
-        # Run trunk check on all
+        # Run 'trunk check' on all
         ${GITHUB_ACTION_PATH}/all.sh
-      env:
-        GITHUB_REF_NAME: ${{ github.ref_name }}
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        GITHUB_SHA: ${{ github.sha }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
-        INPUT_TRUNK_TOKEN: ${{ inputs.trunk-token }}
-        INPUT_UPLOAD_SERIES: ${{ inputs.upload-series }}
 
     - name: Run trunk check on Trunk Merge
       if: env.TRUNK_CHECK_MODE == 'trunk_merge'
       shell: bash
       run: |
-        # Run trunk check on Trunk Merge
+        # Run 'trunk check' on Trunk Merge
         ${GITHUB_ACTION_PATH}/trunk_merge.sh
-      env:
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        GITHUB_SHA: ${{ github.sha }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
+
+    - name: Run trunk install to populate the GitHub Actions cache
+      if: env.TRUNK_CHECK_MODE == 'populate_cache_only'
+      shell: bash
+      run: |
+        # Run 'trunk install' to populate the GitHub Actions cache
+        ${GITHUB_ACTION_PATH}/populate_cache_only.sh
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
@@ -165,22 +307,24 @@ runs:
       with:
         # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
         script: |
-          var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+          let artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{github.event.workflow_run.id }},
+              run_id: ${{ github.event.workflow_run.id }},
           });
-          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+          let matchArtifact = artifacts.data.artifacts.filter((artifact) => {
             return artifact.name == "trunk-annotations"
           })[0];
-          var download = await github.rest.actions.downloadArtifact({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              artifact_id: matchArtifact.id,
-              archive_format: 'zip',
-          });
-          var fs = require('fs');
-          fs.writeFileSync('${{ env.TRUNK_TMPDIR }}/annotations.zip', Buffer.from(download.data));
+          if (matchArtifact) {
+            let download = await github.rest.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: matchArtifact.id,
+                archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync('${{ env.TRUNK_TMPDIR }}/annotations.zip', Buffer.from(download.data));
+          }
 
     - name: Unpack annotations artifact
       if: inputs.post-annotations == 'true'
@@ -197,11 +341,15 @@ runs:
         ${GITHUB_ACTION_PATH}/annotate.sh
       env:
         GITHUB_EVENT_WORKFLOW_RUN_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
-        GITHUB_REPOSITORY: ${{ github.repository }}
-        GITHUB_SHA: ${{ github.sha }}
-        GITHUB_TOKEN: ${{ github.token }}
-        INPUT_ARGUMENTS: ${{ inputs.arguments }}
-        INPUT_LABEL: ${{ inputs.label }}
+
+    - name: Upload landing state
+      if: env.INPUT_UPLOAD_LANDING_STATE == 'true'
+      continue-on-error: true
+      uses: actions/upload-artifact@v3
+      with:
+        name: landing-state.json
+        path: .trunk/landing-state.json
+        if-no-files-found: warn
 
     - name: Cleanup temporary files
       if: always()

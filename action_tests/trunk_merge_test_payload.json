@@ -1,0 +1,19 @@
+{
+  "trunkPath": "./local-action/action_tests/stub.js",
+  "targetRefName": "trunk-merge/of-feature-branch",
+  "targetCheckoutRef": "refs/heads/trunk-merge/of-feature-branch",
+  "checkMode": "trunk_merge",
+  "trunkToken": "fake-token",
+  "checkRunId": 14235603498,
+  "version": "0.0.0",
+  "githubToken": "fake-token",
+  "cache": true,
+  "cacheKey": "trunk-check",
+  "cachePath": "~/.cache/trunk/tools/ruby",
+  "trunkApiAddress": "localhost-will-not-work:5021",
+  "checkJobName": "action-test/trunk-action/trunk_merge",
+  "checkJobRunsOn": ["self-hosted", "linux", "public", "x86", "2xlarge"],
+  "checkWorkflowRunName": "action-test-trunk-merge",
+  "concurrencyGroup": "trunk-action/trunk_merge/trunk-merge/of-feature-branch",
+  "debug": true
+}

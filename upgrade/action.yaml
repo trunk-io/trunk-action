@@ -1,0 +1,124 @@
+name: Trunk Upgrade
+author: trunk.io
+description: Upgrade trunk and its tools
+
+branding:
+  icon: check
+  color: green
+
+inputs:
+  trunk-path:
+    description:
+      Path to Trunk Launcher. If not provided, we'll look for it the repo root, `.trunk/bin` and
+      `tools/`. If it can't be found anywhere and is not provided explicitly, we'll download it on
+      demand.
+    required: false
+
+  prefix:
+    description: Prefix to be added in the PR title
+    required: false
+
+  arguments:
+    description: Extra arguments to pass to trunk upgrade
+    required: false
+
+  base:
+    description: The base branch to create a PR against
+    required: false
+    default: main
+
+  github-token:
+    description:
+      A GitHub token to allow created PRs to run pull_request workflows. See
+      https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs
+      for more information.
+    required: false
+    default: ${{ github.token }}
+
+  setup-deps:
+    description:
+      Install dependencies for trunk check that the trunk CLI does not manage. This is only
+      necessary if you have Node dependencies in your package.json that your Node linters need (e.g.
+      eslint dependencies, or @types packages).
+    required: false
+    default: "false"
+
+  reviewers:
+    description: A comma or newline separated list of GitHub reviewer usernames
+    required: false
+
+  add-paths:
+    description: Specific paths to add to the created pull request. Comma separated.
+    required: false
+    default: .trunk
+
+  lowercase-title:
+    description: A boolean to decide if the PR and commit message title should be in lowercase
+    required: false
+    default: false
+
+runs:
+  using: composite
+  steps:
+    - name: Locate trunk
+      shell: bash
+      run: |
+        # Locate trunk
+        ${{ github.action_path }}/../locate_trunk.sh
+      env:
+        INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
+
+    - name: Detect trunk
+      id: auto_init
+      shell: bash
+      run: |
+        if [ ! -e .trunk/trunk.yaml ]; then
+          echo "Unable to run 'trunk upgrade'. Please run 'trunk init' and commit the generated '.trunk/trunk.yaml'."
+          exit 1
+        fi
+
+    - name: Detect setup strategy
+      shell: bash
+      run: |
+        if [ -e .trunk/setup-ci ]; then
+          echo "SETUP_DEPS=true" >>$GITHUB_ENV
+        else
+          mkdir -p .trunk
+          ln -s ${{ github.action_path }}/../setup-env .trunk/setup-ci
+          echo .trunk/setup-ci >>.git/info/exclude
+        fi
+
+    - name: Set up env
+      uses: ./.trunk/setup-ci
+      if: env.SETUP_DEPS == 'true' || inputs.setup-deps == 'true'
+
+    - name: Run upgrade
+      id: upgrade
+      shell: bash
+      run: |
+        # Run trunk upgrade
+        ${{ github.action_path }}/upgrade.sh
+      env:
+        UPGRADE_ARGUMENTS: ${{ inputs.arguments }}
+        LOWERCASE_TITLE: ${{ inputs.lowercase-title }}
+
+    - name: Cleanup temporary files
+      if: always()
+      shell: bash
+      run: |
+        # Cleanup temporary files
+        ${{ github.action_path }}/../cleanup.sh
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v5
+      with:
+        title: ${{ inputs.prefix }}${{ env.PR_TITLE }}
+        body: ${{ env.PR_DESCRIPTION }}
+        base: ${{ inputs.base }}
+        branch: trunk-io/update-trunk
+        labels: trunk
+        add-paths: ${{ inputs.add-paths }}
+        commit-message: ${{ inputs.prefix }}${{ env.PR_TITLE }}
+        delete-branch: true
+        reviewers: ${{ inputs.reviewers }}
+        token: ${{ inputs.github-token }}

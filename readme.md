@@ -1,155 +1,201 @@
-<!-- trunk-ignore(markdownlint/MD041) -->
-<p align="center">
-  <a href="https://docs.trunk.io">
-    <img height="300" src="https://user-images.githubusercontent.com/3904462/199616921-7861e331-c774-43bf-8c17-1ecd27d0a750.png" />
-  </a>
-</p>
-<h2 align="center">Trunk GitHub Action</h2>
-<p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=Trunk.io">
-    <img src="https://img.shields.io/visual-studio-marketplace/i/Trunk.io?logo=visualstudiocode"/>
-  </a>
-  <a href="https://slack.trunk.io">
-    <img src="https://img.shields.io/badge/slack-slack.trunk.io-blue?logo=slack"/>
-  </a>
-  <a href="https://docs.trunk.io">
-    <img src="https://img.shields.io/badge/docs.trunk.io-7f7fcc?label=docs&logo=readthedocs&labelColor=555555&logoColor=ffffff"/>
-  </a>
-  <a href="https://trunk.io">
-    <img src="https://img.shields.io/badge/trunk.io-enabled-brightgreen?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIxMSIgdmlld0JveD0iMCAwIDEwMSAxMDEiPjxwYXRoIGQ9Ik01MC41IDk1LjVhNDUgNDUgMCAxIDAtNDUtNDVtNDUtMzBhMzAgMzAgMCAwIDAtMzAgMzBtNDUgMGExNSAxNSAwIDAgMC0zMCAwIi8+PC9zdmc+"/>
-  </a>
-</p>
+<!-- markdownlint-disable first-line-heading -->
 
-This action runs [`trunk check`](https://trunk.io), a super powerful meta linter and formatter,
-showing inline annotations on your PRs for any issues found. Trunk runs just as well locally as on
-CI, so you can always quickly see lint issues _before_ pushing your changes.
+[![Trunk.io](https://user-images.githubusercontent.com/3904462/199616921-7861e331-c774-43bf-8c17-1ecd27d0a750.png)](https://trunk.io)
+
+[![docs](https://img.shields.io/badge/-docs-darkgreen?logo=readthedocs&logoColor=ffffff)][docs]
+[![vscode](https://img.shields.io/visual-studio-marketplace/i/trunk.io?color=0078d7&label=vscode&logo=visualstudiocode)][vscode]
+[![slack](https://img.shields.io/badge/-slack-611f69?logo=slack)][slack]
+[![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
+
+# Trunk.io GitHub Action
+
+> **Note**
+>
+> We strongly encourage using Trunk Check's integration with GitHub to run Trunk Check on CI.
+> [Get started here!](https://docs.trunk.io/check/get-started)
+
+This action runs and shows inline annotations of issues found by
+[`trunk check`](https://docs.trunk.io/docs/check), a powerful meta linter and formatter. Trunk runs
+hermetically, _locally_ or on CI, so you can always quickly see lint, formatting, and security
+issues _before_ pushing your changes. See all supported linters
+[here](https://github.com/trunk-io/plugins).
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/46629651/232631742-645be266-5ea1-4a97-aa6d-6da868c056a8.png" height="300"/>
+  <br>
+  <em>Example annotations</em>
+</p>
 
 ## Get Started
 
-Before setting up running Trunk Check on CI, you'll need to initialize trunk in your repo.
-Initializing it (`trunk init`) bootstraps a the trunk configuration (`.trunk/trunk.yaml`) which
-stores all the configuration for Trunk. All linters and formatters, as well as the version of Trunk
-itself, are versioned in `trunk.yaml`, so you're guarnateed to get the same results whether you're
-running locally or on CI.
+[Follow these instructions to set up Trunk Check CI for your GitHub repository](https://docs.trunk.io/check/get-started)
 
-Check out the Trunk [CLI](https://docs.trunk.io) and
-[VS Code extension](https://marketplace.visualstudio.com/items?itemName=Trunk.io) to start using
-Trunk locally.
+## Run it yourself
+
+To run Trunk Check on your pull requests, add this file to your repo as
+`.github/workflows/trunk-check.yaml`:
+
+```yaml
+name: Pull Request
+on: [pull_request]
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  trunk_check:
+    name: Trunk Check Runner
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write # For trunk to post annotations
+      contents: read # For repo checkout
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+```
+
+See this repo's
+[`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
+for further reference.
+
+### Advanced
+
+You can get a lot more out of Trunk if you install it locally and commit a Trunk configuration in
+your repository:
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
 2. Setup Trunk in your repo → `trunk init`
-3. Locally check your changes for issues → `trunk check`
-4. Locally format your changes → `trunk fmt`
-5. Make sure no lint and format issues leak onto `main` → **You're in the right place 👍**
+3. Locally check your changes for issues → `git commit -m "Create initial Trunk config" .trunk/`
 
-## Usage
+You'll see that in `.trunk/trunk.yaml`, we implement strict versioning of the trunk CLI and every
+linter you're running. This allows you to control all linter versioning using `.trunk/trunk.yaml`,
+as well as enable linters which require manual configuration.
+
+By default, `trunk-io/trunk-action` will run all linters which we can automatically initialize and
+set up for you. This works well in many cases, but there are some where it's insufficient.
+
+For example, if you already have eslint set up and depend on eslint plugins such as
+`@typescript-eslint/eslint-plugin`, you'll need to `trunk check enable eslint` and also
+[add a custom setup action](#custom-setup) to install your eslint dependencies.
+
+### Custom setup
+
+If you define a composite action in your repository at `.trunk/setup-ci/action.yaml`, we will
+automatically run it before we run any linters. This can be important if, for example, a linter
+needs some generated code to be present before it can run:
 
 ```yaml
-steps:
-  - name: Checkout
-    uses: actions/checkout@v3
+name: Trunk Check setup
+description: Set up dependencies for Trunk Check
+runs:
+  using: composite
+  steps:
+    - name: Build required trunk check inputs
+      shell: bash
+      run: bazel build ... --build_tag_filters=pre-lint
 
-  # >>> Install your own deps here (npm install, etc) <<<
-
-  - name: Trunk Check
-    uses: trunk-io/trunk-action@v1
+    - name: Install eslint dependencies
+      shell: bash
+      run: npm install
 ```
 
-(See this repo's
-[`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
-for further reference)
+Alternatively, you can handle setup as a separate step in your workflow before running
+`trunk-io/trunk-action`; note however that this approach is not compatible with Trunk's
+GitHub-native integrations.
 
-### Installing your own dependencies
-
-You do need to install your own dependencies (`npm install`, etc) as a step in your workflow before
-the `trunk-io/trunk-action` step. Many linters will follow imports/includes in your code to find
-errors in your usage and thus they need you to have your dependencies installed and available.
-
-If you've setup basic testing on CI, you're already doing this for other CI jobs; Do it here too 😉.
-Here's some GitHub docs to get you going:
-[[nodejs](https://docs.github.com/en/actions/guides/building-and-testing-nodejs),
-[ruby](https://docs.github.com/en/actions/guides/building-and-testing-ruby),
-[python](https://docs.github.com/en/actions/guides/building-and-testing-python),
-[many more](https://docs.github.com/en/actions/guides/about-continuous-integration)]
+If you've setup basic testing on CI, you're already doing this for other CI jobs; do it here too 😉.
 
 ### Caching
 
-Caching is on by default: Trunk will cache linters/formatters via `actions/cache@v2`. This is great
-if you are using GitHub-hosted ephemeral runners.
+To use GitHub Actions caching for Trunk, create a new workflow (for example,
+`.github/worksflows/cache_trunk.yaml`) to run on any change to your Trunk configuration:
 
-If you are using long-lived self-hosted runners you should disable caching by passing `cache: false`
-as so:
+```yaml
+on:
+  push:
+    branches: [main]
+    paths: [.trunk/trunk.yaml]
+
+permissions: read-all
+
+jobs:
+  cache_trunk:
+    name: Cache Trunk
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          check-mode: populate_cache_only
+```
+
+If you are using long-lived self-hosted runners you should _not_ create the above workflow, and you
+should also disable caching by passing `cache: false` as so when running Trunk on your PRs:
 
 ```yaml
 - name: Trunk Check
-  uses: trunk-io/trunk-action@v1
+  uses: trunk-io/trunk-action@v3
   with:
     cache: false
 ```
 
-Note: Previous versions of the Trunk GitHub Action did _not_ include caching. If you were previously
-using `actions/cache@v2` to cache Trunk, please remove it from your workflow.
+### Getting inline annotations for fork PRs
 
-## Linters
+Create an additional _new GitHub workflow_ to post annotations from fork PRs. This workflow needs to
+be merged into your main branch before fork PRs will see annotations. It's important that the name
+of the workflow in the workflow_runs section (here "Pull Request") matches the workflow which runs
+trunk check:
 
-We integrate new linters every release. If you have suggestions for us, please request it
-[here](https://features.trunk.io/check) or stop by in our [Slack](https://slack.trunk.io/) - we
-always love hearing from our users!
+```yaml
+name: Annotate PR with trunk issues
 
-We currently support the following linters (always-up-to-date list
-[here](https://docs.trunk.io/docs/check-supported-linters)):
+on:
+  workflow_run:
+    workflows: ["Pull Request"]
+    types: [completed]
 
-| Language                           | Linters                                                                                                                                                                     |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| All                                | `codespell`, `cspell`, `gitleaks`, `git-diff-check`                                                                                                                         |
-| Ansible                            | `ansible-lint`                                                                                                                                                              |
-| Bash                               | `shellcheck`, `shfmt`                                                                                                                                                       |
-| Bazel, Starlark                    | `buildifier`                                                                                                                                                                |
-| C, C++, Protobuf                   | `clang-format`, `clang-tidy`, `include-what-you-use`                                                                                                                        |
-| Cloudformation                     | `cfnlint`                                                                                                                                                                   |
-| CSS, SCSS                          | `stylelint`                                                                                                                                                                 |
-| Cue                                | `cue-fmt`                                                                                                                                                                   |
-| Docker                             | `hadolint`                                                                                                                                                                  |
-| Dotenv                             | `dotenv-linter`                                                                                                                                                             |
-| GitHub                             | `actionlint`                                                                                                                                                                |
-| Go                                 | `gofmt`, `golangci-lint`, `semgrep`, `goimports`                                                                                                                            |
-| HAML                               | `haml-lint`                                                                                                                                                                 |
-| Java                               | `semgrep`                                                                                                                                                                   |
-| JavaScript, TypeScript, YAML, JSON | `eslint`, `prettier`, `semgrep`                                                                                                                                             |
-| Kotlin                             | `detekt`<sup><a href="#note-detekt">1</a></sup>, `detekt-explicit`<sup><a href="#note-detekt">1</a></sup>, `detekt-gradle`<sup><a href="#note-detekt">1</a></sup>, `ktlint` |
-| Markdown                           | `markdownlint`                                                                                                                                                              |
-| Protobuf                           | `buf-breaking`, `buf-lint`                                                                                                                                                  |
-| Python                             | `autopep8`, `bandit`, `black`, `flake8`, `isort`, `mypy`, `pylint`, `semgrep`, `yapf`                                                                                       |
-| Ruby                               | `brakeman`, `rubocop`, `rufo`, `semgrep`, `standardrb`                                                                                                                      |
-| Rust                               | `clippy`, `rustfmt`                                                                                                                                                         |
-| Scala                              | `scalafmt`                                                                                                                                                                  |
-| SQL                                | `sql-formatter`, `sqlfluff`                                                                                                                                                 |
-| SVG                                | `svgo`                                                                                                                                                                      |
-| Terraform                          | `terraform` (`validate` and `fmt`), `tflint`<sup><a href="#note-tflint">2</a></sup>                                                                                         |
-| TOML                               | `taplo`                                                                                                                                                                     |
-| YAML                               | `prettier`, `semgrep`, `yamllint`                                                                                                                                           |
+jobs:
+  trunk_check:
+    name: Trunk Check Annotate
+    runs-on: ubuntu-latest
 
-<sup><ol>
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-<li><a aria-hidden="true" tabindex="-1" class="customAnchor" id="note-detekt"></a>
-Support for Detekt is under active development; see <a href="#detekt">its docs</a> for more
-details.
-</li>
+      - name: Trunk Check
+        uses: trunk-io/trunk-action@v1
+        with:
+          post-annotations: true # only for fork PRs
+```
 
-<li><a aria-hidden="true" tabindex="-1" class="customAnchor" id="note-tflint"></a>
-<a href="https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/module-inspection.md">Module inspection</a>, <a href="https://github.com/terraform-linters/tflint-ruleset-aws/blob/master/docs/deep_checking.md">deep Checking</a>, and setting variables are not currently supported.
-</li>
+This setup is necessitated by GitHub for
+[security reasons](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/).
+The Trunk Action auto-detects this situation and uploads its results as an artifact instead of
+trying to post them. Creating the new github workflow above downloads this artifact and posts the
+annotations.
 
-</ol></sup>
-
-<br/>
+This also works if you use both fork and non-fork PRs in your repo. In that case, non-fork PRs post
+annotations in the regular manner, and fork PRs post annotations via the above workflow.
 
 ## Trunk versioning
 
 After you `trunk init`, `.trunk/trunk.yaml` will contain a pinned version of Trunk to use for your
 repo. When you run trunk, it will automatically detect which version you should be running for a
 particular repo and download+run it. This means that everyone working in a repo, and CI, all get the
-same results and the same experience. no more "doesn't happen on my machine". When you want to
+same results and the same experience - no more "doesn't happen on my machine". When you want to
 upgrade to a newer verison, just run `trunk upgrade` and commit the updated `trunk.yaml`.
 
 ## Run Trunk outside of GitHub Actions
@@ -237,6 +283,48 @@ being merged. The "Merge commit" and "Squash and merge"
 [strategies](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/managing-a-merge-queue#about-merge-queues)
 are currently supported. "Rebase and merge" does not yet work correctly.
 
+## Automatic upgrades
+
+A service-based integration for automatic upgrades is in active development, but in the meantime if
+you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade Trunk
+and its tools, you can configure the action to automatically generate pull requests with these
+upgrades:
+
+```yaml
+name: Nightly
+on:
+  schedule:
+    - cron: 0 8 * * 1-5
+  workflow_dispatch: {}
+permissions: read-all
+jobs:
+  trunk_upgrade:
+    name: Upgrade Trunk
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # For trunk to create PRs
+      pull-requests: write # For trunk to create PRs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # >>> Install your own deps here (npm install, etc) <<<
+      - name: Trunk Upgrade
+        uses: trunk-io/trunk-action/upgrade@v1
+```
+
+We recommend that you only run the upgrade action on a nightly or weekly cadence, running from your
+main branch. You can also set the `arguments` field to filter particular upgrades and set `base` to
+define the branch to create a PR against (default `main`).
+
+You must also enable the repository setting to "Allow GitHub Actions to create and approve pull
+requests". If you have checks that run on pull requests, you will need to supply a `github-token` to
+the upgrade action to run those checks. For more information, see
+[create-pull-request](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs).
+
 ## Feedback
 
-Join the [Trunk Community Slack](https://slack.trunk.io). ❤️
+Join the [Trunk Community Slack][slack]. ❤️
+
+[slack]: https://slack.trunk.io
+[docs]: https://docs.trunk.io
+[vscode]: https://marketplace.visualstudio.com/items?itemName=Trunk.io

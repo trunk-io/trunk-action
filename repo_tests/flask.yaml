@@ -1,0 +1,6 @@
+version: 0.1
+lint:
+  ignore:
+    - linters: [prettier]
+      paths:
+        - examples/javascript/js_example/templates/xhr.html
