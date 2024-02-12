@@ -4,7 +4,7 @@ concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-permissions: read-all
+#permissions: read-all
 
 jobs:
   trunk_check:
