@@ -19,7 +19,7 @@ if [[ -z ${trunk_path} ]]; then
     trunk_path=./trunk
   else
     curl -fsSL https://trunk.io/releases/trunk -o "${tmpdir}/trunk"
-    chmod u+x "${tmpdir}/trunk"
+    chmod 755 ${tmpdir}/trunk
     trunk_path="${tmpdir}/trunk"
   fi
 fi
