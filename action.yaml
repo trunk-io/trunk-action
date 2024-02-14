@@ -209,7 +209,7 @@ runs:
         token: ${{ env.INPUT_GITHUB_TOKEN }}
 
     - name: Locate trunk
-      uses: trunk-io/trunk-action/setup-trunk@v1
+      uses: ./setup-trunk
 
     - name: Determine check mode
       shell: bash
