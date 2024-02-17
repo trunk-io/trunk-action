@@ -17,6 +17,7 @@ inputs:
   prefix:
     description: Prefix to be added in the PR title
     required: false
+    default: "chore: "
 
   arguments:
     description: Extra arguments to pass to trunk upgrade
