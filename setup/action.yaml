@@ -2,6 +2,14 @@ name: Trunk Check
 author: trunk.io
 description: The official trunk.io GitHub action to install trunk
 
+inputs:
+  trunk-path:
+    description:
+      Path to Trunk Launcher. If not provided, we'll look for it the repo root, `.trunk/bin` and
+      `tools/`. If it can't be found anywhere and is not provided explicitly, we'll download it on
+      demand.
+    required: false
+
 branding:
   icon: check
   color: green
@@ -12,3 +20,5 @@ runs:
     - name: Locate trunk
       shell: bash
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
+      env:
+        INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
