@@ -321,6 +321,23 @@ requests". If you have checks that run on pull requests, you will need to supply
 the upgrade action to run those checks. For more information, see
 [create-pull-request](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs).
 
+## Automatic trunk setup
+
+To install trunk on your CI machine
+
+```yaml
+jobs:
+  trunk_install:
+    name: Install trunk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      # >>> After this step, trunk is available as the env var TRUNK_PATH <<<
+      - name: Trunk install
+        uses: trunk-io/trunk-action/setup@v1
+```
+
 ## Feedback
 
 Join the [Trunk Community Slack][slack]. ❤️
