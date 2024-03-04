@@ -64,7 +64,7 @@ runs:
       shell: bash
       run: |
         # Locate trunk
-        ${{ github.action_path }}/../locate_trunk.sh
+        ${{ github.action_path }}/../setup/locate_trunk.sh
       env:
         INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
 
@@ -110,7 +110,7 @@ runs:
         ${{ github.action_path }}/../cleanup.sh
 
     - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v5
+      uses: peter-evans/create-pull-request@v6
       with:
         title: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         body: ${{ env.PR_DESCRIPTION }}
