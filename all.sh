@@ -57,6 +57,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
     ${htl_arg} \
     ${upload_id_arg} \
     --series "${INPUT_UPLOAD_SERIES:-${GITHUB_REF_NAME}}" \
+    --debug \
     ${INPUT_ARGUMENTS}
 else
   "${TRUNK_PATH}" check \
@@ -64,5 +65,6 @@ else
     --upload \
     --series "${INPUT_UPLOAD_SERIES:-${INPUT_GITHUB_REF_NAME}}" \
     --token "${INPUT_TRUNK_TOKEN}" \
+    --debug \
     ${INPUT_ARGUMENTS}
 fi
