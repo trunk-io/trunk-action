@@ -249,7 +249,7 @@ runs:
 
     - name: Cache Linters/Formatters
       if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ env.INPUT_CACHE_PATH }}
         key: ${{ env.INPUT_CACHE_KEY }}
