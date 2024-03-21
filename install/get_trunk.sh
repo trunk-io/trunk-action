@@ -17,4 +17,4 @@ echo "TRUNK_PATH=${trunk_path}" >>"${GITHUB_ENV}"
 echo ${tmpdir} >>$GITHUB_PATH
 
 # Ensure that trunk CLI is downloaded before subsequent steps
-(${trunk_path} version 2>&1) || echo "::warning::${trunk_path} does not exist!"
+(${trunk_path} version >/dev/null 2>&1) || echo "::warning::${trunk_path} does not exist!"

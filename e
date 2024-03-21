@@ -1,0 +1,12 @@
+TRUNK_TMPDIR=/tmp/tmp.hG1IHSvSTW
+TRUNK_PATH=/tmp/tmp.hG1IHSvSTW/trunk
+TRUNK_TMPDIR=/tmp/tmp.DjKbPQMXyV
+TRUNK_PATH=/tmp/tmp.DjKbPQMXyV/trunk
+TRUNK_TMPDIR=/tmp/tmp.wMl6qLUCDB
+TRUNK_PATH=/tmp/tmp.wMl6qLUCDB/trunk
+TRUNK_TMPDIR=/tmp/tmp.kNmsgeprGa
+TRUNK_PATH=/tmp/tmp.kNmsgeprGa/trunk
+TRUNK_TMPDIR=/tmp/tmp.u8j06ig5I2
+TRUNK_PATH=/tmp/tmp.u8j06ig5I2/trunk
+TRUNK_TMPDIR=/tmp/tmp.EzBwoyDUSi
+TRUNK_PATH=/tmp/tmp.EzBwoyDUSi/trunk
