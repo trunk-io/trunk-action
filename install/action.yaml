@@ -18,9 +18,13 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/get_trunk.sh
 
-    - name: which-trunk-
+    - name: clean up dead symlink
       shell: bash
-      run: which trunk
+      run: |
+        tools_path=".trunk/tools"
+        if [ -L "${tools_path}" ] && [ ! -e "${tools_path}" ] ; then
+          rm "${tools_path}"
+        fi
 
     - name: Trunk install
       shell: bash
@@ -29,7 +33,3 @@ runs:
     - name: Add .trunk/tools to path
       shell: bash
       run: echo ".trunk/tools" >> $GITHUB_PATH
-
-    - name: path
-      shell: bash
-      run: echo $GITHUB_PATH
