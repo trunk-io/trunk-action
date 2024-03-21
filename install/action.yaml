@@ -18,7 +18,7 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/get_trunk.sh
 
-    - name: clean up dead symlink
+    - name: clean up possible dead symlink
       shell: bash
       run: |
         tools_path=".trunk/tools"
