@@ -20,8 +20,8 @@ runs:
 
     - name: Add .trunk/tools to path
       shell: bash
-      if: runner.os == 'Linux' || runner.os == 'macOS'
       run: echo ".trunk/tools" >> $GITHUB_PATH
 
     - name: Trunk install
+      shell: bash
       run: trunk install --ci ${{ inputs.tools }}
