@@ -1,0 +1,27 @@
+name: Trunk Check
+author: trunk.io
+description: Install trunk and managed tools to PATH
+
+inputs:
+  tools:
+    description: specific tools to install (if not specified will install all enabled tools)
+    required: false
+
+branding:
+  icon: check
+  color: green
+
+runs:
+  using: composite
+  steps:
+    - name: get trunk
+      shell: bash
+      run: ${GITHUB_ACTION_PATH}/get_trunk.sh
+
+    - name: Add .trunk/tools to path
+      shell: bash
+      if: runner.os == 'Linux' || runner.os == 'macOS'
+      run: echo ".trunk/tools" >> $GITHUB_PATH
+
+    - name: Trunk install
+      run: trunk install --ci ${{ inputs.tools }}
