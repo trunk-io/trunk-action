@@ -18,10 +18,14 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/get_trunk.sh
 
+    - name: Trunk install
+      shell: bash
+      run: trunk tools install --ci ${{ inputs.tools }}
+
     - name: Add .trunk/tools to path
       shell: bash
       run: echo ".trunk/tools" >> $GITHUB_PATH
 
-    - name: Trunk install
+    - name: path
       shell: bash
-      run: trunk tools install --ci ${{ inputs.tools }}
+      run: echo $GITHUB_PATH
