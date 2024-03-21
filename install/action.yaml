@@ -18,6 +18,10 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/get_trunk.sh
 
+    - name: which-trunk-
+      shell: bash
+      run: which trunk
+
     - name: Trunk install
       shell: bash
       run: trunk tools install --ci ${{ inputs.tools }}
