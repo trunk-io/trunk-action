@@ -24,4 +24,4 @@ runs:
 
     - name: Trunk install
       shell: bash
-      run: trunk install --ci ${{ inputs.tools }}
+      run: trunk tools install --ci ${{ inputs.tools }}
