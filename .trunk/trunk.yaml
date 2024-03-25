@@ -6,7 +6,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.4.4
+      ref: v1.4.5
       uri: https://github.com/trunk-io/plugins
     - id: configs
       ref: v1.0.4
