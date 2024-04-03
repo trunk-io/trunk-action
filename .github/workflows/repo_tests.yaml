@@ -85,11 +85,11 @@ jobs:
               echo "====="
               ${TRUNK_PATH} check list --color=false
               echo "====="
-              if ! grep -q "✔ eslint" <(${TRUNK_PATH} check list --color=false); then
+              if grep -q "✔ eslint" <(${TRUNK_PATH} check list --color=false); then
                 echo "::error::eslint not disabled"
                 exit 1
               fi
-              if ! grep -q "✔ stylelint" <(${TRUNK_PATH} check list --color=false); then
+              if grep -q "✔ stylelint" <(${TRUNK_PATH} check list --color=false); then
                 echo "::error::stylelint not disabled"
                 exit 1
               fi
