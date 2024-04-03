@@ -7,27 +7,27 @@ concurrency:
 permissions: read-all
 
 jobs:
-  # trunk_check:
-  #   name: Trunk Check Runner
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     checks: write # For trunk to post annotations
+  trunk_check:
+    name: Trunk Check Runner
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write # For trunk to post annotations
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
 
-  #     - name: Trunk Check
-  #       uses: ./ # external users, use: trunk-io/trunk-action@v1
+      - name: Trunk Check
+        uses: ./ # external users, use: trunk-io/trunk-action@v1
 
-  # action_tests:
-  #   name: Action tests
-  #   uses: ./.github/workflows/action_tests.yaml
+  action_tests:
+    name: Action tests
+    uses: ./.github/workflows/action_tests.yaml
 
   repo_tests:
     name: Repository tests
     uses: ./.github/workflows/repo_tests.yaml
 
-  # docker_repo_tests:
-  #   name: Repository tests (docker)
-  #   uses: ./.github/workflows/docker_repo_tests.yaml
+  docker_repo_tests:
+    name: Repository tests (docker)
+    uses: ./.github/workflows/docker_repo_tests.yaml
