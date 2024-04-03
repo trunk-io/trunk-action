@@ -115,6 +115,27 @@ runs:
           hashFiles(env.HASH_GLOB) }}
 
     - name: Install ${{ env.PACKAGE_MANAGER }} packages
+      id: install_packages
       if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
       shell: bash
       run: ${{ env.INSTALL_CMD }}
+      continue-on-error: true
+
+    - name: Check for package install
+      if: env.PACKAGE_MANAGER && (env.NODE_VERSION_FILE || env.RUN_INSTALL_NODE_PACKAGES)
+      shell: bash
+      run: |
+        if [ ${{ steps.install_packages.outcome }} == "success" ]; then
+          exit 0
+        fi
+        echo "FAILED_NODE_PACKAGE_INSTALL=true" >>$GITHUB_ENV
+
+        if [[ -z "${INITIALIZED_TRUNK}" ]]; then
+          echo "::error::Failed to install node packages."
+          echo "::error::Aborting because this repo has an existing trunk.yaml file."
+          exit 1
+        fi
+        echo "::warning::Failed to install node packages."
+        echo "::warning::Disabling linters that depend on node packages."
+        ${TRUNK_PATH} check disable eslint
+        ${TRUNK_PATH} check disable stylelint

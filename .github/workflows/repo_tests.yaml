@@ -75,6 +75,15 @@ jobs:
               fi
             description: (test for setup-node)
 
+          - repo: prawn-test-staging-rw/node-packages-failure-test
+            ref: main
+            post-init: |
+              if [ "${FAILED_NODE_PACKAGE_INSTALL}" != "true" ]; then
+                echo "::error::Node package install didn't fail"
+                exit 1
+              fi
+            description: (test for continuing on node package install failure)
+
           - repo: replayio/devtools
             ref: 730a9f0ddaafefc2a1a293d6924ce3910cd156ac
             description: (has trunk.yaml)
