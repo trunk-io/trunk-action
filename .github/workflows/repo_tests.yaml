@@ -82,8 +82,6 @@ jobs:
                 echo "::error::Node package install didn't fail"
                 exit 1
               fi
-              echo "====="
-              echo "====="
               if grep -q "✔ eslint" <(${TRUNK_PATH} check list --color=false); then
                 echo "::error::eslint not disabled"
                 exit 1
