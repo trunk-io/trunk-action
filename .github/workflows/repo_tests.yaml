@@ -82,6 +82,14 @@ jobs:
                 echo "::error::Node package install didn't fail"
                 exit 1
               fi
+              if ! trunk check list --color=false | grep -q "✔ eslint"; then
+                echo "::error::eslint not disabled"
+                exit 1
+              fi
+              if ! trunk check list --color=false | grep -q "✔ stylelint"; then
+                echo "::error::stylelint not disabled"
+                exit 1
+              fi
             description: (test for continuing on node package install failure)
 
           - repo: replayio/devtools
