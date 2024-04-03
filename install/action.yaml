@@ -18,13 +18,21 @@ runs:
       shell: bash
       run: ${GITHUB_ACTION_PATH}/get_trunk.sh
 
-    - name: clean up possible dead symlink
+    - name: debug .trunk
       shell: bash
+      continue-on-error: true
       run: |
-        tools_path=".trunk/tools"
-        if [ -L "${tools_path}" ] && [ ! -e "${tools_path}" ] ; then
-          rm "${tools_path}"
-        fi
+        ls -la .trunk/
+        ls -lLa .trunk/
+
+
+    # - name: clean up possible dead symlink
+    #   shell: bash
+    #   run: |
+    #     tools_path=".trunk/tools"
+    #     if [ -L "${tools_path}" ] && [ ! -e "${tools_path}" ] ; then
+    #       rm "${tools_path}"
+    #     fi
 
     - name: Trunk install
       shell: bash
