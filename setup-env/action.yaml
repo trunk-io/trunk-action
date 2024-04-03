@@ -137,5 +137,4 @@ runs:
         fi
         echo "::warning::Failed to install node packages."
         echo "::warning::Disabling linters that depend on node packages."
-        ${TRUNK_PATH} check disable eslint
-        ${TRUNK_PATH} check disable stylelint
+        ${TRUNK_PATH} check disable eslint stylelint

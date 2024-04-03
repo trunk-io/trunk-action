@@ -35,7 +35,8 @@ jobs:
             description: (compile-commands.json)
             post-init: |
               # black complains about py2 code
-              ${TRUNK_PATH} check disable black
+              # markdownlint fails for some reason, and what we really care about anyways is clang-tidy
+              ${TRUNK_PATH} check disable black markdownlint
               mkdir build
               cd build
               cmake .. -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -44,8 +45,6 @@ jobs:
               sed -i "s|lint:|lint:\n  compile_commands: json|" .trunk/trunk.yaml
               cp local-action/repo_tests/yaml_cpp.yaml .trunk/user.yaml
               ${TRUNK_PATH} check enable clang-tidy
-              # markdownlint fails for some reason, and what we really care about anyways is clang-tidy
-              ${TRUNK_PATH} check disable markdownlint
 
           - repo: pallets/flask
             ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
@@ -112,10 +111,7 @@ jobs:
             description: (has trunk.yaml)
             post-init: |
               # all of these linters have failures
-              ${TRUNK_PATH} check disable svgo
-              ${TRUNK_PATH} check disable golangci-lint
-              ${TRUNK_PATH} check disable prettier
-              ${TRUNK_PATH} check disable oxipng
+              ${TRUNK_PATH} check disable svgo golangci-lint prettier oxipng
 
           - repo: shopify/draggable
             ref: e6cf325a98c11b8aefbfb626b7a91b95d1c340c9
