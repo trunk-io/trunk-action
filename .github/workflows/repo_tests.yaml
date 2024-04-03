@@ -82,11 +82,11 @@ jobs:
                 echo "::error::Node package install didn't fail"
                 exit 1
               fi
-              if ! trunk check list --color=false | grep -q "✔ eslint"; then
+              if ! grep -q "✔ eslint" <(trunk check list --color=false); then
                 echo "::error::eslint not disabled"
                 exit 1
               fi
-              if ! trunk check list --color=false | grep -q "✔ stylelint"; then
+              if ! grep -q "✔ stylelint" <(trunk check list --color=false); then
                 echo "::error::stylelint not disabled"
                 exit 1
               fi
