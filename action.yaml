@@ -223,6 +223,7 @@ runs:
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
           ${TRUNK_PATH:-trunk} init
+          echo "INITIALIZED_TRUNK=true" >>$GITHUB_ENV
         fi
 
     - name: Detect setup strategy
