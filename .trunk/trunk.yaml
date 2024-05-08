@@ -12,11 +12,8 @@ plugins:
       ref: v1.0.4
       uri: https://github.com/trunk-io/configs
 
-# change to trigger upgrade action
 lint:
   # enabled list inherited from plugin 'configs'
-  enabled:
-    - flake8@6.0.0
   disabled:
     - eslint
   ignore:
