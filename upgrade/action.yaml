@@ -57,6 +57,11 @@ inputs:
     required: false
     default: false
 
+  signoff:
+    description: A boolean to add a Signed-off-by line to the commit message
+    required: false
+    default: false
+
 runs:
   using: composite
   steps:
@@ -122,3 +127,4 @@ runs:
         delete-branch: true
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
+        signoff: ${{ inputs.signoff }}
