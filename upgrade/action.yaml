@@ -116,6 +116,13 @@ runs:
         UPGRADE_ARGUMENTS: ${{ inputs.arguments }}
         LOWERCASE_TITLE: ${{ inputs.lowercase-title }}
 
+    - name: Echo results
+      shell: bash
+      run: |
+        # Echo outputs
+        echo "outputs:"
+        echo ${{ steps.upgrade.outputs.pull-request-number }}
+
     - name: Cleanup temporary files
       if: always()
       shell: bash
@@ -124,6 +131,7 @@ runs:
         ${{ github.action_path }}/../cleanup.sh
 
     - name: Create Pull Request
+      id: cpr
       uses: peter-evans/create-pull-request@v6
       with:
         title: ${{ inputs.prefix }}${{ env.PR_TITLE }}
@@ -138,3 +146,4 @@ runs:
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
         signoff: ${{ inputs.signoff }}
+# ${{ steps.cpr.outputs.pull-request-number }}"
