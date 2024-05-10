@@ -43,6 +43,15 @@ inputs:
     required: false
     default: "false"
 
+  branch-name:
+    description: The branch name to generate the PR from
+    default: trunk-io/update-trunk
+    required: false
+
+  assignees:
+    description: A comma or newline separated list of GitHub assignee usernames
+    required: false
+
   reviewers:
     description: A comma or newline separated list of GitHub reviewer usernames
     required: false
@@ -120,11 +129,12 @@ runs:
         title: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         body: ${{ env.PR_DESCRIPTION }}
         base: ${{ inputs.base }}
-        branch: trunk-io/update-trunk
+        branch: ${{ inputs.branch-name }}
         labels: trunk
         add-paths: ${{ inputs.add-paths }}
         commit-message: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         delete-branch: true
+        assignees: ${{ inputs.assignees }}
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
         signoff: ${{ inputs.signoff }}
