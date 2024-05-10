@@ -34,7 +34,8 @@ jobs:
 
       - name: Echo results
         shell: bash
+        env:
+          PR_NUMBER: ${{ steps.upgrade.outputs.pull-request-number }}
         run: |
           # Echo outputs
-          echo "outputs:"
-          echo ${{ steps.upgrade.outputs.pull-request-number }}
+          echo "outputs: ${PR_NUMBER}"
