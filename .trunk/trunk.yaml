@@ -1,7 +1,7 @@
 version: 0.1
 
 cli:
-  version: 1.22.0
+  version: 1.22.1
 
 plugins:
   sources:
@@ -14,6 +14,9 @@ plugins:
 
 lint:
   # enabled list inherited from plugin 'configs'
+  enabled:
+    # todo: remove this
+    - flake8@7.0.0
   disabled:
     - eslint
   ignore:
