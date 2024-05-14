@@ -26,6 +26,7 @@ jobs:
           private_key: ${{ secrets.TRUNK_OPEN_PR_APP_PRIVATE_KEY }}
 
       - name: Trunk Upgrade
+        id: upgrade
         uses: ./upgrade # external users: use trunk-io/trunk-action/upgrade@v1
         with:
           github-token: ${{ steps.generate-token.outputs.token }}
