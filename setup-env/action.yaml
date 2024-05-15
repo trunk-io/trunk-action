@@ -71,11 +71,23 @@ runs:
           echo "Could not find existing node install, skipping node package installation"
         fi
 
+    - name: Determine pnpm version
+      if: env.PACKAGE_MANAGER == 'pnpm'
+      shell: bash
+      run: |
+        if [ -e package.json ] && command -v jq >/dev/null; then
+          PNPM_VERSION=$(jq -r '.packageManager|split("@")[1]' package.json)
+        fi
+        if [ -z "${PNPM_VERSION}" ]; then
+          PNPM_VERSION=latest
+        fi
+        echo "PNPM_VERSION=${PNPM_VERSION}" >>$GITHUB_ENV
+
     - name: Install pnpm
       if: env.PACKAGE_MANAGER == 'pnpm'
       uses: pnpm/action-setup@v2
       with:
-        version: latest
+        version: ${{ env.PNPM_VERSION }}
 
     - name: Install Node dependencies
       id: setup_node
