@@ -76,7 +76,7 @@ runs:
       shell: bash
       run: |
         if [ -e package.json ] && command -v jq >/dev/null; then
-          PNPM_VERSION=$(jq -r '.packageManager|split("@")[1]' package.json)
+          PNPM_VERSION=$(jq -r '.packageManager|split("@")[1]' package.json || echo "")
         fi
         if [ -z "${PNPM_VERSION}" ]; then
           PNPM_VERSION=latest
