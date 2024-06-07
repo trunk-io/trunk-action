@@ -274,7 +274,11 @@ runs:
       shell: bash
       run: |
         # Run 'trunk check' on pull request
-        timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/pull_request.sh
+        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
+          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/pull_request.sh
+        else
+          ${GITHUB_ACTION_PATH}/pull_request.sh
+        fi
       env:
         INPUT_SAVE_ANNOTATIONS: ${{ inputs.save-annotations }}
 
@@ -283,7 +287,11 @@ runs:
       shell: bash
       run: |
         # Run 'trunk check' on push
-        timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/push.sh
+        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
+          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/push.sh
+        else
+          ${GITHUB_ACTION_PATH}/push.sh
+        fi
       env:
         GITHUB_EVENT_AFTER: ${{ env.GITHUB_EVENT_AFTER || github.event.after }}
         GITHUB_EVENT_BEFORE: ${{ env.GITHUB_EVENT_BEFORE || github.event.before }}
@@ -293,14 +301,22 @@ runs:
       shell: bash
       run: |
         # Run 'trunk check' on all
-        timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/all.sh
+        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
+          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/all.sh
+        else
+          ${GITHUB_ACTION_PATH}/all.sh
+        fi
 
     - name: Run trunk check on Trunk Merge
       if: env.TRUNK_CHECK_MODE == 'trunk_merge'
       shell: bash
       run: |
         # Run 'trunk check' on Trunk Merge
-        timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/trunk_merge.sh
+        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
+          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/trunk_merge.sh
+        else
+          ${GITHUB_ACTION_PATH}/trunk_merge.sh
+        fi
 
     - name: Cat Trunk Cli / Daemon logs
       if: always() && inputs.cat-trunk-debug-logs == 'true'
