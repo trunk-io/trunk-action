@@ -419,6 +419,49 @@ jobs:
           npm install
           ./action_tests/assert.js all-hold-the-line-no-upload-id
 
+  pull_request_expect_trunk_check_timeout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: local-action
+
+      - name: Set up test
+        shell: bash
+        run: |
+          ./local-action/action_tests/setup.sh src-repo repo-under-test
+          cd repo-under-test
+          git checkout feature-branch
+          echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
+
+      - name: Run trunk-action
+        shell: bash
+        id: trunk-action
+        run: |
+          cd repo-under-test
+          git checkout feature-branch
+          ../local-action/pull_request.sh
+        env:
+          INPUT_ARGUMENTS: ""
+          INPUT_CHECK_RUN_ID: 12345678
+          INPUT_DEBUG: ""
+          INPUT_LABEL: ""
+          TRUNK_PATH: ../local-action/action_tests/stub.js
+          INPUT_GITHUB_REF_NAME: feature-branch
+          GITHUB_EVENT_PULL_REQUEST_NUMBER: ""
+          GITHUB_EVENT_PULL_REQUEST_BASE_SHA: ${{ env.EXPECTED_UPSTREAM }}
+          GITHUB_EVENT_PULL_REQUEST_HEAD_SHA: ""
+          GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK: ""
+          INPUT_SAVE_ANNOTATIONS: ""
+          INPUT_AUTOFIX_AND_PUSH: true
+          INPUT_TIMEOUT_SECONDS: 1
+
+      - name: Assert trunk-action check has failed
+        shell: bash
+        if: steps.trunk-action.outcome == 'success'
+        run: exit 1
+
   pull_request_autofix:
     runs-on: ubuntu-latest
     steps:
