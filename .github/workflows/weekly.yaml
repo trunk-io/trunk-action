@@ -16,7 +16,7 @@ jobs:
       pull-requests: write # For trunk to create PRs
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create App Token for TrunkBuild App (Internal)
         uses: tibdex/github-app-token@v1
