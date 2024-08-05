@@ -23,7 +23,7 @@
   "cachePath": "~/.cache/trunk/tools/ruby",
   "trunkApiAddress": "localhost-will-not-work:5021",
   "checkJobName": "repo-under-test/pull_request",
-  "checkJobRunsOn": ["self-hosted", "linux", "public", "x86", "2xlarge"],
+  "checkJobRunsOn": ["self-hosted", "linux", "arbitrary", "test", "values"],
   "checkWorkflowRunName": "action-test-pull-request",
   "concurrencyGroup": "repo-under-test/1",
   "debug": true
