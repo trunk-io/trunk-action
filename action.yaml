@@ -122,6 +122,7 @@ runs:
       run: |
         cat >>$GITHUB_ENV <<EOF
         GITHUB_TOKEN=${{ github.token }}
+        TRUNK_LAUNCHER_QUIET=false
         EOF
 
         payload() {
