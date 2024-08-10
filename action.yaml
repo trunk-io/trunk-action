@@ -215,7 +215,7 @@ runs:
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         lfs: true
         submodules: recursive
@@ -265,7 +265,7 @@ runs:
 
     - name: Cache Linters/Formatters
       if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ${{ env.INPUT_CACHE_PATH }}
         key: ${{ env.INPUT_CACHE_KEY }}
@@ -348,14 +348,14 @@ runs:
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: trunk-annotations
         path: ${{ env.TRUNK_TMPDIR }}/annotations.bin
 
     - name: Download annotations artifact
       if: inputs.post-annotations == 'true'
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
         script: |
@@ -397,7 +397,7 @@ runs:
     - name: Upload landing state
       if: env.INPUT_UPLOAD_LANDING_STATE == 'true'
       continue-on-error: true
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: landing-state.json
         path: .trunk/landing-state.json
