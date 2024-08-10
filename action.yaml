@@ -136,7 +136,7 @@ runs:
 
         # Every inputs.field should be referenced as INPUT_FIELD later in the action. This allows
         # the field to be set either as an argument to the github action or via inputs.json.
-        if [[ "${{ inputs.check-mode }}" = "payload" ]]; then
+        if [[ "${{ inputs.check-mode }}" == "payload" ]]; then
 
           INPUT_GITHUB_TOKEN=$(payload githubToken)
           INPUT_TRUNK_TOKEN=$(payload trunkToken)
@@ -236,7 +236,7 @@ runs:
     - name: Init on-demand
       shell: bash
       run: |
-        if [ ! -e .trunk/trunk.yaml ]; then
+        if [[ ! -e .trunk/trunk.yaml ]]; then
           ${TRUNK_PATH:-trunk} init
           echo "INITIALIZED_TRUNK=true" >>$GITHUB_ENV
         fi
@@ -244,7 +244,7 @@ runs:
     - name: Detect setup strategy
       shell: bash
       run: |
-        if [ -e .trunk/setup-ci ]; then
+        if [[ -e .trunk/setup-ci ]]; then
           echo "INPUT_SETUP_DEPS=true" >>$GITHUB_ENV
         else
           mkdir -p .trunk
@@ -324,7 +324,7 @@ runs:
       shell: bash
       run: |
         echo "::group::.trunk/logs/cli.log"
-        if [ -f .trunk/logs/cli.log ]; then
+        if [[ -f .trunk/logs/cli.log ]]; then
           cat .trunk/logs/cli.log
         else
           echo ".trunk/logs/cli.log doesn't exist"
@@ -332,7 +332,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::.trunk/logs/daemon.log"
-        if [ -f .trunk/logs/daemon.log ]; then
+        if [[ -f .trunk/logs/daemon.log ]]; then
           cat .trunk/logs/daemon.log
         else
           echo ".trunk/logs/daemon.log doesn't exist"
