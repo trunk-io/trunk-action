@@ -236,7 +236,7 @@ runs:
       shell: bash
       run: |
         if [ ! -e .trunk/trunk.yaml ]; then
-          ${TRUNK_PATH:-trunk} init
+          ${TRUNK_PATH:-trunk} init | grep -v -F -- "$(echo -e "\033[2K\033[0G")"
           echo "INITIALIZED_TRUNK=true" >>$GITHUB_ENV
         fi
 
