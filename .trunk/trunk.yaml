@@ -9,7 +9,7 @@ plugins:
       ref: v1.6.1
       uri: https://github.com/trunk-io/plugins
     - id: configs
-      ref: v1.0.6
+      ref: v1.0.7
       uri: https://github.com/trunk-io/configs
 
 lint:
