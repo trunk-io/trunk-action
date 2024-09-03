@@ -186,8 +186,8 @@ runs:
         GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FORK=${{ github.event.pull_request.head.repo.fork }}
         GITHUB_EVENT_PULL_REQUEST_HEAD_SHA=${{ github.event.pull_request.head.sha }}
         GITHUB_EVENT_PULL_REQUEST_NUMBER=${{ github.event.pull_request.number }}
-        GITHUB_EVENT_MERGE_GROUP_BASE_SHA=${{ github.event.pull_request.base.sha }}
-        GITHUB_EVENT_MERGE_GROUP_HEAD_SHA=${{ github.event.pull_request.head.sha }}
+        GITHUB_EVENT_MERGE_GROUP_BASE_SHA=${{ github.event.merge_group.base_sha }}
+        GITHUB_EVENT_MERGE_GROUP_HEAD_SHA=${{ github.event.merge_group.head_sha }}
         GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_ARGUMENTS=${{ inputs.arguments }}
         INPUT_CACHE=${{ inputs.cache }}
