@@ -307,6 +307,17 @@ runs:
           ${GITHUB_ACTION_PATH}/all.sh
         fi
 
+    - name: Run trunk check on GitHub Merge
+      if: env.TRUNK_CHECK_MODE == 'gh_merge'
+      shell: bash
+      run: |
+        # Run 'trunk check' on GitHub Merge
+        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
+          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/gh_merge.sh
+        else
+          ${GITHUB_ACTION_PATH}/gh_merge.sh
+        fi
+
     - name: Run trunk check on Trunk Merge
       if: env.TRUNK_CHECK_MODE == 'trunk_merge'
       shell: bash
