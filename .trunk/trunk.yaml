@@ -1,7 +1,7 @@
 version: 0.1
 
 cli:
-  version: 1.22.3
+  version: 1.22.4
 
 plugins:
   sources:
@@ -9,7 +9,7 @@ plugins:
       ref: v1.6.2
       uri: https://github.com/trunk-io/plugins
     - id: configs
-      ref: v1.0.7
+      ref: v1.0.8
       uri: https://github.com/trunk-io/configs
 
 lint:
