@@ -15,10 +15,9 @@ fetch() {
     "$@"
 }
 
-head_sha=$(git rev-parse HEAD)
-fetch --depth=2 origin "${head_sha}"
-upstream=$(git rev-parse HEAD^1)
-git_commit=$(git rev-parse HEAD^2)
+upstream=${GITHUB_EVENT_MERGE_GROUP_BASE_SHA}
+git_commit=${GITHUB_EVENT_MERGE_GROUP_HEAD_SHA}
+fetch origin "${upstream}"
 
 "${TRUNK_PATH}" check \
   --ci \
