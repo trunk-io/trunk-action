@@ -29,7 +29,8 @@ fi
 
 if [[ -z ${upstream+x} ]]; then
   # Otherwise use github.event.pull_request.base.sha as the upstream.
-  upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA}"
+  # The default 'main' can be overriden with 'arguments: --upstream=main'
+  upstream="${GITHUB_EVENT_PULL_REQUEST_BASE_SHA:-main}"
   git_commit="${GITHUB_EVENT_PULL_REQUEST_HEAD_SHA}"
   fetch origin "${upstream}"
 fi
