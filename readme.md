@@ -7,6 +7,14 @@
 [![slack](https://img.shields.io/badge/-slack-611f69?logo=slack)][slack]
 [![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
 
+> **Flaky Tests!**
+> 
+> Got Flaky Tests? We're building a new tool to handle them and we'd love for you to be included! We'll be in touch when we're accepting new folks into the beta. It's free for three months; we only ask for your feedback.
+> 
+> If your team struggles with flaky tests, this is the tool for you!
+> 
+> [Join the Waitlist](https://trunk.io/flaky-tests)
+
 # Trunk.io GitHub Action
 
 > **Note**
@@ -18,8 +26,11 @@ This action runs and shows inline annotations of issues found by
 [Trunk Code Quality](https://docs.trunk.io/code-quality), a powerful meta linter 
 and formatter. Trunk runs hermetically, _locally_ or on CI, so you can always quickly 
 see lint, formatting, and security issues _before_ pushing your changes. 
-See all supported linters
-[here](https://docs.trunk.io/code-quality/linters/supported).
+See all supported linters [here](https://docs.trunk.io/code-quality/linters/supported).
+
+Trunk Code Quality is free for individual use, **free for open source projects**, and has a free tier for team use in
+private repos. (See [pricing](https://trunk.io/pricing))
+
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/46629651/232631742-645be266-5ea1-4a97-aa6d-6da868c056a8.png" height="300"/>
