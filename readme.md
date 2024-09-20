@@ -8,29 +8,30 @@
 [![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
 
 > **Flaky Tests!**
-> 
-> Got Flaky Tests? We're building a new tool to handle them and we'd love for you to be included! We'll be in touch when we're accepting new folks into the beta. It's free for three months; we only ask for your feedback.
-> 
+>
+> Got Flaky Tests? We're building a new tool to handle them and we'd love for you to be included!
+> We'll be in touch when we're accepting new folks into the beta. It's free for three months; we
+> only ask for your feedback.
+>
 > If your team struggles with flaky tests, this is the tool for you!
-> 
+>
 > [Join the Waitlist](https://trunk.io/flaky-tests)
 
 # Trunk.io GitHub Action
 
 > **Note**
 >
-> We strongly encourage using Trunk Code Quality's integration with GitHub to run Trunk Code Quality on CI.
-> [Get started here!](https://docs.trunk.io/code-quality/ci-setup)
+> We strongly encourage using Trunk Code Quality's integration with GitHub to run Trunk Code Quality
+> on CI. [Get started here!](https://docs.trunk.io/code-quality/ci-setup)
 
-This action runs and shows inline annotations of issues found by 
-[Trunk Code Quality](https://docs.trunk.io/code-quality), a powerful meta linter 
-and formatter. Trunk runs hermetically, _locally_ or on CI, so you can always quickly 
-see lint, formatting, and security issues _before_ pushing your changes. 
-See all supported linters [here](https://docs.trunk.io/code-quality/linters/supported).
+This action runs and shows inline annotations of issues found by
+[Trunk Code Quality](https://docs.trunk.io/code-quality), a powerful meta linter and formatter.
+Trunk runs hermetically, _locally_ or on CI, so you can always quickly see lint, formatting, and
+security issues _before_ pushing your changes. See all supported linters
+[here](https://docs.trunk.io/code-quality/linters/supported).
 
-Trunk Code Quality is free for individual use, **free for open source projects**, and has a free tier for team use in
-private repos. (See [pricing](https://trunk.io/pricing))
-
+Trunk Code Quality is free for individual use, **free for open source projects**, and has a free
+tier for team use in private repos. (See [pricing](https://trunk.io/pricing))
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/46629651/232631742-645be266-5ea1-4a97-aa6d-6da868c056a8.png" height="300"/>
@@ -78,8 +79,8 @@ for further reference.
 
 ### Advanced
 
-You can get a lot more out of Trunk Code Quality if you install it locally and 
-commit a Trunk configuration in your repository:
+You can get a lot more out of Trunk Code Quality if you install it locally and commit a Trunk
+configuration in your repository:
 
 1. Install Trunk → `curl https://get.trunk.io -fsSL | bash`
 2. Setup Trunk in your repo → `trunk init`
@@ -204,11 +205,12 @@ annotations in the regular manner, and fork PRs post annotations via the above w
 
 ## Trunk Versioning
 
-After you run `trunk init`, the `.trunk/trunk.yaml` file will contain a pinned version of Trunk to use for your
-repo. When you run `trunk`, it will automatically detect which version you should be running for a
-particular repo and download+run it. This means that everyone working in a repo, and CI, all get the
-same results and the same experience - no more *"doesn't happen on my machine"*. When you want to
-upgrade to a newer version, just run `trunk upgrade` and commit the updated `trunk.yaml`.
+After you run `trunk init`, the `.trunk/trunk.yaml` file will contain a pinned version of Trunk to
+use for your repo. When you run `trunk`, it will automatically detect which version you should be
+running for a particular repo and download+run it. This means that everyone working in a repo, and
+CI, all get the same results and the same experience - no more _"doesn't happen on my machine"_.
+When you want to upgrade to a newer version, just run `trunk upgrade` and commit the updated
+`trunk.yaml`.
 
 ## Run Trunk Outside of GitHub Actions
 
@@ -225,10 +227,10 @@ Check out the [setup docs](https://docs.trunk.io/code-quality/setup-and-installa
 
 ## Running Trunk Code Quality on all files
 
-By default, `trunk check` will run on only changed files. When triggered by a pull request this will be
-*all files changed in the PR*. When triggered by a push this will be *all files changed in that push*.
-If you would like to run `trunk check` on all files in a repo, you can set the `check-mode` to `all`.
-For example:
+By default, `trunk check` will run on only changed files. When triggered by a pull request this will
+be _all files changed in the PR_. When triggered by a push this will be _all files changed in that
+push_. If you would like to run `trunk check` on all files in a repo, you can set the `check-mode`
+to `all`. For example:
 
 ```yaml
 - name: Trunk Code Quality
@@ -266,8 +268,8 @@ workflow for further reference)
 
 ## Running Trunk Code Quality on multiple platforms
 
-If you'd like to run multiple Trunk Code Quality jobs on different platforms at the same time, you can pass
-`label` to each job to distinguish them. For example:
+If you'd like to run multiple Trunk Code Quality jobs on different platforms at the same time, you
+can pass `label` to each job to distinguish them. For example:
 
 ```yaml
 - name: Trunk Code Quality
@@ -278,8 +280,8 @@ If you'd like to run multiple Trunk Code Quality jobs on different platforms at 
 
 ## Annotating Existing Issues
 
-By default, the Trunk Action will only annotate new issues, but if you also want to annotate existing
-issues you can pass `--github-annotate-new-only=false` to Trunk Code Quality. For example:
+By default, the Trunk Action will only annotate new issues, but if you also want to annotate
+existing issues you can pass `--github-annotate-new-only=false` to Trunk Code Quality. For example:
 
 ```yaml
 - name: Trunk Code Quality
@@ -297,8 +299,8 @@ are currently supported. "Rebase and merge" does not yet work correctly.
 
 ## Automatic Upgrades
 
-If you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade Trunk
-and its tools, you can configure the action to automatically generate pull requests with these
+If you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade
+Trunk and its tools, you can configure the action to automatically generate pull requests with these
 upgrades:
 
 ```yaml
