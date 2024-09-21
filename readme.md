@@ -7,15 +7,10 @@
 [![slack](https://img.shields.io/badge/-slack-611f69?logo=slack)][slack]
 [![openssf](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action/badge)](https://api.securityscorecards.dev/projects/github.com/trunk-io/trunk-action)
 
-> **Flaky Tests!**
+> **💡Tip**
 >
-> Got Flaky Tests? We're building a new tool to handle them and we'd love for you to be included!
-> We'll be in touch when we're accepting new folks into the beta. It's free for three months; we
-> only ask for your feedback.
->
-> If your team struggles with flaky tests, this is the tool for you!
->
-> [Join the Waitlist](https://trunk.io/flaky-tests)
+> 🎉 New: [Trunk Flaky Tests](https://trunk.io/flaky-tests) detects, quarantines, and eliminates
+> flaky tests.
 
 # Trunk.io GitHub Action
 
@@ -299,9 +294,8 @@ are currently supported. "Rebase and merge" does not yet work correctly.
 
 ## Automatic Upgrades
 
-If you have a `.trunk/trunk.yaml` checked into your repo, and you want to automatically upgrade
-Trunk and its tools, you can configure the action to automatically generate pull requests with these
-upgrades:
+Once you have a `.trunk/trunk.yaml` checked into your repo, the following action will automatically
+upgrade Trunk and its tools.
 
 ```yaml
 name: Nightly
