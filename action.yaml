@@ -114,6 +114,11 @@ inputs:
     required: false
     default: false
 
+  lfs-checkout:
+    description: Option to checkout LFS files
+    required: false
+    default: true
+
 runs:
   using: composite
   steps:
@@ -124,9 +129,15 @@ runs:
         GITHUB_TOKEN=${{ github.token }}
         EOF
 
+        # First arg is field to fetch, second arg is default value or empty
         payload() {
+          if [ $# -lt 2 ]; then
+            DEFAULT_VALUE=empty
+          else
+            DEFAULT_VALUE=\"$2\"
+          fi
           if command -v jq >/dev/null; then
-            jq -r ".inputs.payload | fromjson | .$1 // empty" ${TEST_GITHUB_EVENT_PATH:-${GITHUB_EVENT_PATH}}
+            jq -r ".inputs.payload | fromjson | .$1 // ${DEFAULT_VALUE}" ${TEST_GITHUB_EVENT_PATH:-${GITHUB_EVENT_PATH}}
           else
             echo "::error::jq not installed on system!"
             exit 1
@@ -174,6 +185,7 @@ runs:
         INPUT_UPLOAD_SERIES=$(payload uploadSeries)
         INPUT_UPLOAD_ID=$(payload uploadId)
         INPUT_AUTOFIX_AND_PUSH=$(payload autofixAndPush)
+        INPUT_LFS_CHECKOUT=$(payload lfsCheckout true)
         EOF
 
         else
@@ -208,6 +220,7 @@ runs:
         INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
         INPUT_UPLOAD_ID=
         INPUT_AUTOFIX_AND_PUSH=
+        INPUT_LFS_CHECKOUT=${{ inputs.lfs-checkout }}
         EOF
 
         fi
@@ -216,7 +229,7 @@ runs:
       if: env.INPUT_TARGET_CHECKOUT
       uses: actions/checkout@v3
       with:
-        lfs: true
+        lfs: ${{ env.INPUT_LFS_CHECKOUT && inputs.lfs-checkout }}
         submodules: recursive
         repository: ${{ env.INPUT_TARGET_CHECKOUT }}
         ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
