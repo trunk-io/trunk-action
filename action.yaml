@@ -360,7 +360,7 @@ runs:
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: trunk-annotations
         path: ${{ env.TRUNK_TMPDIR }}/annotations.bin
@@ -409,7 +409,7 @@ runs:
     - name: Upload landing state
       if: env.INPUT_UPLOAD_LANDING_STATE == 'true'
       continue-on-error: true
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: landing-state.json
         path: .trunk/landing-state.json
