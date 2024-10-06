@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "chai": "^4.3.7"
+    "chai": "^4.3.7",
+    "ip": "^2.0.0"
   },
   "engines": {
     "node": "20.8.1"
