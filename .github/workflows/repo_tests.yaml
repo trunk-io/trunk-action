@@ -147,13 +147,13 @@ jobs:
 
     steps:
       - name: Checkout ${{ matrix.repo }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ matrix.repo }}
           ref: ${{ matrix.ref }}
 
       - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: local-action
 
@@ -182,7 +182,7 @@ jobs:
             '${{ matrix.description }}'
 
       - name: Upload landing state
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.landing_state_artifact_name }} landing state
           path: .trunk/landing-state.json

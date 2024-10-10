@@ -56,6 +56,11 @@ inputs:
     description: A comma or newline separated list of GitHub reviewer usernames
     required: false
 
+  labels:
+    description: A comma or newline separated list of GitHub labels that should be added to the PR
+    default: trunk
+    required: false
+
   add-paths:
     description: Specific paths to add to the created pull request. Comma separated.
     required: false
@@ -148,7 +153,7 @@ runs:
         body: ${{ env.PR_DESCRIPTION }}
         base: ${{ inputs.base }}
         branch: ${{ inputs.branch-name }}
-        labels: trunk
+        labels: ${{ inputs.labels }}
         add-paths: ${{ inputs.add-paths }}
         commit-message: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         delete-branch: true
