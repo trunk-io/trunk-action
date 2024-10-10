@@ -75,6 +75,11 @@ inputs:
     description: A boolean to add a Signed-off-by line to the commit message
     required: false
     default: false
+
+  sign-commits:
+    description: A boolean to sign commits. See https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#commit-signature-verification-for-bots
+    required: false
+    default: false
 outputs:
   pull-request-number:
     description: The pull request number
@@ -161,3 +166,4 @@ runs:
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
         signoff: ${{ inputs.signoff }}
+        sign-commits: ${{ inputs.sign-commits }}
