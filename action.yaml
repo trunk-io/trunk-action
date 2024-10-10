@@ -127,6 +127,7 @@ runs:
       run: |
         cat >>$GITHUB_ENV <<EOF
         GITHUB_TOKEN=${{ github.token }}
+        TRUNK_LAUNCHER_QUIET=false
         EOF
 
         # First arg is field to fetch, second arg is default value or empty
@@ -146,7 +147,7 @@ runs:
 
         # Every inputs.field should be referenced as INPUT_FIELD later in the action. This allows
         # the field to be set either as an argument to the github action or via inputs.json.
-        if [[ "${{ inputs.check-mode }}" = "payload" ]]; then
+        if [[ "${{ inputs.check-mode }}" == "payload" ]]; then
 
           INPUT_GITHUB_TOKEN=$(payload githubToken)
           INPUT_TRUNK_TOKEN=$(payload trunkToken)
@@ -248,15 +249,15 @@ runs:
     - name: Init on-demand
       shell: bash
       run: |
-        if [ ! -e .trunk/trunk.yaml ]; then
-          ${TRUNK_PATH:-trunk} init
+        if [[ ! -e .trunk/trunk.yaml ]]; then
+          ${TRUNK_PATH:-trunk} --ci init
           echo "INITIALIZED_TRUNK=true" >>$GITHUB_ENV
         fi
 
     - name: Detect setup strategy
       shell: bash
       run: |
-        if [ -e .trunk/setup-ci ]; then
+        if [[ -e .trunk/setup-ci ]]; then
           echo "INPUT_SETUP_DEPS=true" >>$GITHUB_ENV
         else
           mkdir -p .trunk
@@ -336,7 +337,7 @@ runs:
       shell: bash
       run: |
         echo "::group::.trunk/logs/cli.log"
-        if [ -f .trunk/logs/cli.log ]; then
+        if [[ -f .trunk/logs/cli.log ]]; then
           cat .trunk/logs/cli.log
         else
           echo ".trunk/logs/cli.log doesn't exist"
@@ -344,7 +345,7 @@ runs:
         echo "::endgroup::"
 
         echo "::group::.trunk/logs/daemon.log"
-        if [ -f .trunk/logs/daemon.log ]; then
+        if [[ -f .trunk/logs/daemon.log ]]; then
           cat .trunk/logs/daemon.log
         else
           echo ".trunk/logs/daemon.log doesn't exist"
@@ -367,7 +368,7 @@ runs:
 
     - name: Download annotations artifact
       if: inputs.post-annotations == 'true'
-      uses: actions/github-script@v6
+      uses: actions/github-script@v7
       with:
         # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
         script: |
