@@ -80,6 +80,7 @@ inputs:
     description: A boolean to sign commits. See https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#commit-signature-verification-for-bots
     required: false
     default: false
+
 outputs:
   pull-request-number:
     description: The pull request number
@@ -152,7 +153,7 @@ runs:
 
     - name: Create Pull Request
       id: cpr
-      uses: peter-evans/create-pull-request@v6
+      uses: peter-evans/create-pull-request@v7
       with:
         title: ${{ inputs.prefix }}${{ env.PR_TITLE }}
         body: ${{ env.PR_DESCRIPTION }}
@@ -165,5 +166,6 @@ runs:
         assignees: ${{ inputs.assignees }}
         reviewers: ${{ inputs.reviewers }}
         token: ${{ inputs.github-token }}
+        branch-token: ${{ inputs.github-token }}
         signoff: ${{ inputs.signoff }}
         sign-commits: ${{ inputs.sign-commits }}
