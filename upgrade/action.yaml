@@ -77,7 +77,9 @@ inputs:
     default: false
 
   sign-commits:
-    description: A boolean to sign commits. See https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#commit-signature-verification-for-bots
+    description:
+      A boolean to sign commits. See
+      https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#commit-signature-verification-for-bots
     required: false
     default: false
 
@@ -91,7 +93,8 @@ outputs:
     value: ${{ steps.cpr.outputs.pull-request-url }}
 
   pull-request-operation:
-    description: The pull request operation performed by the action, `created`, `updated` or `closed`.
+    description:
+      The pull request operation performed by the action, `created`, `updated` or `closed`.
     value: ${{ steps.cpr.outputs.pull-request-operation }}
 
   pull-request-head-sha:
