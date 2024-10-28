@@ -414,6 +414,7 @@ runs:
       with:
         name: landing-state.json
         path: .trunk/landing-state.json
+        overwrite: true
         if-no-files-found: warn
 
     - name: Cleanup temporary files
