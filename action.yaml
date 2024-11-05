@@ -364,6 +364,7 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: trunk-annotations
+        overwrite: true
         path: ${{ env.TRUNK_TMPDIR }}/annotations.bin
 
     - name: Download annotations artifact
@@ -414,6 +415,7 @@ runs:
       with:
         name: landing-state.json
         path: .trunk/landing-state.json
+        overwrite: true
         if-no-files-found: warn
 
     - name: Cleanup temporary files
