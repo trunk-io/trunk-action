@@ -237,30 +237,6 @@ to `all`. For example:
 If you're running an hourly or nightly job on a branch, `check-mode` is automatically inferred to be
 `all`.
 
-## Uploading results to the Trunk web app
-
-[The Trunk web app](https://app.trunk.io/) can track results over time, give upgrade notifications
-and suggestions, and more. For security, we never clone your repo in our backend. Instead, you set
-up a periodic CI job to run `trunk check` on your repo, and it sends the results to Trunk.
-
-By providing a `trunk-token` (as seen below) and running on a `schedule` workflow dispatch
-([example](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/nightly.yaml)),
-Trunk will infer to run with `check-mode` as `all` and to upload results to Trunk.
-
-```yaml
-- name: Trunk Code Quality
-  uses: trunk-io/trunk-action@v1
-  with:
-    trunk-token: ${{ secrets.TRUNK_TOKEN }}
-```
-
-Note: When run as a periodic workflow on a branch, Trunk will automatically infer `check-mode` to be
-`all`.
-
-(See this repo's
-[`nightly.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/nightly.yaml)
-workflow for further reference)
-
 ## Running Trunk Code Quality on multiple platforms
 
 If you'd like to run multiple Trunk Code Quality jobs on different platforms at the same time, you
