@@ -267,7 +267,7 @@ runs:
 
     - name: Find Comment
       uses: peter-evans/find-comment@v3
-      if: env.INPUT_SETUP_DEPS == 'true'
+      if: inputs.check-mode == 'payload' && env.INPUT_GITHUB_TOKEN
       id: fc
       with:
         issue-number: ${{ env.GITHUB_EVENT_PULL_REQUEST_NUMBER }}
@@ -277,7 +277,7 @@ runs:
 
     - name: Post comment
       uses: peter-evans/create-or-update-comment@v4
-      if: env.INPUT_SETUP_DEPS == 'true'
+      if: inputs.check-mode == 'payload' && env.INPUT_GITHUB_TOKEN
       with:
         comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ env.GITHUB_EVENT_PULL_REQUEST_NUMBER }}
