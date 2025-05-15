@@ -291,7 +291,7 @@ runs:
         token: ${{ env.INPUT_GITHUB_TOKEN }}
         edit-mode: replace
         body: |
-          Code-Quality-on-PRs is deprecated and will soon be removed. Please see the [migration guide](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide) for more information.
+          Running Code Quality on PRs by uploading data to Trunk will soon be removed. You can still run checks on your PRs using [trunk-action](https://github.com/trunk-io/trunk-action) - see the [migration guide](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide) for more information.
 
     - name: Set up env
       uses: ./.trunk/setup-ci
