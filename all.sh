@@ -17,6 +17,7 @@ fetch() {
 
 MINIMUM_UPLOAD_ID_VERSION=1.12.3
 
+echo "::warning::Check uploads and check all mode is no longer supported. Please see https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide for more information."
 if [[ -z ${INPUT_TRUNK_TOKEN} ]]; then
   "${TRUNK_PATH}" check \
     --ci \

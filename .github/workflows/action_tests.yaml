@@ -549,7 +549,7 @@ jobs:
       - name: Craft TEST_GITHUB_EVENT_PATH
         shell: bash
         run: |
-          payload=$(jq --null-input --argfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo | tostring)}')
+          payload=$(jq --null-input --slurpfile foo local-action/${{ matrix.payload_path }} '{"payload": ($foo[0] | tostring)}')
           echo "$(echo '{"inputs":'$(echo $payload | jq -c '.' )'}')">>local-action/payload.json
           echo "TEST_GITHUB_EVENT_PATH=local-action/payload.json">>$GITHUB_ENV
           mkdir -p .git/info

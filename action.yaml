@@ -265,6 +265,34 @@ runs:
           echo .trunk/setup-ci >>.git/info/exclude
         fi
 
+    - name: Find Comment
+      uses: peter-evans/find-comment@v3
+      if: |
+        inputs.check-mode == 'payload' && env.TRUNK_CHECK_MODE == 'pull_request' &&
+        env.INPUT_GITHUB_TOKEN
+      id: fc
+      continue-on-error: true
+      with:
+        issue-number: ${{ env.GITHUB_EVENT_PULL_REQUEST_NUMBER }}
+        repository: ${{ env.INPUT_TARGET_CHECKOUT }}
+        token: ${{ env.INPUT_GITHUB_TOKEN }}
+        body-regex: ^.*https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide.*$
+
+    - name: Post comment
+      uses: peter-evans/create-or-update-comment@v4
+      if: |
+        inputs.check-mode == 'payload' && env.TRUNK_CHECK_MODE == 'pull_request' &&
+        env.INPUT_GITHUB_TOKEN
+      continue-on-error: true
+      with:
+        comment-id: ${{ steps.fc.outputs.comment-id }}
+        issue-number: ${{ env.GITHUB_EVENT_PULL_REQUEST_NUMBER }}
+        repository: ${{ env.INPUT_TARGET_CHECKOUT }}
+        token: ${{ env.INPUT_GITHUB_TOKEN }}
+        edit-mode: replace
+        body: |
+          Running Code Quality on PRs by uploading data to Trunk will soon be removed. You can still run checks on your PRs using [trunk-action](https://github.com/trunk-io/trunk-action) - see the [migration guide](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide) for more information.
+
     - name: Set up env
       uses: ./.trunk/setup-ci
       if: env.INPUT_SETUP_DEPS == 'true'
