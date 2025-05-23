@@ -237,29 +237,27 @@ to `all`. For example:
 If you're running an hourly or nightly job on a branch, `check-mode` is automatically inferred to be
 `all`.
 
-## Uploading results to the Trunk web app
+## Uploading results to the Trunk web app (deprecated)
 
-[The Trunk web app](https://app.trunk.io/) can track results over time, give upgrade notifications
-and suggestions, and more. For security, we never clone your repo in our backend. Instead, you set
-up a periodic CI job to run `trunk check` on your repo, and it sends the results to Trunk.
+The Trunk Code Quality web app has been deprecated and the service will be shut down on July
+27, 2025.
 
-By providing a `trunk-token` (as seen below) and running on a `schedule` workflow dispatch
-([example](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/nightly.yaml)),
-Trunk will infer to run with `check-mode` as `all` and to upload results to Trunk.
+If you are uploading to the Trunk web app you can stop by removing `trunk-token` from your config:
 
 ```yaml
 - name: Trunk Code Quality
   uses: trunk-io/trunk-action@v1
+  # remove trunk-token from your action
   with:
     trunk-token: ${{ secrets.TRUNK_TOKEN }}
 ```
 
-Note: When run as a periodic workflow on a branch, Trunk will automatically infer `check-mode` to be
-`all`.
+You can continue to run this action nightly using a `schedule` worflow dispatch and
+`check-mode: all`.
+[See the example](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/nightly.yaml).
 
-(See this repo's
-[`nightly.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/nightly.yaml)
-workflow for further reference)
+For more information on the deprecation,
+[see the migration guide](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide).
 
 ## Running Trunk Code Quality on multiple platforms
 

@@ -18,4 +18,4 @@ jobs:
       - name: Trunk Check
         uses: ./ # external users, use: trunk-io/trunk-action@v1
         with:
-          trunk-token: ${{ secrets.TRUNK_TOKEN }}
+          check-mode: all
