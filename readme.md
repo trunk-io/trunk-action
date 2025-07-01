@@ -36,7 +36,7 @@ tier for team use in private repos. (See [pricing](https://trunk.io/pricing))
 
 ## Get Started
 
-[Follow these instructions to set up Trunk Code Quality CI for your GitHub repository](https://docs.trunk.io/code-quality/ci-setup)
+[Follow these instructions to set up Trunk Code Quality CI for your GitHub repository](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues)
 
 ## Run it Yourself
 
