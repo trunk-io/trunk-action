@@ -17,7 +17,8 @@
 > **Note**
 >
 > We strongly encourage using Trunk Code Quality's integration with GitHub to run Trunk Code Quality
-> on CI. [Get started here!](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues)
+> on CI.
+> [Get started here!](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues)
 
 This action runs and shows inline annotations of issues found by
 [Trunk Code Quality](https://docs.trunk.io/code-quality), a powerful meta linter and formatter.
