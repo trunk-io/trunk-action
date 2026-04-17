@@ -85,14 +85,14 @@ runs:
 
     - name: Install pnpm
       if: env.PACKAGE_MANAGER == 'pnpm'
-      uses: pnpm/action-setup@v2
+      uses: pnpm/action-setup@08c4be7e2e672a47d11bd04269e27e5f3e8529cb # v6.0.0
       with:
         version: ${{ env.PNPM_VERSION }}
 
     - name: Install Node dependencies
       id: setup_node
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
       with:
         node-version-file: ${{ env.NODE_VERSION_FILE }}
       continue-on-error: true
@@ -113,13 +113,13 @@ runs:
 
     - name: Install backup node version
       if: env.PACKAGE_MANAGER && env.NODE_VERSION_FILE && env.INSTALL_LATEST_NODE == 'true'
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
       with:
         node-version: latest
 
     - name: Cache node_modules
       if: inputs.cache-key && env.PACKAGE_MANAGER
-      uses: actions/cache@v3
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
       with:
         path: node_modules/
         key:
