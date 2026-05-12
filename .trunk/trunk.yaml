@@ -8,6 +8,9 @@ plugins:
     - id: trunk
       ref: v1.9.0
       uri: https://github.com/trunk-io/plugins
+    - id: configs
+      ref: v1.1.1
+      uri: https://github.com/trunk-io/configs
 
 lint:
   definitions:
@@ -22,17 +25,6 @@ lint:
   enabled:
     - zizmor@1.24.1
     - grype@0.110.0
-    - checkov@3.2.528
-    - actionlint@1.7.8
-    - git-diff-check
-    - markdownlint@0.48.0
-    - osv-scanner@2.2.4
-    - prettier@3.8.3
-    - renovate@43.150.0
-    - shellcheck@0.11.0
-    - shfmt@3.6.0
-    - trufflehog@3.90.13
-    - yamllint@1.38.0
   disabled:
     - eslint
   ignore:
