@@ -21,6 +21,10 @@ lint:
       commands:
         - name: lint
           run: zizmor --format=sarif --pedantic ${target}
+  # Only medium+ zizmor findings block `trunk check` (note/low are reported only).
+  threshold:
+    - linters: [zizmor]
+      level: medium
   # enabled list inherited from plugin 'configs'
   enabled:
     - zizmor@1.24.1
