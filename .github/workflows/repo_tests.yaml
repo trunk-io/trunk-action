@@ -169,7 +169,8 @@ jobs:
           cache-key: repo_tests/${{ matrix.repo }}
           setup-deps: true
         env:
-          TRUNK_CLI_VERSION: ${{ matrix.description == '(compat test for cli 1.0.0)' && '1.0.0' || '' }}
+          TRUNK_CLI_VERSION:
+            ${{ matrix.description == '(compat test for cli 1.0.0)' && '1.0.0' || '' }}
         continue-on-error: true
 
       - name: Check for task failures

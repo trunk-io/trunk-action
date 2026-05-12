@@ -15,7 +15,8 @@ inputs:
     required: false
 
   label:
-    description: Label to append to the check run name (useful if running Trunk Check on multiple platforms)
+    description:
+      Label to append to the check run name (useful if running Trunk Check on multiple platforms)
     deprecationMessage: "Use `arguments: --github-label=value` instead."
     required: false
 
@@ -31,7 +32,8 @@ inputs:
     required: false
 
   check-all-mode:
-    description: If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
+    description:
+      If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
     required: false
     default: ""
 
@@ -47,7 +49,8 @@ inputs:
     default: "true"
 
   cache-key:
-    description: A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
+    description:
+      A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
     required: false
 
   post-init:
