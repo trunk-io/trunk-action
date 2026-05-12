@@ -76,7 +76,17 @@ runs:
       shell: bash
       run: |
         if [ -e package.json ] && command -v jq >/dev/null; then
-          PNPM_VERSION=$(jq -r '.packageManager|split("@")[1]' package.json || echo "")
+          if jq -e '.packageManager | type == "string"' package.json >/dev/null 2>&1; then
+            PM=$(jq -r '.packageManager' package.json)
+            if [[ "${PM}" == pnpm@* ]]; then
+              PNPM_VERSION="${PM#pnpm@}"
+            fi
+          fi
+        fi
+        # Repos with pnpm-lock.yaml but no `packageManager` field (or null) need a pnpm major
+        # compatible with their lockfile; `latest` can be too new (breaking lockfile format).
+        if [ -z "${PNPM_VERSION}" ] && [ -e pnpm-lock.yaml ]; then
+          PNPM_VERSION=8.15.9
         fi
         if [ -z "${PNPM_VERSION}" ]; then
           PNPM_VERSION=latest

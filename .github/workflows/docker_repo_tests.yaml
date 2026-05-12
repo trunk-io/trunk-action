@@ -64,13 +64,13 @@ jobs:
                 exit 1
               fi
               if [ "${INSTALL_LATEST_NODE}" != "true" ]; then
-                echo "::error::Initial setup node didn't fail"
+                echo "::error::Expected fallback latest-node install after failed version match"
                 exit 1
               fi
             description: (test for setup-node)
             pre-init: |
-              while which node > /dev/null; do
-                rm $(which node)
+              while which node >/dev/null 2>&1; do
+                rm -f "$(which node)"
               done
             cache: false
 
@@ -92,6 +92,7 @@ jobs:
           path: local-action
 
       - name: Run pre-init
+        if: matrix.pre-init
         shell: bash
         run: ${{ matrix.pre-init }}
 
