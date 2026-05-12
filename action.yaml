@@ -15,8 +15,7 @@ inputs:
     required: false
 
   label:
-    description:
-      Label to append to the check run name (useful if running Trunk Check on multiple platforms)
+    description: Label to append to the check run name (useful if running Trunk Check on multiple platforms)
     deprecationMessage: "Use `arguments: --github-label=value` instead."
     required: false
 
@@ -32,8 +31,7 @@ inputs:
     required: false
 
   check-all-mode:
-    description:
-      If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
+    description: If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
     required: false
     default: ""
 
@@ -49,8 +47,7 @@ inputs:
     default: "true"
 
   cache-key:
-    description:
-      A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
+    description: A key unique to the repo/branch this action is being run on (e.g. the repo name and branch)
     required: false
 
   post-init:
@@ -228,7 +225,7 @@ runs:
 
     - name: Checkout
       if: env.INPUT_TARGET_CHECKOUT
-      uses: actions/checkout@v4
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         lfs: ${{ env.INPUT_LFS_CHECKOUT && inputs.lfs-checkout }}
         submodules: recursive
@@ -278,7 +275,7 @@ runs:
 
     - name: Cache Linters/Formatters
       if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
-      uses: actions/cache@v4
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
       with:
         path: ${{ env.INPUT_CACHE_PATH }}
         key: ${{ env.INPUT_CACHE_KEY }}
@@ -361,7 +358,7 @@ runs:
 
     - name: Upload annotations artifact
       if: always() && env.TRUNK_UPLOAD_ANNOTATIONS == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: trunk-annotations
         overwrite: true
@@ -369,7 +366,7 @@ runs:
 
     - name: Download annotations artifact
       if: inputs.post-annotations == 'true'
-      uses: actions/github-script@v7
+      uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
       with:
         # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
         script: |
@@ -411,7 +408,7 @@ runs:
     - name: Upload landing state
       if: env.INPUT_UPLOAD_LANDING_STATE == 'true'
       continue-on-error: true
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: landing-state.json
         path: .trunk/landing-state.json

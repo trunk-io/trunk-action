@@ -6,17 +6,47 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.7.3
+      ref: v1.9.0
       uri: https://github.com/trunk-io/plugins
-    - id: configs
-      ref: v1.1.1
-      uri: https://github.com/trunk-io/configs
 
 lint:
+  definitions:
+    # ref-version-mismatch (tag vs SHA) runs on the default persona; missing
+    # version comments and stale-action-refs (SHA not on a tag) need pedantic.
+    # Neither audit supports rules.<id>.config in zizmor.yml.
+    - name: zizmor
+      commands:
+        - name: lint
+          run: zizmor --format=sarif --pedantic ${target}
   # enabled list inherited from plugin 'configs'
+  enabled:
+    - zizmor@1.24.1
+    - grype@0.110.0
+    - checkov@3.2.528
+    - actionlint@1.7.8
+    - git-diff-check
+    - markdownlint@0.48.0
+    - osv-scanner@2.2.4
+    - prettier@3.8.3
+    - renovate@43.150.0
+    - shellcheck@0.11.0
+    - shfmt@3.6.0
+    - trufflehog@3.90.13
+    - yamllint@1.38.0
   disabled:
     - eslint
   ignore:
     - linters: [ALL]
       paths:
         - repo_tests/**
+runtimes:
+  enabled:
+    - go@1.21.0
+    - node@22.16.0
+    - python@3.14.4
+actions:
+  enabled:
+    - trunk-announce
+    - trunk-check-pre-push
+    - trunk-fmt-pre-commit
+    - trunk-upgrade-available
