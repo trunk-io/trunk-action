@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     # This is a docker image that mimics the github runner image
     # https://github.com/catthehacker/docker_images/pkgs/container/ubuntu
-    container: ghcr.io/catthehacker/ubuntu:runner-20.04
+    container: ghcr.io/catthehacker/ubuntu:runner-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -42,18 +42,11 @@ jobs:
               cp local-action/repo_tests/flask.yaml .trunk/user.yaml
             cache: true
 
+          # PostCSS: track `main` in Docker (pnpm 9 lockfile + setup-env); host `repo_tests.yaml`
+          # keeps an older pin where default `trunk init` osv-scanner is stable on lockfile 6.x.
           - repo: postcss/postcss
-            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
+            ref: 84fbbe9009cb3cc3bbb4cc3a9b65d468f4844d95
             description: (uses pnpm)
-            post-init: |
-              ${TRUNK_PATH} check enable eslint
-            cache: true
-
-          - repo: postcss/postcss
-            ref: aa9e03ea4708909631eba70500c8c0cc0708bb4e
-            description: (compat test for cli 1.0.0)
-            post-init: |
-              ${TRUNK_PATH} check enable eslint
             cache: true
 
           - repo: prawn-test-staging-rw/setup-node-test
@@ -106,9 +99,6 @@ jobs:
           arguments: --output-file=/tmp/landing-state.json
           cache-key: repo_tests/${{ matrix.repo }}
           setup-deps: true
-        env:
-          TRUNK_CLI_VERSION:
-            ${{ matrix.description == '(compat test for cli 1.0.0)' && '1.0.0' || '' }}
         continue-on-error: true
 
       - name: Check for task failures

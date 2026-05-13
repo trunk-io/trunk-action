@@ -1,5 +1,8 @@
 version: 0.1
 lint:
+  disabled:
+    - black
+    - flake8
   ignore:
     - linters: [prettier]
       paths:

@@ -460,10 +460,14 @@ jobs:
           INPUT_AUTOFIX_AND_PUSH: true
           INPUT_TIMEOUT_SECONDS: "1"
 
-      - name: Assert trunk-action check has failed
+      - name: Assert trunk-action failed from timeout
         shell: bash
-        if: steps.trunk-action.outcome == 'success'
-        run: exit 1
+        run: |
+          # With continue-on-error, a timed-out step has conclusion=failure, outcome=success.
+          if [ "${{ steps.trunk-action.conclusion }}" != "failure" ]; then
+            echo "::error::Expected timeout (conclusion=failure); conclusion=${{ steps.trunk-action.conclusion }} outcome=${{ steps.trunk-action.outcome }}"
+            exit 1
+          fi
 
   pull_request_autofix:
     runs-on: ubuntu-latest

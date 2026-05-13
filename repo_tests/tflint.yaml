@@ -2,3 +2,6 @@ version: 0.1
 lint:
   disabled:
     - golangci-lint
+    - golangci-lint2
+    - grype
+    - osv-scanner

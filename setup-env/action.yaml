@@ -86,7 +86,11 @@ runs:
         # Repos with pnpm-lock.yaml but no `packageManager` field (or null) need a pnpm major
         # compatible with their lockfile; `latest` can be too new (breaking lockfile format).
         if [ -z "${PNPM_VERSION}" ] && [ -e pnpm-lock.yaml ]; then
-          PNPM_VERSION=8.15.9
+          if grep -qE "^lockfileVersion: ['\"](9|10)" pnpm-lock.yaml 2>/dev/null; then
+            PNPM_VERSION=9.15.9
+          else
+            PNPM_VERSION=8.15.9
+          fi
         fi
         if [ -z "${PNPM_VERSION}" ]; then
           PNPM_VERSION=latest
