@@ -6,7 +6,3 @@ __pycache__/
 
 # from https://github.com/github/gitignore/blob/main/Node.gitignore
 node_modules/
-
-# Local clones created by action_tests/setup.sh (nested git repos; do not commit)
-src-repo/
-repo-under-test/
