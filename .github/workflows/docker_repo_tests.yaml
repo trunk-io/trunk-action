@@ -26,7 +26,8 @@ jobs:
           #     this workflow on PRs
           #
           - repo: highlightjs/highlight.js
-            ref: 4f9cd3bffb6bc55c9e2c4252c7b733a219880151
+            # Keep this on main so Docker CI continuously validates current npm + trunk init behavior.
+            ref: main
             description: (uses npm)
             post-init: |
               # terrascan scans dockerfile.js (a JS file for parsing dockerfiles) as a dockerfile itself
@@ -35,7 +36,8 @@ jobs:
             cache: true
 
           - repo: pallets/flask
-            ref: 4bcd4be6b7d69521115ef695a379361732bcaea6
+            # Keep this on main so Docker CI catches Python ecosystem drift quickly.
+            ref: main
             post-init: |
               # prettier chokes on this malformed html file
               echo "examples/celery/src/task_app/templates/index.html" >> .gitignore
@@ -68,7 +70,8 @@ jobs:
             cache: false
 
           - repo: sass/sass
-            ref: 225e176115211387e014d97ae0076d94de3152a1
+            # Keep this on main so Docker CI validates current npm toolchain behavior.
+            ref: main
             description: (uses npm)
             cache: true
 
