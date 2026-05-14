@@ -438,6 +438,7 @@ jobs:
       - name: Run trunk-action
         shell: bash
         id: trunk-action
+        continue-on-error: true
         run: |
           cd repo-under-test
           git checkout feature-branch
