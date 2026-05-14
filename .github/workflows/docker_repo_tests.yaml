@@ -48,6 +48,8 @@ jobs:
           - repo: postcss/postcss
             ref: 84fbbe9009cb3cc3bbb4cc3a9b65d468f4844d95
             description: (uses pnpm)
+            pre-init: |
+              echo "20.18.0" > .nvmrc
             post-init: |
               cp local-action/repo_tests/postcss.yaml .trunk/user.yaml
             cache: true
