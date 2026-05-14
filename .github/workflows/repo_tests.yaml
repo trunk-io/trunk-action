@@ -59,6 +59,8 @@ jobs:
           - repo: postcss/postcss
             ref: 79052c277049d2e97a4832e370fb7d2728dde877
             description: (uses pnpm)
+            post-init: |
+              cp local-action/repo_tests/postcss.yaml .trunk/user.yaml
 
           - repo: prawn-test-staging-rw/setup-node-test
             ref: main
