@@ -1,4 +1,0 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/suzuki-shunsuke/pinact/refs/heads/main/json-schema/pinact.json
-# pinact: https://github.com/suzuki-shunsuke/pinact — pin actions to SHA + semver comment.
-# Authenticated GitHub API is recommended (e.g. GITHUB_TOKEN=$(gh auth token) pinact run).
-version: 3

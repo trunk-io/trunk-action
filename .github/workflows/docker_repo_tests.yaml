@@ -104,13 +104,13 @@ jobs:
 
     steps:
       - name: Checkout ${{ matrix.repo }}
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@v4
         with:
           repository: ${{ matrix.repo }}
           ref: ${{ matrix.ref }}
 
       - name: Checkout ${{ github.repository }}
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@v4
         with:
           path: local-action
 
@@ -140,7 +140,7 @@ jobs:
             '${{ matrix.description }}'
 
       - name: Upload landing state
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.landing_state_artifact_name }} landing state
           path: .trunk/landing-state.json
