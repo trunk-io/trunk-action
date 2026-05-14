@@ -1,6 +1,16 @@
 version: 0.1
 lint:
+  disabled:
+    - black
+    - flake8
+    - trivy
   ignore:
     - linters: [prettier]
       paths:
         - examples/javascript/js_example/templates/xhr.html
+    - linters: [mypy]
+      paths:
+        # Inverse ignores: only src/ and tests/type_check/ (pyproject [tool.mypy] files).
+        - "**"
+        - "!src/**"
+        - "!tests/type_check/**"
