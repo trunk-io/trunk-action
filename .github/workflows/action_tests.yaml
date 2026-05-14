@@ -435,16 +435,21 @@ jobs:
           git checkout feature-branch
           echo "EXPECTED_UPSTREAM=$(git rev-parse feature-branch^1)" >>$GITHUB_ENV
 
-      - name: Run trunk-action
+      - name: Run trunk-action (expect GNU timeout exit 124)
         shell: bash
-        id: trunk-action
-        continue-on-error: true
         run: |
           cd repo-under-test
           git checkout feature-branch
           # Mirror action.yaml: wrap pull_request.sh with GNU timeout. The stub completes instantly
           # unless TRUNK_STUB_SLEEP_SECONDS is set, so we sleep in the stub to force a timeout.
-          exec timeout "${INPUT_TIMEOUT_SECONDS}" ../local-action/pull_request.sh
+          set +e
+          timeout "${INPUT_TIMEOUT_SECONDS}" ../local-action/pull_request.sh
+          ec=$?
+          set -e
+          if [ "$ec" -ne 124 ]; then
+            echo "::error::Expected exit code 124 (GNU timeout killed the process), got ${ec}"
+            exit 1
+          fi
         env:
           INPUT_ARGUMENTS: ""
           INPUT_CHECK_RUN_ID: 12345678
@@ -460,15 +465,6 @@ jobs:
           INPUT_SAVE_ANNOTATIONS: ""
           INPUT_AUTOFIX_AND_PUSH: true
           INPUT_TIMEOUT_SECONDS: "1"
-
-      - name: Assert trunk-action failed from timeout
-        shell: bash
-        run: |
-          # With continue-on-error, a timed-out step has conclusion=failure, outcome=success.
-          if [ "${{ steps.trunk-action.conclusion }}" != "failure" ]; then
-            echo "::error::Expected timeout (conclusion=failure); conclusion=${{ steps.trunk-action.conclusion }} outcome=${{ steps.trunk-action.outcome }}"
-            exit 1
-          fi
 
   pull_request_autofix:
     runs-on: ubuntu-latest

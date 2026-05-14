@@ -67,8 +67,29 @@ jobs:
               fi
             description: (test for setup-node)
             pre-init: |
+              # runner-24.04 ships Node under /opt/acttoolcache (not removable by runner). Drop those
+              # PATH entries so a failed setup-node leaves no `node` on PATH and setup-env sets
+              # INSTALL_LATEST_NODE (see setup-env/action.yaml).
+              _newpath=""
+              _IFS="$IFS"
+              IFS=':'
+              for _d in $PATH; do
+                IFS="$_IFS"
+                case "$_d" in
+                  */acttoolcache/*|*/hostedtoolcache/*) ;;
+                  *) _newpath="${_newpath:+${_newpath}:}${_d}" ;;
+                esac
+              done
+              IFS="$_IFS"
+              export PATH="$_newpath"
+              hash -r || true
               while which node >/dev/null 2>&1; do
-                rm -f "$(which node)"
+                _n="$(which node)"
+                if [[ -w "$_n" ]] && rm -f "$_n" 2>/dev/null; then
+                  hash -r || true
+                else
+                  break
+                fi
               done
             cache: false
 
