@@ -33,3 +33,15 @@ if (argv[1] === "check" && argv[2] === "get-latest-raw-output") {
 if (argv[1] === "version") {
   process.stdout.write(process.env.TRUNK_CLI_VERSION || "99.99.99");
 }
+
+// Optional delay so CI can exercise `timeout` wrapping `pull_request.sh` (see action_tests.yaml).
+// Skip `trunk check get-latest-raw-output` / `trunk check list` etc. — only slow down `trunk check --flags...`.
+if (argv[1] === "check") {
+  const sub = argv[2];
+  const sleepOk = !sub || sub.startsWith("-");
+  const sec = Number(process.env.TRUNK_STUB_SLEEP_SECONDS || 0);
+  if (sleepOk && Number.isFinite(sec) && sec > 0) {
+    const { execSync } = require("node:child_process");
+    execSync(`sleep ${Math.floor(sec)}`, { stdio: "inherit" });
+  }
+}

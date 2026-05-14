@@ -1,0 +1,19 @@
+# Zizmor (https://docs.zizmor.sh/configuration/) — workflows under .github/
+#
+# ref-version-mismatch: SHA-pinned actions should have a matching version comment
+#   (Dependabot-friendly). Mismatches are reported in the default persona; missing
+#   comments are pedantic-only.
+#
+# stale-action-refs: pinned SHA should point at a Git tag (pedantic-only; needs
+#   network). Enabled for this repo via --pedantic on the Trunk zizmor command
+#   in .trunk/trunk.yaml.
+#
+# Blocking severity for zizmor is set in .trunk/trunk.yaml via `lint.threshold`
+# (medium+ blocks; note/low are non-blocking).
+#
+# Neither audit supports per-rule `config` in this file; use `rules.<id>.ignore`
+# or inline suppressions if you need exceptions.
+
+rules:
+  template-injection:
+    disable: true

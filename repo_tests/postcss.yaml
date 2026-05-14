@@ -1,0 +1,6 @@
+version: 0.1
+lint:
+  disabled:
+    - trivy
+    # Hermetic ESLint 10.x crashes on this snapshot (flat config / scopeManager); smoke test targets pnpm + trunk, not eslint.
+    - eslint
