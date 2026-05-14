@@ -98,6 +98,8 @@ jobs:
               ${TRUNK_PATH} upgrade
               ${TRUNK_PATH} upgrade
               ${TRUNK_PATH} upgrade
+              # Post-upgrade Prettier 3.x crashes on this snapshot; test covers trunk upgrade only.
+              ${TRUNK_PATH} check disable prettier
             trunk-path: node_modules/.bin/trunk
 
           - repo: sass/sass
