@@ -67,20 +67,24 @@ jobs:
               fi
             description: (test for setup-node)
             pre-init: |
-              # runner-24.04 ships Node under /opt/acttoolcache (not removable by runner). Drop those
-              # PATH entries so a failed setup-node leaves no `node` on PATH and setup-env sets
-              # INSTALL_LATEST_NODE (see setup-env/action.yaml).
+              # setup-env prefers .nvmrc over package.json. package.json has no engines.node, so
+              # actions/setup-node only warns and still succeeds — we need a real version miss.
+              echo "99.0.0" >.nvmrc
+              # runner-24.04 ships Node under /opt/acttoolcache (not removable). Strip toolcache
+              # dirs from PATH *and* persist via GITHUB_ENV so later steps (trunk-action) do not
+              # see preinstalled Node; then setup-node can fail and INSTALL_LATEST_NODE is set.
               _newpath=""
               _IFS="$IFS"
               IFS=':'
               for _d in $PATH; do
                 IFS="$_IFS"
                 case "$_d" in
-                  */acttoolcache/*|*/hostedtoolcache/*) ;;
+                  */acttoolcache/*|*/hostedtoolcache/*|*/__t/*) ;;
                   *) _newpath="${_newpath:+${_newpath}:}${_d}" ;;
                 esac
               done
               IFS="$_IFS"
+              echo "PATH=${_newpath}" >>"${GITHUB_ENV}"
               export PATH="$_newpath"
               hash -r || true
               while which node >/dev/null 2>&1; do
