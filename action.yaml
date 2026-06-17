@@ -192,7 +192,7 @@ runs:
         else
 
           cat >>$GITHUB_ENV <<EOF
-        INPUT_GITHUB_TOKEN=${{ inputs.github-token }}
+        INPUT_GITHUB_TOKEN=${{ inputs.github-token || github.token }}
         INPUT_TRUNK_TOKEN=${{ inputs.trunk-token }}
         TRUNK_TOKEN=${{ inputs.trunk-token }}
         GITHUB_EVENT_PULL_REQUEST_BASE_SHA=${{ github.event.pull_request.base.sha }}

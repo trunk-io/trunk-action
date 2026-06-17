@@ -9,7 +9,14 @@ if [[ ${INPUT_DEBUG} == "true" ]]; then
 fi
 
 fetch() {
-  git -c protocol.version=2 fetch -q \
+  local extra_args=()
+  if [[ -n "${INPUT_GITHUB_TOKEN:-}" ]]; then
+    extra_args=(
+      -c "credential.helper="
+      -c "credential.helper=!f(){ echo \"username=x-access-token\"; echo \"password=${INPUT_GITHUB_TOKEN}\"; };f"
+    )
+  fi
+  git "${extra_args[@]}" -c protocol.version=2 fetch -q \
     --no-tags \
     --no-recurse-submodules \
     "$@"
