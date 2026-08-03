@@ -6,7 +6,7 @@ cli:
 plugins:
   sources:
     - id: trunk
-      ref: v1.9.0
+      ref: v1.11.0
       uri: https://github.com/trunk-io/plugins
     - id: configs
       ref: v1.2.1
@@ -27,8 +27,8 @@ lint:
       level: medium
   # enabled list inherited from plugin 'configs'
   enabled:
-    - zizmor@1.24.1
-    - grype@0.112.0
+    - zizmor@1.29.0
+    - grype@0.116.1
   disabled:
     - semgrep
     - eslint
