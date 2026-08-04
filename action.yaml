@@ -158,8 +158,12 @@ runs:
             INPUT_GITHUB_TOKEN=${{ github.token }}
           fi
           INPUT_TRUNK_TOKEN=$(payload trunkToken)
-          echo "::add-mask::${INPUT_GITHUB_TOKEN}"
-          echo "::add-mask::${INPUT_TRUNK_TOKEN}"
+          if [[ -n ${INPUT_GITHUB_TOKEN} ]]; then
+            echo "::add-mask::${INPUT_GITHUB_TOKEN}"
+          fi
+          if [[ -n ${INPUT_TRUNK_TOKEN} ]]; then
+            echo "::add-mask::${INPUT_TRUNK_TOKEN}"
+          fi
 
           cat >>$GITHUB_ENV <<EOF
         GITHUB_TOKEN=${INPUT_GITHUB_TOKEN}
@@ -198,8 +202,12 @@ runs:
 
         else
 
-          echo "::add-mask::${{ inputs.github-token }}"
-          echo "::add-mask::${{ inputs.trunk-token }}"
+          if [[ -n "${{ inputs.github-token }}" ]]; then
+            echo "::add-mask::${{ inputs.github-token }}"
+          fi
+          if [[ -n "${{ inputs.trunk-token }}" ]]; then
+            echo "::add-mask::${{ inputs.trunk-token }}"
+          fi
 
           cat >>$GITHUB_ENV <<EOF
         GITHUB_TOKEN=${{ inputs.github-token }}
@@ -268,14 +276,12 @@ runs:
 
     - name: Detect setup strategy
       shell: bash
-      env:
-        ACTION_PATH: ${{ github.action_path }}
       run: |
         if [[ -e .trunk/setup-ci ]]; then
           echo "INPUT_SETUP_DEPS=true" >>$GITHUB_ENV
         else
           mkdir -p .trunk
-          ln -s "${ACTION_PATH}/setup-env" .trunk/setup-ci
+          ln -s ${{ github.action_path }}/setup-env .trunk/setup-ci
           echo .trunk/setup-ci >>.git/info/exclude
         fi
 

@@ -12,6 +12,10 @@
 
 set -euo pipefail
 
+# The action_tests workflow sets TMPDIR to a directory that only setup.sh creates.
+# This standalone job does not run setup.sh, so ensure the dir exists for mktemp.
+mkdir -p "${TMPDIR:-/tmp}"
+
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../git_github.sh
 source "${HERE}/../git_github.sh"
