@@ -15,8 +15,6 @@ fetch() {
     "$@"
 }
 
-MINIMUM_CHECK_RUN_ID_VERSION=1.7.0
-
 if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
   # We use this instead of github.event.pull_request.base.sha which can be incorrect sometimes.
@@ -40,20 +38,7 @@ if [[ ${save_annotations} == "auto" && ${GITHUB_EVENT_PULL_REQUEST_HEAD_REPO_FOR
   save_annotations=true
 fi
 
-if [[ -n ${INPUT_CHECK_RUN_ID} ]]; then
-  trunk_version="$(${TRUNK_PATH} version)"
-  # trunk-ignore-begin(shellcheck/SC2312): the == will fail if anything inside the $() fails
-  if sort_result=$(printf "%s\n%s\n" "${MINIMUM_CHECK_RUN_ID_VERSION}" "${trunk_version}" | sort --version-sort); then
-    if [[ $(echo "${sort_result}" | head -n 1) == "${trunk_version}" ]]; then
-      echo "::error::Please update your CLI to ${MINIMUM_CHECK_RUN_ID_VERSION} or higher (current version ${trunk_version})."
-      exit 1
-    fi
-  else
-    echo "::warning::sort --version-sort failed - continuing without checking CLI version"
-  fi
-  # trunk-ignore-end(shellcheck/SC2312)
-  annotation_argument=--trunk-annotate=${INPUT_CHECK_RUN_ID}
-elif [[ ${save_annotations} == "true" ]]; then
+if [[ ${save_annotations} == "true" ]]; then
   annotation_argument=--github-annotate-file=${TRUNK_TMPDIR}/annotations.bin
   # Signal that we need to upload an annotations artifact
   echo "TRUNK_UPLOAD_ANNOTATIONS=true" >>"${GITHUB_ENV}"

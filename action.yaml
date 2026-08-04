@@ -37,10 +37,6 @@ inputs:
     required: false
     default: ""
 
-  check-run-id:
-    description: Check run ID. If set, posts annotations using CheckService.
-    required: false
-
   cache:
     description:
       Cache trunk downloads and results between runs. Caching is only needed when using ephemeral CI
@@ -173,7 +169,6 @@ runs:
         INPUT_CACHE_PATH=$(payload cachePath)
         INPUT_CHECK_ALL_MODE=$(payload checkAllMode)
         INPUT_CHECK_MODE=$(payload checkMode)
-        INPUT_CHECK_RUN_ID=$(payload checkRunId)
         INPUT_DEBUG=$(payload debug)
         INPUT_GITHUB_REF_NAME=$(payload targetRefName)
         INPUT_LABEL=$(payload label)
@@ -207,7 +202,6 @@ runs:
         INPUT_CAT_TRUNK_DEBUG_LOGS=${{ inputs.cat-trunk-debug-logs }}
         INPUT_CHECK_ALL_MODE=${{ inputs.check-all-mode }}
         INPUT_CHECK_MODE=${{ inputs.check-mode }}
-        INPUT_CHECK_RUN_ID=${{ inputs.check-run-id }}
         INPUT_DEBUG=${{ inputs.debug }}
         INPUT_GITHUB_REF_NAME=${{ github.ref_name }}
         INPUT_LABEL=${{ inputs.label }}
