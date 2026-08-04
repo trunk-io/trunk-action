@@ -4,16 +4,12 @@
 
 set -euo pipefail
 
+# shellcheck source=git_github.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/git_github.sh"
+
 if [[ ${INPUT_DEBUG} == "true" ]]; then
   set -x
 fi
-
-fetch() {
-  git -c protocol.version=2 fetch -q \
-    --no-tags \
-    --no-recurse-submodules \
-    "$@"
-}
 
 head_sha=$(git rev-parse HEAD)
 fetch --depth=2 origin "${head_sha}"

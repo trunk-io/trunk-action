@@ -4,16 +4,12 @@
 
 set -euo pipefail
 
+# shellcheck source=git_github.sh
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/git_github.sh"
+
 if [[ ${INPUT_DEBUG} == "true" ]]; then
   set -x
 fi
-
-fetch() {
-  git -c protocol.version=2 fetch -q \
-    --no-tags \
-    --no-recurse-submodules \
-    "$@"
-}
 
 MINIMUM_UPLOAD_ID_VERSION=1.12.3
 

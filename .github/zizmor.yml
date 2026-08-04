@@ -13,6 +13,10 @@
 #
 # Neither audit supports per-rule `config` in this file; use `rules.<id>.ignore`
 # or inline suppressions if you need exceptions.
+#
+# Composite action findings (action.yaml) cannot be ignored via rules.<id>.ignore
+# here — use inline `# zizmor: ignore[...]` comments in the action instead. Do not
+# disable github-env / artipacked globally; that would also blind workflow audits.
 
 rules:
   template-injection:
