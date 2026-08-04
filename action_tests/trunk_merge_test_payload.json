@@ -4,7 +4,6 @@
   "targetCheckoutRef": "refs/heads/trunk-merge/of-feature-branch",
   "checkMode": "trunk_merge",
   "trunkToken": "fake-token",
-  "checkRunId": 14235603498,
   "version": "0.0.0",
   "githubToken": "fake-token",
   "cache": true,

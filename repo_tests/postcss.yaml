@@ -4,3 +4,6 @@ lint:
     - trivy
     # Hermetic ESLint 10.x crashes on this snapshot (flat config / scopeManager); smoke test targets pnpm + trunk, not eslint.
     - eslint
+    # oxlint/oxfmt evaluate postcss's oxfmt.config.ts, which imports @logux/oxc-configs — a package that
+    # isn't resolvable in trunk's hermetic tool runtime. Smoke test targets pnpm + trunk, not oxlint.
+    - oxlint

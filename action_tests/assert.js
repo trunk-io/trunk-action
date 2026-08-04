@@ -12,17 +12,22 @@ const stubLog = fs.readFileSync(process.env.TRUNK_STUB_LOGS, "utf8").split("\n")
 expect(stubLog.slice(-1)).to.deep.equal([""]);
 
 const getHtlFactoriesPath = () => {
-  const tmpdirContents = fs.readdirSync(process.env.TMPDIR);
+  // all.sh creates the htl factories file via `mktemp`, which names it `tmp.XXXXXX`.
+  // Ignore anything else (e.g. Node's `node-compile-cache` directory, which newer Node
+  // versions drop into TMPDIR).
+  const tmpdirContents = fs
+    .readdirSync(process.env.TMPDIR)
+    .filter((entry) => entry.startsWith("tmp."));
 
   if (tmpdirContents.length === 0) {
     throw new Error(
-      `TMPDIR=${process.env.TMPDIR} was empty; could not infer what --htl-factories-path should have been`,
+      `TMPDIR=${process.env.TMPDIR} had no mktemp entries; could not infer what --htl-factories-path should have been`,
     );
   }
 
   if (tmpdirContents.length > 1) {
     throw new Error(
-      `TMPDIR=${process.env.TMPDIR} had multiple entries (${JSON.stringify(
+      `TMPDIR=${process.env.TMPDIR} had multiple mktemp entries (${JSON.stringify(
         tmpdirContents,
       )}); could not infer what --htl-factories-path should have been`,
     );
@@ -45,38 +50,6 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "",
     ],
   ],
-  "trunk-merge-annotate": () => [
-    ["trunk", "version"],
-    [
-      "trunk",
-      "check",
-      "--ci",
-      "--upstream",
-      process.env.EXPECTED_UPSTREAM,
-      "--github-commit",
-      process.env.EXPECTED_GITHUB_COMMIT,
-      "--github-label",
-      "",
-      "--trunk-annotate=8675309",
-    ],
-  ],
-  "trunk-merge-annotate-old-cli": () => [["trunk", "version"]],
-  "pull-request-trunk-annotate": () => [
-    ["trunk", "version"],
-    [
-      "trunk",
-      "check",
-      "--ci",
-      "--upstream",
-      process.env.EXPECTED_UPSTREAM,
-      "--github-commit",
-      process.env.EXPECTED_GITHUB_COMMIT,
-      "--github-label",
-      "",
-      "--trunk-annotate=8675309",
-    ],
-  ],
-  "pull-request-trunk-annotate-old-cli": () => [["trunk", "version"]],
   "pull-request-github-annotate-file": () => [
     [
       "trunk",
@@ -144,7 +117,6 @@ const EXPECTED_CLI_CALL_FACTORIES = {
     ["trunk", "check", "--all", "--upload", "--series", "series-name"],
   ],
   "pull-request-autofix": () => [
-    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -152,13 +124,12 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       "--upstream",
       process.env.EXPECTED_UPSTREAM,
       "--fix",
-      "--trunk-annotate=12345678",
+      "--github-annotate",
     ],
   ],
   "pull-request-payload": () => [
     ["trunk", "version"],
     ["trunk", "--ci", "init"],
-    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -169,13 +140,12 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       process.env.EXPECTED_GITHUB_COMMIT,
       "--github-label",
       "",
-      "--trunk-annotate=14235603498",
+      "--github-annotate",
     ],
   ],
   "trunk-merge-payload": () => [
     ["trunk", "version"],
     ["trunk", "--ci", "init"],
-    ["trunk", "version"],
     [
       "trunk",
       "check",
@@ -186,7 +156,6 @@ const EXPECTED_CLI_CALL_FACTORIES = {
       process.env.EXPECTED_GITHUB_COMMIT,
       "--github-label",
       "",
-      "--trunk-annotate=14235603498",
     ],
   ],
   "all-payload": () => [
