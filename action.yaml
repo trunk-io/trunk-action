@@ -34,6 +34,8 @@ inputs:
   check-all-mode:
     description:
       If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
+    deprecationMessage:
+      The Trunk web app has been shut down; hold-the-line uploads are no longer supported.
     required: false
     default: ""
 
@@ -66,12 +68,14 @@ inputs:
       You can find a per-repo API token in the Trunk web app settings. This will cause results to be
       uploaded to the Trunk web app if this job is a scheduled job running on a branch, or if
       `check-mode` is set to 'all'.
+    deprecationMessage: The Trunk web app has been shut down; uploads are no longer supported.
     required: false
 
   upload-series:
     description:
       Upload series name, for when `trunk-token` is provided. If not provided, we'll use the branch
       name.
+    deprecationMessage: The Trunk web app has been shut down; uploads are no longer supported.
     required: false
 
   save-annotations:
