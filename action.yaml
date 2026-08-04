@@ -148,6 +148,11 @@ runs:
         if [[ "${{ inputs.check-mode }}" == "payload" ]]; then
 
           INPUT_GITHUB_TOKEN=$(payload githubToken)
+          if [[ -z ${INPUT_GITHUB_TOKEN} ]]; then
+            # Fall back to the workflow's default token when the payload omits one so
+            # GITHUB_TOKEN is never empty (payload mode previously always inherited github.token).
+            INPUT_GITHUB_TOKEN=${{ github.token }}
+          fi
           INPUT_TRUNK_TOKEN=$(payload trunkToken)
           echo "::add-mask::${INPUT_GITHUB_TOKEN}"
           echo "::add-mask::${INPUT_TRUNK_TOKEN}"
