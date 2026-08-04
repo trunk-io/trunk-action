@@ -73,6 +73,34 @@ See this repo's
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference.
 
+### Authenticating with `github-token`
+
+The `github-token` input controls the GitHub identity the action uses to post check-run annotations,
+call the GitHub API, and authenticate git operations (fetching history, and pushing autofixes when
+`autofix-and-push` is enabled). It defaults to `${{ github.token }}` (the automatic, per-job token),
+so **most users don't need to set it** — just grant the job `checks: write` so annotations can be
+posted.
+
+Provide your own token only when you need behavior the default token can't give you, for example:
+
+- a Personal Access Token or GitHub App token with broader permissions than the default job token,
+- attributing annotations or autofix commits to a specific identity, or
+- allowing autofix commits to trigger further workflow runs (pushes made with the default
+  `github.token` intentionally do not trigger new workflows).
+
+```yaml
+- name: Trunk Code Quality
+  uses: trunk-io/trunk-action@v1
+  with:
+    github-token: ${{ secrets.MY_APP_TOKEN }}
+```
+
+> **Note:** the token you supply is used for the whole action — annotations, API calls, and git auth
+> — so make sure it has `checks: write` (to post annotations) and, if you use `autofix-and-push`,
+> `contents: write`. When the action checks out a separate `target-checkout` repository it no longer
+> persists credentials for later steps; it authenticates each git command on demand with this token
+> instead.
+
 ### Advanced
 
 You can get a lot more out of Trunk Code Quality if you install it locally and commit a Trunk
