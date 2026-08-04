@@ -240,7 +240,8 @@ runs:
         repository: ${{ env.INPUT_TARGET_CHECKOUT }}
         ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
         token: ${{ env.INPUT_GITHUB_TOKEN }}
-        # Do not persist; scripts use one-shot auth when INPUT_TARGET_CHECKOUT is set.
+        # Do not persist credentials for later steps; trunk's internal git
+        # commands re-authenticate on demand via git_github.sh.
         persist-credentials: false
 
     - name: Locate trunk

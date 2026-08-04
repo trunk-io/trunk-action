@@ -97,9 +97,10 @@ Provide your own token only when you need behavior the default token can't give 
 
 > **Note:** the token you supply is used for the whole action — annotations, API calls, and git auth
 > — so make sure it has `checks: write` (to post annotations) and, if you use `autofix-and-push`,
-> `contents: write`. When the action checks out a separate `target-checkout` repository it no longer
-> persists credentials for later steps; it authenticates each git command on demand with this token
-> instead.
+> `contents: write`. Trunk's internal git fetches and autofix pushes are authenticated on demand
+> with this token whenever the checkout did not persist credentials (for example when you set
+> `persist-credentials: false` on `actions/checkout`), so **private repositories work without
+> persisting credentials**. When credentials are persisted, they are used as-is and left untouched.
 
 ### Advanced
 
