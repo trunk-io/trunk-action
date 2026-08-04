@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # shellcheck source=git_github.sh
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/git_github.sh"
+source "${BASH_SOURCE[0]%/*}/git_github.sh"
 
 if [[ ${INPUT_DEBUG} == "true" ]]; then
   set -x
