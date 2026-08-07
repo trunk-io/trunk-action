@@ -4,16 +4,12 @@
 
 set -euo pipefail
 
+# shellcheck source=git_github.sh
+source "${BASH_SOURCE[0]%/*}/git_github.sh"
+
 if [[ ${INPUT_DEBUG} == "true" ]]; then
   set -x
 fi
-
-fetch() {
-  git -c protocol.version=2 fetch -q \
-    --no-tags \
-    --no-recurse-submodules \
-    "$@"
-}
 
 if [[ ${GITHUB_EVENT_BEFORE} == "0000000000000000000000000000000000000000" ]]; then
   # Github will send us all 0s for the before hash in a few circumstances, such as the first commit to a repo

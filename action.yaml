@@ -34,6 +34,8 @@ inputs:
   check-all-mode:
     description:
       If set to "hold-the-line", computes new/existing issues by comparing to previous upload.
+    deprecationMessage:
+      The Trunk web app has been shut down; hold-the-line uploads are no longer supported.
     required: false
     default: ""
 
@@ -50,24 +52,30 @@ inputs:
     required: false
 
   post-init:
-    description: Steps to run after auto-init / before check
+    description:
+      Trusted shell to run after auto-init / before check (caller-controlled escape hatch).
     required: false
 
   github-token:
-    description: For overriding github.token
+    description:
+      GitHub token for API/checkout. Defaults to github.token; pass a PAT/App secret only for extra
+      permissions.
     required: false
+    default: ${{ github.token }}
 
   trunk-token:
     description:
       You can find a per-repo API token in the Trunk web app settings. This will cause results to be
       uploaded to the Trunk web app if this job is a scheduled job running on a branch, or if
       `check-mode` is set to 'all'.
+    deprecationMessage: The Trunk web app has been shut down; uploads are no longer supported.
     required: false
 
   upload-series:
     description:
       Upload series name, for when `trunk-token` is provided. If not provided, we'll use the branch
       name.
+    deprecationMessage: The Trunk web app has been shut down; uploads are no longer supported.
     required: false
 
   save-annotations:
@@ -120,11 +128,9 @@ runs:
   steps:
     - name: Set up inputs
       shell: bash
-      run: |
-        cat >>$GITHUB_ENV <<EOF
-        GITHUB_TOKEN=${{ github.token }}
-        TRUNK_LAUNCHER_QUIET=false
-        EOF
+      run: | # zizmor: ignore[github-env]
+        echo "TRUNK_LAUNCHER_QUIET=false" >>"${GITHUB_ENV}"
+        echo "INPUT_TIMEOUT_SECONDS=${{ inputs.timeout-seconds }}" >>"${GITHUB_ENV}"
 
         # First arg is field to fetch, second arg is default value or empty
         payload() {
@@ -146,11 +152,21 @@ runs:
         if [[ "${{ inputs.check-mode }}" == "payload" ]]; then
 
           INPUT_GITHUB_TOKEN=$(payload githubToken)
+          if [[ -z ${INPUT_GITHUB_TOKEN} ]]; then
+            # Fall back to the workflow's default token when the payload omits one so
+            # GITHUB_TOKEN is never empty (payload mode previously always inherited github.token).
+            INPUT_GITHUB_TOKEN=${{ github.token }}
+          fi
           INPUT_TRUNK_TOKEN=$(payload trunkToken)
-          echo "::add-mask::${INPUT_GITHUB_TOKEN}"
-          echo "::add-mask::${INPUT_TRUNK_TOKEN}"
+          if [[ -n ${INPUT_GITHUB_TOKEN} ]]; then
+            echo "::add-mask::${INPUT_GITHUB_TOKEN}"
+          fi
+          if [[ -n ${INPUT_TRUNK_TOKEN} ]]; then
+            echo "::add-mask::${INPUT_TRUNK_TOKEN}"
+          fi
 
           cat >>$GITHUB_ENV <<EOF
+        GITHUB_TOKEN=${INPUT_GITHUB_TOKEN}
         INPUT_GITHUB_TOKEN=${INPUT_GITHUB_TOKEN}
         INPUT_TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
         TRUNK_TOKEN=${INPUT_TRUNK_TOKEN}
@@ -186,7 +202,15 @@ runs:
 
         else
 
+          if [[ -n "${{ inputs.github-token }}" ]]; then
+            echo "::add-mask::${{ inputs.github-token }}"
+          fi
+          if [[ -n "${{ inputs.trunk-token }}" ]]; then
+            echo "::add-mask::${{ inputs.trunk-token }}"
+          fi
+
           cat >>$GITHUB_ENV <<EOF
+        GITHUB_TOKEN=${{ inputs.github-token }}
         INPUT_GITHUB_TOKEN=${{ inputs.github-token }}
         INPUT_TRUNK_TOKEN=${{ inputs.trunk-token }}
         TRUNK_TOKEN=${{ inputs.trunk-token }}
@@ -209,7 +233,6 @@ runs:
         INPUT_SETUP_DEPS=${{ inputs.setup-deps }}
         INPUT_TARGET_CHECKOUT=
         INPUT_TARGET_CHECKOUT_REF=
-        INPUT_TIMEOUT_SECONDS=${{ inputs.timeout-seconds }}
         INPUT_TRUNK_PATH=${{ inputs.trunk-path }}
         INPUT_UPLOAD_LANDING_STATE=false
         INPUT_UPLOAD_SERIES=${{ inputs.upload-series }}
@@ -229,6 +252,9 @@ runs:
         repository: ${{ env.INPUT_TARGET_CHECKOUT }}
         ref: ${{ env.INPUT_TARGET_CHECKOUT_REF }}
         token: ${{ env.INPUT_GITHUB_TOKEN }}
+        # Do not persist credentials for later steps; trunk's internal git
+        # commands re-authenticate on demand via git_github.sh.
+        persist-credentials: false
 
     - name: Locate trunk
       shell: bash
@@ -268,7 +294,9 @@ runs:
     - name: Post-init steps
       if: inputs.post-init
       shell: bash
-      run: ${{ inputs.post-init }}
+      env:
+        POST_INIT: ${{ inputs.post-init }}
+      run: bash --noprofile --norc -eo pipefail -c "$POST_INIT"
 
     - name: Cache Linters/Formatters
       if: env.TRUNK_CHECK_MODE != 'none' && env.INPUT_CACHE == 'true'
@@ -280,51 +308,27 @@ runs:
     - name: Run trunk check on pull request
       if: env.TRUNK_CHECK_MODE == 'pull_request'
       shell: bash
-      run: |
-        # Run 'trunk check' on pull request
-        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
-          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/pull_request.sh
-        else
-          ${GITHUB_ACTION_PATH}/pull_request.sh
-        fi
       env:
         INPUT_SAVE_ANNOTATIONS: ${{ inputs.save-annotations }}
+      run: ${GITHUB_ACTION_PATH}/run_with_timeout.sh pull_request.sh
 
     - name: Run trunk check on push
       if: env.TRUNK_CHECK_MODE == 'push'
       shell: bash
-      run: |
-        # Run 'trunk check' on push
-        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
-          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/push.sh
-        else
-          ${GITHUB_ACTION_PATH}/push.sh
-        fi
       env:
         GITHUB_EVENT_AFTER: ${{ env.GITHUB_EVENT_AFTER || github.event.after }}
         GITHUB_EVENT_BEFORE: ${{ env.GITHUB_EVENT_BEFORE || github.event.before }}
+      run: ${GITHUB_ACTION_PATH}/run_with_timeout.sh push.sh
 
     - name: Run trunk check on all
       if: env.TRUNK_CHECK_MODE == 'all'
       shell: bash
-      run: |
-        # Run 'trunk check' on all
-        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
-          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/all.sh
-        else
-          ${GITHUB_ACTION_PATH}/all.sh
-        fi
+      run: ${GITHUB_ACTION_PATH}/run_with_timeout.sh all.sh
 
     - name: Run trunk check on Trunk Merge
       if: env.TRUNK_CHECK_MODE == 'trunk_merge'
       shell: bash
-      run: |
-        # Run 'trunk check' on Trunk Merge
-        if [[ "${{ inputs.timeout-seconds }}" != "0" ]]; then
-          timeout ${{ inputs.timeout-seconds }} ${GITHUB_ACTION_PATH}/trunk_merge.sh
-        else
-          ${GITHUB_ACTION_PATH}/trunk_merge.sh
-        fi
+      run: ${GITHUB_ACTION_PATH}/run_with_timeout.sh trunk_merge.sh
 
     - name: Cat Trunk Cli / Daemon logs
       if: always() && inputs.cat-trunk-debug-logs == 'true'
@@ -364,13 +368,17 @@ runs:
     - name: Download annotations artifact
       if: inputs.post-annotations == 'true'
       uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      env:
+        WORKFLOW_RUN_ID: ${{ github.event.workflow_run.id }}
+        TRUNK_TMPDIR: ${{ env.TRUNK_TMPDIR }}
       with:
         # TODO(chris): We can't use the official download artifact action yet: https://github.com/actions/download-artifact/issues/172
         script: |
+          const runId = Number(process.env.WORKFLOW_RUN_ID);
           let artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{ github.event.workflow_run.id }},
+              run_id: runId,
           });
           let matchArtifact = artifacts.data.artifacts.filter((artifact) => {
             return artifact.name == "trunk-annotations"
@@ -383,15 +391,17 @@ runs:
                 archive_format: 'zip',
             });
             let fs = require('fs');
-            fs.writeFileSync('${{ env.TRUNK_TMPDIR }}/annotations.zip', Buffer.from(download.data));
+            fs.writeFileSync(`${process.env.TRUNK_TMPDIR}/annotations.zip`, Buffer.from(download.data));
           }
 
     - name: Unpack annotations artifact
       if: inputs.post-annotations == 'true'
+      shell: bash
+      env:
+        TRUNK_TMPDIR: ${{ env.TRUNK_TMPDIR }}
       run: |
         # Unpack annotations artifact
-        cd ${{ env.TRUNK_TMPDIR }} && unzip annotations.zip
-      shell: bash
+        cd "${TRUNK_TMPDIR}" && unzip annotations.zip
 
     - name: Post annotations
       if: inputs.post-annotations == 'true'

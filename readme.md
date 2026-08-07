@@ -73,6 +73,48 @@ See this repo's
 [`pr.yaml`](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/pr.yaml) workflow
 for further reference.
 
+### Authenticating with `github-token`
+
+The `github-token` input controls the GitHub identity the action uses to post check-run annotations,
+call the GitHub API, and authenticate git operations (fetching history, and pushing autofixes when
+`autofix-and-push` is enabled). It defaults to `${{ github.token }}` (the automatic, per-job token),
+so **most users don't need to set it** — just grant the job `checks: write` so annotations can be
+posted.
+
+Provide your own token only when you need behavior the default token can't give you, for example:
+
+- a Personal Access Token or GitHub App token with broader permissions than the default job token,
+- attributing annotations or autofix commits to a specific identity, or
+- allowing autofix commits to trigger further workflow runs (pushes made with the default
+  `github.token` intentionally do not trigger new workflows).
+
+```yaml
+- name: Trunk Code Quality
+  uses: trunk-io/trunk-action@v1
+  with:
+    github-token: ${{ secrets.MY_APP_TOKEN }}
+```
+
+> **Note:** the token you supply is used for the whole action — annotations, API calls, and git auth
+> — so make sure it has `checks: write` (to post annotations) and, if you use `autofix-and-push`,
+> `contents: write`. Trunk's internal git fetches and autofix pushes are authenticated on demand
+> with this token whenever the checkout did not persist credentials (for example when you set
+> `persist-credentials: false` on `actions/checkout`), so **private repositories work without
+> persisting credentials**. When credentials are persisted, they are used as-is and left untouched.
+
+### Private repositories
+
+`trunk-io/trunk-action` works with private repositories out of the box, including when your checkout
+uses `persist-credentials: false` (a common pattern in hardened or reusable workflows). Trunk's
+internal git fetches are authenticated on demand with `github-token`, so you should not hit:
+
+```text
+fatal: could not read Username for 'https://github.com': No such device or address
+```
+
+No extra configuration is required — just make sure `github-token` (which defaults to
+`github.token`) can read the repository.
+
 ### Advanced
 
 You can get a lot more out of Trunk Code Quality if you install it locally and commit a Trunk
@@ -155,7 +197,7 @@ should also disable caching by passing `cache: false` when running Trunk on your
 
 ```yaml
 - name: Trunk Code Quality
-  uses: trunk-io/trunk-action@v3
+  uses: trunk-io/trunk-action@v1
   with:
     cache: false
 ```
@@ -237,28 +279,6 @@ to `all`. For example:
 
 If you're running an hourly or nightly job on a branch, `check-mode` is automatically inferred to be
 `all`.
-
-## Uploading results to the Trunk web app (deprecated)
-
-The Trunk Code Quality web app has been deprecated and the service will be shut down on July
-27, 2025.
-
-If you are uploading to the Trunk web app you can stop by removing `trunk-token` from your config:
-
-```yaml
-- name: Trunk Code Quality
-  uses: trunk-io/trunk-action@v1
-  # remove trunk-token from your action
-  with:
-    trunk-token: ${{ secrets.TRUNK_TOKEN }}
-```
-
-You can continue to run this action nightly using a `schedule` worflow dispatch and
-`check-mode: all`.
-[See the example](https://github.com/trunk-io/trunk-action/blob/main/.github/workflows/nightly.yaml).
-
-For more information on the deprecation,
-[see the migration guide](https://docs.trunk.io/code-quality/setup-and-installation/prevent-new-issues/migration-guide).
 
 ## Running Trunk Code Quality on multiple platforms
 

@@ -4,16 +4,12 @@
 
 set -euo pipefail
 
+# shellcheck source=git_github.sh
+source "${BASH_SOURCE[0]%/*}/git_github.sh"
+
 if [[ ${INPUT_DEBUG} == "true" ]]; then
   set -x
 fi
-
-fetch() {
-  git -c protocol.version=2 fetch -q \
-    --no-tags \
-    --no-recurse-submodules \
-    "$@"
-}
 
 if [[ ${INPUT_GITHUB_REF_NAME} == "${GITHUB_EVENT_PULL_REQUEST_NUMBER}/merge" ]]; then
   # If we have checked out the merge commit then fetch enough history to use HEAD^1 as the upstream.
@@ -51,7 +47,7 @@ if [[ -n ${INPUT_AUTOFIX_AND_PUSH} ]]; then
   git config --global user.email ""
   git config --global user.name "${GITHUB_ACTOR}"
   git commit --all --allow-empty --message "Trunk Check applied autofixes"
-  git push origin "${INPUT_GITHUB_REF_NAME}"
+  git_github push origin "${INPUT_GITHUB_REF_NAME}"
 else
   "${TRUNK_PATH}" check \
     --ci \

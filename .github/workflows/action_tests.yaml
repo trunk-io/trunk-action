@@ -41,6 +41,19 @@ jobs:
           npm install
           ./action_tests/assert.js trunk-merge
 
+  git-github-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          path: local-action
+          persist-credentials: false
+
+      - name: Assert git_github auth behavior
+        shell: bash
+        run: ./local-action/action_tests/git_github_test.sh
+
   pull-request-github-annotate-file:
     runs-on: ubuntu-latest
     steps:
