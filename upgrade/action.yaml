@@ -83,6 +83,22 @@ inputs:
     required: false
     default: false
 
+  author:
+    description:
+      The commit author in the format `Display Name <email@address.com>`. Defaults to the user who
+      triggered the workflow run, which on a schedule is whoever GitHub attributes the cron to.
+      Ignored when `sign-commits` is enabled.
+    required: false
+    default:
+      ${{ github.actor }} <${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com>
+
+  committer:
+    description:
+      The committer in the format `Display Name <email@address.com>`. Defaults to the GitHub Actions
+      bot user. Ignored when `sign-commits` is enabled.
+    required: false
+    default: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+
 outputs:
   pull-request-number:
     description: The pull request number
@@ -171,3 +187,5 @@ runs:
         branch-token: ${{ inputs.github-token }}
         signoff: ${{ inputs.signoff }}
         sign-commits: ${{ inputs.sign-commits }}
+        author: ${{ inputs.author }}
+        committer: ${{ inputs.committer }}
