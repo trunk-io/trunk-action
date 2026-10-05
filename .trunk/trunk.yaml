@@ -27,9 +27,9 @@ lint:
       level: medium
   # enabled list inherited from plugin 'configs'
   enabled:
-    - pinact@4.1.1
-    - zizmor@1.29.0
-    - grype@0.116.1
+    - pinact@5.0.0
+    - zizmor@1.30.1
+    - grype@0.120.0
   disabled:
     - semgrep
     - eslint
