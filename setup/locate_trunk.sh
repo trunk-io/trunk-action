@@ -18,11 +18,10 @@ if [[ -z ${trunk_path} ]]; then
   elif [[ -f trunk && -x trunk ]]; then
     trunk_path=./trunk
   else
-    curl -fsSL https://trunk.io/releases/trunk -o "${tmpdir}/trunk"
-    chmod u+x "${tmpdir}/trunk"
+    "$(dirname "${BASH_SOURCE[0]}")/get_trunk.sh" "${tmpdir}"
     trunk_path="${tmpdir}/trunk"
   fi
 fi
 echo "TRUNK_PATH=${trunk_path}" >>"${GITHUB_ENV}"
 # Ensure that trunk CLI is downloaded before subsequent steps
-${trunk_path} version || echo "::warning::${trunk_path} does not exist!"
+"$(dirname "${BASH_SOURCE[0]}")/legacy_version.sh" "${trunk_path}" || echo "::warning::${trunk_path} does not exist!"
