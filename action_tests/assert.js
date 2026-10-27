@@ -129,7 +129,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "pull-request-payload": () => [
     ["trunk", "version"],
-    ["trunk", "--ci", "init"],
+    ["trunk", "init", "--ci"],
     [
       "trunk",
       "check",
@@ -145,7 +145,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "trunk-merge-payload": () => [
     ["trunk", "version"],
-    ["trunk", "--ci", "init"],
+    ["trunk", "init", "--ci"],
     [
       "trunk",
       "check",
@@ -160,7 +160,7 @@ const EXPECTED_CLI_CALL_FACTORIES = {
   ],
   "all-payload": () => [
     ["trunk", "version"],
-    ["trunk", "--ci", "init"],
+    ["trunk", "init", "--ci"],
     [
       "trunk",
       "check",

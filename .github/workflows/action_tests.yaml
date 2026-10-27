@@ -531,8 +531,13 @@ jobs:
         run: |
           set -euo pipefail
           source local-action/setup/cli-pins.sh
-          [[ "$(trunk --version)" == "trunk ${TRUNK_CLI_PIN_VERSION}" ]]
-          [[ "$(trunk legacy version)" == "1.25.0" ]]
+          command -v trunk
+          cli_version="$(trunk --version)"
+          echo "cli version: ${cli_version}"
+          [[ ${cli_version} == "trunk ${TRUNK_CLI_PIN_VERSION}" ]]
+          legacy_version="$(trunk legacy version)"
+          echo "legacy version: ${legacy_version}"
+          [[ ${legacy_version} == "1.25.0" ]]
 
   cli-pins:
     name: cli-pins
