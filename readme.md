@@ -259,11 +259,12 @@ The action (and `setup`, `install` and `upgrade`) selects `trunk` in this order:
    `./trunk`.
 3. A download.
 
-On Linux (x64, arm64) and macOS (arm64, x64), the download is the trunk CLI. Each release of the
-action pins one CLI version and the sha256 of each platform's build, and the action checks the
-download against that sha256. The CLI runs `trunk check`, `trunk fmt`, `trunk upgrade` and the other
-commands through the legacy launcher, so the `cli.version` in your `.trunk/trunk.yaml` still selects
-the version that runs, and the GitHub Actions cache works as before. Self-update is off in CI.
+On Linux (x64, arm64) and macOS 14 or later (arm64, x64), the download is the trunk CLI. Each
+release of the action pins one CLI version and the sha256 of each platform's build, and the action
+checks the download against that sha256. The CLI runs `trunk check`, `trunk fmt`, `trunk upgrade`
+and the other commands through the legacy launcher, so the `cli.version` in your `.trunk/trunk.yaml`
+still selects the version that runs, and the GitHub Actions cache works as before. Self-update is
+off in CI.
 
 On Windows, the download is the legacy launcher from `https://trunk.io/releases/trunk`, as before.
 
@@ -271,9 +272,8 @@ Things to know if you move to this version of `trunk-io/trunk-action@v1`:
 
 - The download comes from `https://trunk.io/releases/trunk-cli/`. If your self-hosted runners use an
   egress allowlist, `trunk.io` must be on it (as before).
-- `"${TRUNK_PATH}" version` prints the CLI version (for example `trunk 0.0.11`).
+- `"${TRUNK_PATH}" version` prints the CLI version (for example `trunk 0.0.12`).
   `"${TRUNK_PATH}" legacy version` prints the `cli.version` that runs your checks.
-- Global flags go after the command: use `trunk init --ci`, not `trunk --ci init`.
 
 To change the download, use these inputs:
 
