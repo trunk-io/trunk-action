@@ -526,16 +526,18 @@ jobs:
       - name: Run install
         uses: ./local-action/install
 
-      - name: Assert trunk is on PATH
+      - name: Assert the installed trunk
         shell: bash
         run: |
           set -euo pipefail
           source local-action/setup/cli-pins.sh
-          command -v trunk
-          cli_version="$(trunk --version)"
+          cli_version="$("${TRUNK_PATH}" --version)"
           echo "cli version: ${cli_version}"
           [[ ${cli_version} == "trunk ${TRUNK_CLI_PIN_VERSION}" ]]
-          legacy_version="$(trunk legacy version)"
+          # `trunk tools install` adds a `trunk` shim for the legacy CLI to .trunk/tools, which is
+          # last on PATH, so `trunk` on PATH can be the CLI or that shim.
+          command -v trunk
+          legacy_version="$(local-action/setup/legacy_version.sh trunk)"
           echo "legacy version: ${legacy_version}"
           [[ ${legacy_version} == "1.25.0" ]]
 
