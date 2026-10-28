@@ -5,10 +5,26 @@ description: The official trunk.io GitHub action to install trunk
 inputs:
   trunk-path:
     description:
-      Path to Trunk Launcher. If not provided, we'll look for it the repo root, `.trunk/bin` and
+      Path to the trunk CLI. If not provided, we'll look for it in the repo root, `.trunk/bin` and
       `tools/`. If it can't be found anywhere and is not provided explicitly, we'll download it on
       demand.
     required: false
+
+  cli-version:
+    description:
+      Version of the trunk CLI to download when no trunk is found in the repo. Defaults to the
+      version that this release of the action pins. `cli.version` in `.trunk/trunk.yaml` still
+      selects the version that runs `trunk check`.
+    required: false
+
+  cli-channel:
+    description: Release channel of the trunk CLI download. Defaults to the pinned channel.
+    required: false
+
+  launcher:
+    description: Set to 'legacy' to download the legacy trunk launcher instead of the trunk CLI.
+    required: false
+    default: new
 
 branding:
   icon: check
@@ -22,3 +38,6 @@ runs:
       run: ${GITHUB_ACTION_PATH}/locate_trunk.sh
       env:
         INPUT_TRUNK_PATH: ${{ inputs.trunk-path }}
+        INPUT_CLI_VERSION: ${{ inputs.cli-version }}
+        INPUT_CLI_CHANNEL: ${{ inputs.cli-channel }}
+        INPUT_LAUNCHER: ${{ inputs.launcher }}

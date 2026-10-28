@@ -9,12 +9,11 @@ fi
 tmpdir="$(mktemp -d)"
 echo "TRUNK_TMPDIR=${tmpdir}" >>"${GITHUB_ENV}"
 
-curl -fsSL https://trunk.io/releases/trunk -o "${tmpdir}/trunk"
-chmod u+x "${tmpdir}/trunk"
+"$(dirname "${BASH_SOURCE[0]}")/../setup/get_trunk.sh" "${tmpdir}"
 trunk_path="${tmpdir}/trunk"
 
 echo "TRUNK_PATH=${trunk_path}" >>"${GITHUB_ENV}"
 echo "${tmpdir}" >>"${GITHUB_PATH}"
 
 # Ensure that trunk CLI is downloaded before subsequent steps (swallow output of version command)
-(${trunk_path} version >/dev/null 2>&1) || echo "::warning::${trunk_path} does not exist!"
+("$(dirname "${BASH_SOURCE[0]}")/../setup/legacy_version.sh" "${trunk_path}" >/dev/null 2>&1) || echo "::warning::${trunk_path} does not exist!"

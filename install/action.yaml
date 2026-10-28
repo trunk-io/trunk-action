@@ -7,6 +7,21 @@ inputs:
     description: specific tools to install (if not specified will install all enabled tools)
     required: false
 
+  cli-version:
+    description:
+      Version of the trunk CLI to download. Defaults to the version that this release of the action
+      pins. `cli.version` in `.trunk/trunk.yaml` still selects the version that runs `trunk check`.
+    required: false
+
+  cli-channel:
+    description: Release channel of the trunk CLI download. Defaults to the pinned channel.
+    required: false
+
+  launcher:
+    description: Set to 'legacy' to download the legacy trunk launcher instead of the trunk CLI.
+    required: false
+    default: new
+
 branding:
   icon: check
   color: green
@@ -17,6 +32,10 @@ runs:
     - name: get trunk
       shell: bash
       run: ${GITHUB_ACTION_PATH}/get_trunk.sh
+      env:
+        INPUT_CLI_VERSION: ${{ inputs.cli-version }}
+        INPUT_CLI_CHANNEL: ${{ inputs.cli-channel }}
+        INPUT_LAUNCHER: ${{ inputs.launcher }}
 
     - name: clean up possible dead symlink
       shell: bash

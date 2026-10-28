@@ -438,3 +438,138 @@ jobs:
           cd local-action
           npm install
           ./action_tests/assert.js ${{matrix.description}}
+
+  setup-cli:
+    name: setup (${{ matrix.os }}, launcher ${{ matrix.launcher }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            launcher: new
+            expect: cli
+          - os: ubuntu-24.04-arm
+            launcher: new
+            expect: cli
+          - os: macos-latest
+            launcher: new
+            expect: cli
+          - os: macos-15-intel
+            launcher: new
+            expect: cli
+          - os: windows-latest
+            launcher: new
+            expect: legacy
+          - os: ubuntu-latest
+            launcher: legacy
+            expect: legacy
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          path: local-action
+          persist-credentials: false
+
+      - name: Set up a repo that pins cli.version
+        shell: bash
+        run: |
+          mkdir -p "${TMPDIR}"
+          git init -q .
+          mkdir -p .trunk
+          printf 'version: 0.1\ncli:\n  version: 1.25.0\n' >.trunk/trunk.yaml
+
+      - name: Run setup
+        uses: ./local-action/setup
+        with:
+          launcher: ${{ matrix.launcher }}
+
+      - name: Assert the downloaded trunk
+        shell: bash
+        env:
+          EXPECT: ${{ matrix.expect }}
+        run: |
+          set -euo pipefail
+          echo "TRUNK_PATH=${TRUNK_PATH}"
+          if [[ ${EXPECT} == "cli" ]]; then
+            source local-action/setup/cli-pins.sh
+            [[ "$("${TRUNK_PATH}" --version)" == "trunk ${TRUNK_CLI_PIN_VERSION}" ]]
+            [[ "$(cat "$(dirname "${TRUNK_PATH}")/trunk.pinned")" == "${TRUNK_CLI_PIN_VERSION}" ]]
+            [[ ${TRUNK_NO_AUTO_UPDATE} == "1" ]]
+          else
+            # The legacy launcher is a bash script.
+            head -n 1 "${TRUNK_PATH}" | grep -q '^#!/bin/bash'
+          fi
+          legacy_version="$(local-action/setup/legacy_version.sh "${TRUNK_PATH}")"
+          echo "legacy version: ${legacy_version}"
+          [[ ${legacy_version} == "1.25.0" ]]
+          "${TRUNK_PATH}" check --help >/dev/null
+
+  install-cli:
+    name: install (ubuntu-latest)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          path: local-action
+          persist-credentials: false
+
+      - name: Set up a repo that pins cli.version
+        shell: bash
+        run: |
+          mkdir -p "${TMPDIR}"
+          git init -q .
+          mkdir -p .trunk
+          printf 'version: 0.1\ncli:\n  version: 1.25.0\n' >.trunk/trunk.yaml
+
+      - name: Run install
+        uses: ./local-action/install
+
+      - name: Assert the installed trunk
+        shell: bash
+        run: |
+          set -euo pipefail
+          source local-action/setup/cli-pins.sh
+          cli_version="$("${TRUNK_PATH}" --version)"
+          echo "cli version: ${cli_version}"
+          [[ ${cli_version} == "trunk ${TRUNK_CLI_PIN_VERSION}" ]]
+          # `trunk tools install` adds a `trunk` shim for the legacy CLI to .trunk/tools, which is
+          # last on PATH, so `trunk` on PATH can be the CLI or that shim.
+          command -v trunk
+          legacy_version="$(local-action/setup/legacy_version.sh trunk)"
+          echo "legacy version: ${legacy_version}"
+          [[ ${legacy_version} == "1.25.0" ]]
+
+  cli-pins:
+    name: cli-pins
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Assert cli-pins.sh matches the release manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${TMPDIR}"
+          source setup/cli-pins.sh
+          ./scripts/bump-cli.sh "${TRUNK_CLI_PIN_VERSION}" "${TRUNK_CLI_PIN_CHANNEL}"
+          git diff --exit-code setup/cli-pins.sh
+
+      - name: Assert a sha256 mismatch fails the download
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "${TMPDIR}"
+          cp -r setup "${RUNNER_TEMP}/setup"
+          sed -i -E 's/(TRUNK_CLI_PIN_SHA256_linux_x64=")[0-9a-f]/\1x/' "${RUNNER_TEMP}/setup/cli-pins.sh"
+          if output="$("${RUNNER_TEMP}/setup/get_trunk.sh" "${RUNNER_TEMP}/out" 2>&1)"; then
+            echo "Expected the download to fail"
+            exit 1
+          fi
+          echo "${output}"
+          grep -q "sha256 mismatch" <<<"${output}"
+          [[ ! -e "${RUNNER_TEMP}/out/trunk" ]]

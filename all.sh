@@ -34,7 +34,7 @@ elif [[ ${INPUT_CHECK_ALL_MODE} == "hold-the-line" ]]; then
   fi
   if [[ -n ${INPUT_UPLOAD_ID-} ]]; then # if upload ID unset, skip it instead of erroring
     upload_id_arg="--upload-id ${INPUT_UPLOAD_ID}"
-    trunk_version="$(${TRUNK_PATH} version)"
+    trunk_version="$("$(dirname "${BASH_SOURCE[0]}")/setup/legacy_version.sh" "${TRUNK_PATH}")"
     # trunk-ignore-begin(shellcheck/SC2312): the == will fail if anything inside the $() fails
     if sort_result=$(printf "%s\n%s\n" "${MINIMUM_UPLOAD_ID_VERSION}" "${trunk_version}" | sort --version-sort); then
       if [[ $(echo "${sort_result}" | head -n 1) == "${trunk_version}" ]]; then

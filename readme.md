@@ -250,6 +250,62 @@ CI, all get the same results and the same experience - no more _"doesn't happen 
 When you want to upgrade to a newer version, just run `trunk upgrade` and commit the updated
 `trunk.yaml`.
 
+### Which `trunk` the action runs
+
+The action (and `setup`, `install` and `upgrade`) selects `trunk` in this order:
+
+1. The `trunk-path` input, if you set it.
+2. A launcher that is committed to your repo: `.trunk/bin/trunk`, then `tools/trunk`, then
+   `./trunk`.
+3. A download.
+
+On Linux (x64, arm64) and macOS 14 or later (arm64, x64), the download is the trunk CLI. Each
+release of the action pins one CLI version and the sha256 of each platform's build, and the action
+checks the download against that sha256. The CLI runs `trunk check`, `trunk fmt`, `trunk upgrade`
+and the other commands through the legacy launcher, so the `cli.version` in your `.trunk/trunk.yaml`
+still selects the version that runs, and the GitHub Actions cache works as before. Self-update is
+off in CI.
+
+On Windows, the download is the legacy launcher from `https://trunk.io/releases/trunk`, as before.
+
+Things to know if you move to this version of `trunk-io/trunk-action@v1`:
+
+- The download comes from `https://trunk.io/releases/trunk-cli/`. If your self-hosted runners use an
+  egress allowlist, `trunk.io` must be on it (as before).
+- `"${TRUNK_PATH}" version` prints the CLI version (for example `trunk 0.0.12`).
+  `"${TRUNK_PATH}" legacy version` prints the `cli.version` that runs your checks.
+
+To change the download, use these inputs:
+
+| Input         | Default                     | Description                                                 |
+| ------------- | --------------------------- | ----------------------------------------------------------- |
+| `cli-version` | the version the action pins | The trunk CLI version to download.                          |
+| `cli-channel` | the channel the action pins | The release channel (`prod` or `staging`).                  |
+| `launcher`    | `new`                       | Set to `legacy` to download the legacy launcher, as before. |
+
+If you set a `cli-version` that the action does not pin, the action checks the download against the
+sha256 in that release's `manifest.json`.
+
+```yaml
+- name: Trunk Code Quality
+  uses: trunk-io/trunk-action@v1
+  with:
+    launcher: legacy # opt out of the trunk CLI for this repo
+```
+
+#### Updating the pinned CLI version (maintainers)
+
+The pin is in [`setup/cli-pins.sh`](setup/cli-pins.sh). Do not edit it by hand. Run:
+
+```bash
+scripts/bump-cli.sh <version> [channel]   # channel defaults to prod; requires curl and jq
+```
+
+The script reads `https://trunk.io/releases/trunk-cli/<channel>/<version>/manifest.json` and writes
+the version, the channel and the sha256 of each platform. It fails if the release does not have a
+build for each of `linux-x64`, `linux-arm64`, `darwin-arm64` and `darwin-x64`. The `cli-pins` job in
+`action_tests.yaml` checks that the file matches the manifest.
+
 ## Run Trunk Outside of GitHub Actions
 
 Trunk has a dead simple install, is totally self-contained, doesn't require docker, and runs on
